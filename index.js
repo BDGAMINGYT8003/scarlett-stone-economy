@@ -1,31 +1,20 @@
-//express
-const express = require('express')
-// import express
-const app = express()
+const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const chalk = require("chalk")
-
-app.get('/', (req, res) => {
-  res.send('Bot Loaded! Changes Saved!');
-});
-
-app.listen(3000, () => {
-  console.log(
-    chalk.white('['),
-    chalk.cyan('Express'),
-    chalk.white(']'),
-    chalk.gray(':'),
-    chalk.white('Connected')
-  );
-});
-
-
-
-
-
-const { Client, Collection } = require("discord.js");
 // Import Discord.Js.
 //moongose in handler /index
-const client = new Client({ intents: 32767 });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildVoiceStates,
+  ],
+  partials: [Partials.Channel, Partials.Message, Partials.User, Partials.GuildMember, Partials.Reaction]
+});
 // Make New Discord Client.
 module.exports = client;
 // Export Client To Give Other Files Access.
@@ -131,15 +120,6 @@ process.on("multipleResolves", (type, promise, reason) => {
    console.log(chalk.gray("—————————————————————————————————"));
    console.log(type, promise, reason);
 });
-
-const Levels = require("discord-xp");
-
-const { mongooseConnectionString } = require("./botconfig/main.json");
-
-Levels.setURL(mongooseConnectionString); //ok
-
-//express
- 
 
 
 

@@ -1,5 +1,5 @@
 const client = require("../../index");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const chalk = require("chalk");
 const ms = require("ms");
 const { developerID } = require("../../botconfig/main.json");
@@ -7,11 +7,11 @@ const { clientavatar } = require("../../botconfig/main.json");
 const { clientname } = require("../../botconfig/main.json");
 const prefix = client.config.prefix;
 const { randomMessages_Cooldown } = require("../../botconfig/main.json");
-const premium = require("../../schemas/premium") 
+const premium = require("../../schemas/premium")
 
 const prettyMilliseconds = require('pretty-ms');
 const cooldownSchema = require("../../schemas/cooldown")
-let countingSchema = require('../../schemas/counting') 
+let countingSchema = require('../../schemas/counting')
 client.on("messageCreate", async (message) => {
    if (
       message.author.bot ||
@@ -25,50 +25,50 @@ client.on("messageCreate", async (message) => {
       .slice(client.config.prefix.length)
       .trim()
       .split(" ");
-   let noargs_embed = new MessageEmbed()
+   let noargs_embed = new EmbedBuilder()
       .setTitle(`:x: | Please Provide A Command To Be Executed!`)
-      .setColor("RED")
-      .setFooter(`${clientname}`, `${clientavatar}`)
+      .setColor("#FF0000")
+      .setFooter({ text: `${clientname}`, iconURL: `${clientavatar}`})
       .setTimestamp();
-   
+
 
    const command =
       client.commands.get(cmd.toLowerCase()) ||
       client.commands.find((c) => c.aliases?.includes(cmd.toLowerCase()))
    if (!command) return console.log(chalk.red(`no cmd ;-;`));
-     
+
    if (command.toggleOff) {
-      let toggleoff_embed = new MessageEmbed()
+      let toggleoff_embed = new EmbedBuilder()
          .setTitle(
             `:x: | That Command Has Been Disabled By The Developers! Please Try Later.`
          )
-         .setColor("RED")
-         .setFooter(`${clientname}`, `${clientavatar}`)
+         .setColor("#FF0000")
+         .setFooter({ text: `${clientname}`, iconURL: `${clientavatar}`})
          .setTimestamp();
       return message.reply({ embeds: [toggleoff_embed] });
    } else if (!message.member.permissions.has(command.userpermissions || [])) {
-      let userperms_embed = new MessageEmbed()
+      let userperms_embed = new EmbedBuilder()
          .setTitle(`:x: | You Don't Have Permissions To Use The Command!`)
-         .setColor("RED")
-         .setFooter(`${clientname}`, `${clientavatar}`)
+         .setColor("#FF0000")
+         .setFooter({ text: `${clientname}`, iconURL: `${clientavatar}`})
          .setTimestamp();
       return message.reply({ embeds: userperms_embed });
-   } else if (!message.guild.me.permissions.has(command.botpermissions || [])) {
-      let botperms_embed = new MessageEmbed()
+   } else if (!message.guild.members.me.permissions.has(command.botpermissions || [])) {
+      let botperms_embed = new EmbedBuilder()
          .setTitle(`:x: | I Don't Have Permissions To Use The Command!`)
-         .setColor("RED")
-         .setFooter(`${clientname}`, `${clientavatar}`)
+         .setColor("#FF0000")
+         .setFooter({ text: `${clientname}`, iconURL: `${clientavatar}`})
          .setTimestamp();
       return message.reply({ embeds: [botperms_embed] });
-   }  else if (command.developersOnly) {
+   } else if (command.developersOnly) {
       if (!developerID.includes(message.author.id)) {
-         let developersOnly_embed = new MessageEmbed()
+         let developersOnly_embed = new EmbedBuilder()
             .setTitle(`:x: | Only Developers Can Use That Command!`)
             .setDescription(
                `Developers: ${developerID.map((v) => `<@${v}>`).join(",")}`
             )
-            .setColor("RED")
-            .setFooter(`${clientname}`, `${clientavatar}`)
+            .setColor("#FF0000")
+            .setFooter({ text: `${clientname}`, iconURL: `${clientavatar}`})
             .setTimestamp();
          return message.reply({ embeds: [developersOnly_embed] });
       }
@@ -76,48 +76,48 @@ client.on("messageCreate", async (message) => {
 
       let cooldown;
       try {
-        cooldown = await cooldownSchema.findOne({
-          userID: message.author.id,
-          commandName: command.name
-        })
-        if(!cooldown) {
-          cooldown = await cooldownSchema.create({
+         cooldown = await cooldownSchema.findOne({
             userID: message.author.id,
-            commandName: command.name,
-            cooldown: 0
-          })
-          cooldown.save()
-        }
+            commandName: command.name
+         })
+         if (!cooldown) {
+            cooldown = await cooldownSchema.create({
+               userID: message.author.id,
+               commandName: command.name,
+               cooldown: 0
+            })
+            cooldown.save()
+         }
       } catch (e) {
-        console.error(e)
+         console.error(e)
       }
 
-      if(!cooldown || command.timeout * 1000 - (Date.now() - cooldown.cooldown) > 0) {
-      let timecommand = prettyMilliseconds(command.timeout * 1000, { verbose: true, verbose :true })
+      if (!cooldown || command.timeout * 1000 - (Date.now() - cooldown.cooldown) > 0) {
+         let timecommand = prettyMilliseconds(command.timeout * 1000, { verbose: true, verbose: true })
 
-        const timeleft = prettyMilliseconds(command.timeout * 1000 - (Date.now() - cooldown.cooldown), {verbose:true})
+         const timeleft = prettyMilliseconds(command.timeout * 1000 - (Date.now() - cooldown.cooldown), { verbose: true })
 
-        let cooldownMessage =  command.cooldownMsg ? command.cooldownMsg.description : `> You can use this command every **${timecommand}**!\n> Try again in: **${timeleft}** `;
+         let cooldownMessage = command.cooldownMsg ? command.cooldownMsg.description : `> You can use this command every **${timecommand}**!\n> Try again in: **${timeleft}** `;
 
-        let cooldownMsg = cooldownMessage.replace("[timeleft]", `${timeleft}`).replace("[cooldown]", `${timecommand}`).replace("[user]", `${message.author.username}`)
+         let cooldownMsg = cooldownMessage.replace("[timeleft]", `${timeleft}`).replace("[cooldown]", `${timecommand}`).replace("[user]", `${message.author.username}`)
 
-        let cooldownEmbed = new MessageEmbed()
-        .setTitle(`${command.cooldownMsg ? command.cooldownMsg.title : "Slow Down!"}`)
-        .setDescription(cooldownMsg)
-        .setColor(`${command.cooldownMsg ? command.cooldownMsg.color : "RED"}`)
-        .setFooter(message.author.username)
-        return message.channel.send({embeds: [cooldownEmbed]})
-    } else {
-      
-      await cooldownSchema.findOneAndUpdate({
-        userID: message.author.id,
-        commandName: command.name
-      }, {
-        cooldown: Date.now()
-      })
-    }
-      
-   } 
+         let cooldownEmbed = new EmbedBuilder()
+            .setTitle(`${command.cooldownMsg ? command.cooldownMsg.title : "Slow Down!"}`)
+            .setDescription(cooldownMsg)
+            .setColor(`${command.cooldownMsg ? command.cooldownMsg.color : "#FF0000"}`)
+            .setFooter({ text: message.author.username })
+         return message.channel.send({ embeds: [cooldownEmbed] })
+      } else {
+
+         await cooldownSchema.findOneAndUpdate({
+            userID: message.author.id,
+            commandName: command.name
+         }, {
+            cooldown: Date.now()
+         })
+      }
+
+   }
    await command.run(client, message, args);
 });
    

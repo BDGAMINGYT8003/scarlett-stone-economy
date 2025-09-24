@@ -1,36 +1,25 @@
-const eco = require('../../schemas/economy')
+const db = require("quick.db");
 
 module.exports = {
-    name: 'setcoin',
-    aliases: ['addcoin', "addcoins", " addc"],
-  timeleft: 100,
-   run: async (client,message, args)=>{
-        const allowed = ['742335160598659094']
+  name: "addcoin",
+  aliases: ["setcoin", "addcoins", "addc"],
+  run: async (client, message, args) => {
+    const allowed = ["742335160598659094"]; // This should probably be in a config file
 
-        if(!allowed.includes(message.author.id)) return
+    if (!allowed.includes(message.author.id)) return;
 
-        const target = message.mentions.users.first() || null
-        if(!target) return message.channel.send(`Please @ the user.`)
-
-        args.shift()
-        const amount = parseInt(args[0]) || null
-        if(!amount || isNaN(amount)) return message.channel.send("Enter a valid amount.")
-        
-        let user = await eco.findOne({ userID: target.id })
-        await eco.findOneAndUpdate({
-                userID: target.id,
-              },
-              {
-                $inc: {
-                  coins: amount,
-                },
-              })
-            user.save()
-            return message.channel.send(`Done! Successfully added ${amount} to ${target} bal`)
-        
-        user.coins = amount
-        user.save()
-        message.channel.send(`Done! Successfully added ${amount} to ${target} bal`)
-
+    const target = message.mentions.users.first();
+    if (!target) {
+      return message.reply("Please @ the user.");
     }
-}
+
+    const amount = parseInt(args[1]);
+    if (isNaN(amount)) {
+      return message.reply("Enter a valid amount.");
+    }
+
+    db.add(`coins_${target.id}`, amount);
+
+    return message.reply(`Done! Successfully added ${amount} to ${target}'s bal`);
+  },
+};

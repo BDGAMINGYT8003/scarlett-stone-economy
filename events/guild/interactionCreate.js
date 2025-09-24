@@ -2,7 +2,7 @@ const client = require("../../index");
 
 client.on("interactionCreate", async (interaction) => {
    // ———————————————[Slash Commands]———————————————
-   if (interaction.isCommand()) {
+   if (interaction.isChatInputCommand()) {
       await interaction.deferReply({ ephemeral: false }).catch(() => {});
 
       const cmd = client.slashCommands.get(interaction.commandName);
@@ -32,7 +32,7 @@ client.on("interactionCreate", async (interaction) => {
    if (interaction.isSelectMenu()) {
    }
    // ———————————————[Context Menu]———————————————
-   if (interaction.isContextMenu()) {
+   if (interaction.isContextMenuCommand()) {
       await interaction.deferReply({ ephemeral: false });
       const command = client.slashCommands.get(interaction.commandName);
       if (command) command.run(client, interaction);
