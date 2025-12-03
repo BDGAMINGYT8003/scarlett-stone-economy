@@ -2,8 +2,8 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBui
 
 const categories = {
     Currency: [
-        { name: '/deposit', description: 'Deposit coins into your bank from your pocket. (Future roadmap command)' },
-        { name: '/withdraw', description: 'Withdraw money from your bank into your pocket. (Future roadmap command)' },
+        { name: '/deposit', description: 'Deposit coins into your bank from your pocket.' },
+        { name: '/withdraw', description: 'Withdraw money from your bank into your pocket.' },
         { name: '/balance', description: 'See someone’s balance, including pocket, bank, net worth, and more.' },
         { name: '/beg', description: 'Beg for coins to help increase your pocket balance.' },
         { name: '/search', description: 'Search various places for items and coins, with some risks.' },
@@ -67,13 +67,13 @@ module.exports = {
             const prevButton = new ButtonBuilder()
                 .setCustomId('prev_page')
                 .setLabel('Previous')
-                .setStyle(ButtonStyle.Secondary)
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(page === 0);
 
             const nextButton = new ButtonBuilder()
                 .setCustomId('next_page')
                 .setLabel('Next')
-                .setStyle(ButtonStyle.Secondary)
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(page >= maxPages - 1);
 
             const row2 = new ActionRowBuilder().addComponents(prevButton, nextButton);

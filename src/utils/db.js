@@ -37,6 +37,11 @@ const addBank = (userId, amount) => {
     db.prepare('UPDATE users SET bank = bank + ? WHERE id = ?').run(amount, userId);
 };
 
+const removeBank = (userId, amount) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET bank = bank - ? WHERE id = ?').run(amount, userId);
+};
+
 const setLastClaimed = (userId, type, timestamp) => {
     getUser(userId);
     db.prepare(`UPDATE users SET ${type}_last_claimed = ? WHERE id = ?`).run(timestamp, userId);
@@ -47,5 +52,6 @@ module.exports = {
     addBalance,
     removeBalance,
     addBank,
+    removeBank,
     setLastClaimed
 };
