@@ -5,7 +5,7 @@ const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../util
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('daily')
-        .setDescription('Claim your daily free coins.'),
+        .setDescription('Each day you can get a small amount of coins and maintain a streak.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 

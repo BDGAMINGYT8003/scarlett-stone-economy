@@ -5,7 +5,7 @@ const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../util
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('weekly')
-        .setDescription('Claim your weekly premium rewards.'),
+        .setDescription('Once per week, get a moderate amount of coins.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 

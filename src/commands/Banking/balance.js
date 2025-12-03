@@ -4,7 +4,7 @@ const db = require('../../utils/db');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('balance')
-        .setDescription('Check your wallet and bank balance.')
+        .setDescription('See someone’s balance, including pocket, bank, net worth, and more.')
         .addUserOption(option =>
             option.setName('user')
                 .setDescription('The user to check balance for')

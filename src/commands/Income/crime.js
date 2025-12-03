@@ -7,7 +7,7 @@ const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('crime')
-        .setDescription('Commit a crime.'),
+        .setDescription('Commit a fake crime for items and coins, with some risk.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 

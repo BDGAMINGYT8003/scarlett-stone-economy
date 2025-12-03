@@ -5,7 +5,7 @@ const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('beg')
-        .setDescription('Ask for coins; low payout but easy to spam.'),
+        .setDescription('Beg for coins to help increase your pocket balance.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 

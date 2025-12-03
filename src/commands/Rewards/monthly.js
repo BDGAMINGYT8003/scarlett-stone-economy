@@ -5,7 +5,7 @@ const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../util
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('monthly')
-        .setDescription('Claim monthly rewards.'),
+        .setDescription('Each month, receive a large amount of coins.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 

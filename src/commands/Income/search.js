@@ -7,7 +7,7 @@ const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('search')
-        .setDescription('Search a location for coins or items.'),
+        .setDescription('Search various places for items and coins, with some risks.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 
