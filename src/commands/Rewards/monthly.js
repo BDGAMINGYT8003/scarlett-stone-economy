@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../utils/db');
+const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,19 +8,17 @@ module.exports = {
         .setDescription('Claim monthly rewards.'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        const userData = db.getUser(userId);
-        const now = Date.now();
-        const cooldown = 30 * 24 * 60 * 60 * 1000; // 30 days (approx)
 
-        if (now - userData.monthly_last_claimed < cooldown) {
-            const remaining = cooldown - (now - userData.monthly_last_claimed);
-            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
-            return interaction.reply({ content: `You can claim your monthly reward again in ${days} days.`, ephemeral: true });
+        const check = checkScheduledCooldown(userId, 'monthly');
+        if (check.onCooldown) {
+            return interaction.reply({
+                embeds: [getScheduleCooldownEmbed('monthly', check.readyAt)]
+            });
         }
 
-        const amount = 100000; // Example amount
+        const amount = 100000;
         db.addBalance(userId, amount);
-        db.setLastClaimed(userId, 'monthly', now);
+        db.setLastClaimed(userId, 'monthly', Date.now());
 
         const embed = new EmbedBuilder()
             .setColor(0x800080)

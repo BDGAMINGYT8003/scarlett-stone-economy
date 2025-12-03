@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../utils/db');
+const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,20 +8,17 @@ module.exports = {
         .setDescription('Claim your weekly premium rewards.'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        const userData = db.getUser(userId);
-        const now = Date.now();
-        const cooldown = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-        if (now - userData.weekly_last_claimed < cooldown) {
-            const remaining = cooldown - (now - userData.weekly_last_claimed);
-            const days = Math.floor(remaining / (24 * 60 * 60 * 1000));
-            const hours = Math.floor((remaining % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-            return interaction.reply({ content: `You can claim your weekly reward again in ${days}d ${hours}h.`, ephemeral: true });
+        const check = checkScheduledCooldown(userId, 'weekly');
+        if (check.onCooldown) {
+            return interaction.reply({
+                embeds: [getScheduleCooldownEmbed('weekly', check.readyAt)]
+            });
         }
 
-        const amount = 25000; // Example amount
+        const amount = 25000;
         db.addBalance(userId, amount);
-        db.setLastClaimed(userId, 'weekly', now);
+        db.setLastClaimed(userId, 'weekly', Date.now());
 
         const embed = new EmbedBuilder()
             .setColor(0xFFA500)

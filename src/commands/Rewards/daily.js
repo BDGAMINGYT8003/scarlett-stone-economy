@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../utils/db');
+const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -7,20 +8,17 @@ module.exports = {
         .setDescription('Claim your daily free coins.'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        const userData = db.getUser(userId);
-        const now = Date.now();
-        const cooldown = 24 * 60 * 60 * 1000; // 24 hours
 
-        if (now - userData.daily_last_claimed < cooldown) {
-            const remaining = cooldown - (now - userData.daily_last_claimed);
-            const hours = Math.floor(remaining / (60 * 60 * 1000));
-            const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-            return interaction.reply({ content: `You can claim your daily reward again in ${hours}h ${minutes}m.`, ephemeral: true });
+        const check = checkScheduledCooldown(userId, 'daily');
+        if (check.onCooldown) {
+            return interaction.reply({
+                embeds: [getScheduleCooldownEmbed('daily', check.readyAt)]
+            });
         }
 
-        const amount = 5000; // Example amount
+        const amount = 5000;
         db.addBalance(userId, amount);
-        db.setLastClaimed(userId, 'daily', now);
+        db.setLastClaimed(userId, 'daily', Date.now());
 
         const embed = new EmbedBuilder()
             .setColor(0xFFFF00)
