@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Elon Musk",
+    "success_chance": 30,
+    "success_quotes": [
+      "Fine, take **֍ {amount}**. Don't spend it all on Dogecoin.",
+      "I'm feeling generous today. Have **֍ {amount}** and go to Mars."
+    ],
+    "fail_quotes": [
+      "I'm too busy tweeting to give you money.",
+      "Crypto is down, ask me later."
+    ]
+  },
+  {
+    "name": "The Rock",
+    "success_chance": 50,
+    "success_quotes": [
+      "It doesn't matter what you want! But here is **֍ {amount}** anyway.",
+      "I see you working hard. Take **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "Can you smell what The Rock is cooking? It's rejection.",
+      "Focus and drive. Earn your own money."
+    ]
+  },
+  {
+    "name": "Your Mom",
+    "success_chance": 90,
+    "success_quotes": [
+      "Oh honey, of course! Here is **֍ {amount}** for ice cream.",
+      "Don't tell your father I gave you **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "We have food at home.",
+      "Go clean your room first."
+    ]
+  },
+  {
+    "name": "Gordon Ramsay",
+    "success_chance": 20,
+    "success_quotes": [
+      "Finally, some good begging. Take **֍ {amount}** and get out.",
+      "Here is **֍ {amount}**. Now don't be an idiot sandwich."
+    ],
+    "fail_quotes": [
+      "THIS BEGGING IS RAW!",
+      "Get out of my kitchen!"
+    ]
+  },
+  {
+    "name": "Shrek",
+    "success_chance": 60,
+    "success_quotes": [
+      "Get out of my swamp! But take **֍ {amount}** with you.",
+      "Better out than in, I always say. Have **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "This is my swamp.",
+      "Donkey, get him out of here."
+    ]
+  },
+  {
+    "name": "Santa Claus",
+    "success_chance": 70,
+    "success_quotes": [
+      "You've been good this year. Ho ho ho, take **֍ {amount}**!",
+      "Here is **֍ {amount}** from my sack."
+    ],
+    "fail_quotes": [
+      "You're on the naughty list.",
+      "Coal for you."
+    ]
+  },
+  {
+    "name": "MrBeast",
+    "success_chance": 40,
+    "success_quotes": [
+      "I just bought this Discord server! Here, have **֍ {amount}**.",
+      "First person to touch this message gets **֍ {amount}**!"
+    ],
+    "fail_quotes": [
+      "Subscribe to my channel first.",
+      "I gave away all my money in the last video."
+    ]
+  },
+  {
+    "name": "Wendy's",
+    "success_chance": 35,
+    "success_quotes": [
+      "Roasted you on Twitter, so here is **֍ {amount}** as compensation.",
+      "Fresh, never frozen coins. **֍ {amount}** for you."
+    ],
+    "fail_quotes": [
+      "Sir, this is a Wendy's.",
+      "Go to McDonald's if you want cheap handouts."
+    ]
+  },
+  {
+    "name": "Rick Astley",
+    "success_chance": 100,
+    "success_quotes": [
+      "Never gonna give you up, but I will give you **֍ {amount}**.",
+      "I just want to tell you how I'm feeling. Have **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "Never gonna let you down (except right now).",
+      "I wouldn't give you up, but I won't give you cash."
+    ]
+  },
+  {
+    "name": "Batman",
+    "success_chance": 25,
+    "success_quotes": [
+      "I'm rich. **֍ {amount}** is nothing to me.",
+      "Justice isn't free, but here is **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "I work alone.",
+      "WHERE IS SHE? (Also, no money for you)"
+    ]
+  },
+  {
+    "name": "SpongeBob",
+    "success_chance": 80,
+    "success_quotes": [
+      "I'm ready! To give you **֍ {amount}**!",
+      "It's the best day ever! Take **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "I need these for Gary's food.",
+      "Barnacles! I'm broke."
+    ]
+  },
+  {
+    "name": "Deadpool",
+    "success_chance": 50,
+    "success_quotes": [
+      "Maximum effort! Here is **֍ {amount}**.",
+      "Did I leave the stove on? Anyway, take **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "I spent it all on chimichangas.",
+      "Fourth wall break: The dev said no."
+    ]
+  },
+  {
+    "name": "Thanos",
+    "success_chance": 50,
+    "success_quotes": [
+      "Perfectly balanced, as all things should be. Have **֍ {amount}**.",
+      "I ignored my destiny once to give you **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "Reality is often disappointing.",
+      "You should have gone for the head."
+    ]
+  },
+  {
+    "name": "Karen",
+    "success_chance": 10,
+    "success_quotes": [
+      "I spoke to the manager and got a refund. Here is **֍ {amount}**.",
+      "Fine! Take **֍ {amount}** and leave me alone!"
+    ],
+    "fail_quotes": [
+      "I want to speak to your manager.",
+      "I'm calling the police."
+    ]
+  },
+  {
+    "name": "Dank Memer",
+    "success_chance": 15,
+    "success_quotes": [
+      "I'm the OG. Take **֍ {amount}**.",
+      "Pls beg... wait, that's old school. Here's **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "L + Ratio.",
+      "Skill issue."
+    ]
+  }
+]

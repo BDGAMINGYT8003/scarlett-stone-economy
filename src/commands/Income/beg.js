@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
+const peoples = require('../../config/peoples.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,26 +18,35 @@ module.exports = {
             });
         }
 
-        const success = Math.random() > 0.3; // 70% chance to succeed
-        if (!success) {
-            setDurationCooldown(userId, 'beg', 20); // Cooldown applies on fail too? Usually yes.
-            const failMessages = [
-                "Stop begging.",
-                "Get a job.",
-                "No coins for you.",
-                "I don't have any change."
-            ];
-            const message = failMessages[Math.floor(Math.random() * failMessages.length)];
-            return interaction.reply({ content: message });
-        }
-
-        const amount = Math.floor(Math.random() * 500) + 1;
-        db.addBalance(userId, amount);
+        // Apply Cooldown immediately as per previous logic (non-interactive)
         setDurationCooldown(userId, 'beg', 20);
 
+        // Select Random Person
+        const person = peoples[Math.floor(Math.random() * peoples.length)];
+
+        // Roll for Success
+        const isSuccess = Math.random() * 100 < person.success_chance;
+
         const embed = new EmbedBuilder()
-            .setColor(0x00FFFF)
-            .setDescription(`You begged and received **֍ ${amount.toLocaleString()}**!`);
+            .setTitle(person.name);
+
+        if (isSuccess) {
+            const amount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
+            db.addBalance(userId, amount);
+
+            const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
+            const formattedQuote = quote.replace('{amount}', amount.toLocaleString());
+
+            embed.setColor(0x00FF00)
+                .setDescription(formattedQuote)
+                .setFooter({ text: 'They felt bad for you' });
+        } else {
+            const quote = person.fail_quotes[Math.floor(Math.random() * person.fail_quotes.length)];
+
+            embed.setColor(0xFF0000)
+                .setDescription(quote)
+                .setFooter({ text: 'They walked away without even glancing at you' });
+        }
 
         await interaction.reply({ embeds: [embed] });
     },
