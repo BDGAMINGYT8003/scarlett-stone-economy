@@ -17,9 +17,9 @@ module.exports = {
             .setColor(0x00FF00)
             .setTitle(`${targetUser.username}'s Balance`)
             .addFields(
-                { name: 'Wallet', value: `${userData.balance} coins`, inline: true },
-                { name: 'Bank', value: `${userData.bank} coins`, inline: true },
-                { name: 'Total', value: `${userData.balance + userData.bank} coins`, inline: true }
+                { name: 'Wallet', value: `֍ ${userData.balance}`, inline: true },
+                { name: 'Bank', value: `֍ ${userData.bank}`, inline: true },
+                { name: 'Total', value: `֍ ${userData.balance + userData.bank}`, inline: true }
             )
             .setTimestamp();
 

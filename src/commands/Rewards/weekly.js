@@ -25,7 +25,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(0xFFA500)
             .setTitle('Weekly Reward')
-            .setDescription(`You claimed your weekly reward of **${amount} coins**!`)
+            .setDescription(`You claimed your weekly reward of **֍ ${amount}**!`)
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
