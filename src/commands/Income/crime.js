@@ -134,6 +134,9 @@ module.exports = {
             releaseLock(userId);
 
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
+                // Set Cooldown on timeout
+                setDurationCooldown(userId, 'crime', 25);
+
                 const disabledRow = new ActionRowBuilder().addComponents(
                     buttons.map(btn => btn.setDisabled(true))
                 );

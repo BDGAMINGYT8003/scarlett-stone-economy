@@ -116,6 +116,9 @@ module.exports = {
             releaseLock(userId);
 
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
+                // Set Cooldown on timeout
+                setDurationCooldown(userId, 'search', 25);
+
                 // If timed out, disable buttons and show message
                 const disabledRow = new ActionRowBuilder().addComponents(
                     buttons.map(btn => btn.setDisabled(true))
