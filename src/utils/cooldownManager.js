@@ -155,8 +155,8 @@ const setDurationCooldown = (userId, commandName, durationSeconds) => {
 const getCooldownEmbed = (commandName, readyAt, defaultSeconds, premiumSeconds) => {
     const readyUnix = Math.floor(readyAt / 1000);
     return new EmbedBuilder()
-        .setTitle("### Easy tiger, let's not rush")
-        .setDescription(`# This command can be used again <t:${readyUnix}:R>\nThe __default__ cooldown is **${defaultSeconds} seconds**\nThe __premium__ cooldown is **${premiumSeconds} seconds**`);
+        .setTitle("Easy tiger, let's not rush")
+        .setDescription(`### This command can be used again <t:${readyUnix}:R>\nThe __default__ cooldown is **${defaultSeconds} seconds**\nThe __premium__ cooldown is **${premiumSeconds} seconds**`);
 };
 
 const getScheduleCooldownEmbed = (commandName, readyAt) => {

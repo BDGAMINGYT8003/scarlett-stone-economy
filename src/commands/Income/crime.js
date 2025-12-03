@@ -1,21 +1,21 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../utils/db');
-const locations = require('../../config/locations.json');
+const crimes = require('../../config/crimes.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('search')
-        .setDescription('Search a location for coins or items.'),
+        .setName('crime')
+        .setDescription('Commit a crime.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'search', 25);
+        const cooldown = checkDurationCooldown(userId, 'crime', 25);
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('search', cooldown.readyAt, 25, 10)]
+                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)]
             });
         }
 
@@ -27,19 +27,19 @@ module.exports = {
             return interaction.reply({ embeds: [lockEmbed], ephemeral: true });
         }
 
-        // Select 3 random unique locations
-        const shuffled = [...locations].sort(() => 0.5 - Math.random());
-        const selectedLocations = shuffled.slice(0, 3);
+        // Select 3 random unique crimes
+        const shuffled = [...crimes].sort(() => 0.5 - Math.random());
+        const selectedCrimes = shuffled.slice(0, 3);
 
         const embed = new EmbedBuilder()
-            .setColor(0xFFA500)
-            .setTitle('**Where do you want to search?**')
-            .setDescription('*Pick an option below to start searching that location!*');
+            .setColor(0x8B0000)
+            .setTitle('**Which crime do you want to commit?**')
+            .setDescription('*Pick an option below to start committing one!*');
 
-        const buttons = selectedLocations.map(loc =>
+        const buttons = selectedCrimes.map(crime =>
             new ButtonBuilder()
-                .setCustomId(`search_${loc.id}`)
-                .setLabel(loc.name)
+                .setCustomId(`crime_${crime.id}`)
+                .setLabel(crime.name)
                 .setStyle(ButtonStyle.Secondary)
         );
 
@@ -58,32 +58,51 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your search session!', ephemeral: true });
+                return i.reply({ content: 'This is not your crime session!', ephemeral: true });
             }
 
-            const locationId = i.customId.replace('search_', '');
-            const location = selectedLocations.find(l => l.id === locationId);
+            const crimeId = i.customId.replace('crime_', '');
+            const crime = selectedCrimes.find(c => c.id === crimeId);
 
-            if (!location) return;
+            if (!crime) return;
 
             // Determine Outcome
-            const isSuccess = Math.random() * 100 < location.success_chance;
+            const isSuccess = Math.random() * 100 < crime.success_chance;
             let amount = 0;
+            let fine = 0;
             let message = "";
-            let outcomeType = isSuccess ? 'success' : 'fail';
-
-            // Select random outcome message
-            const outcomes = location.outcomes[outcomeType];
-            message = outcomes[Math.floor(Math.random() * outcomes.length)];
+            let outcomeKey = 'success'; // Default
 
             if (isSuccess) {
-                amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
+                // Success
+                outcomeKey = 'success';
+                const outcomes = crime.outcomes.success;
+                message = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+                amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
                 db.addBalance(userId, amount);
                 message = message.replace('{amount}', amount.toLocaleString());
+            } else {
+                // Fail - Determine if fined (50/50 for simplicity unless specified otherwise? "Each crime must include two success outcomes and two failure outcomes. One failure outcome should involve no fine, while the other should include a fine")
+                // Let's assume 50/50 chance between fail_safe and fail_fined if user fails.
+                const isFined = Math.random() > 0.5;
+                if (isFined) {
+                    outcomeKey = 'fail_fined';
+                    const outcomes = crime.outcomes.fail_fined;
+                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+                    fine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
+                    db.removeBalance(userId, fine);
+                    message = message.replace('{fine}', fine.toLocaleString());
+                } else {
+                    outcomeKey = 'fail_safe';
+                    const outcomes = crime.outcomes.fail_safe;
+                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                }
             }
 
             // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'search', 25);
+            setDurationCooldown(userId, 'crime', 25);
 
             // Update UI
             const updatedButtons = buttons.map(btn => {
@@ -99,9 +118,9 @@ module.exports = {
 
             const resultEmbed = new EmbedBuilder()
                 .setColor(isSuccess ? 0x00FF00 : 0xFF0000)
-                .setTitle(`${interaction.user.username} searched the ${location.name}`)
+                .setTitle(`${interaction.user.username} committed ${crime.name}`)
                 .setDescription(message)
-                .setFooter({ text: isSuccess ? "Lucky you!" : "Better luck next time." });
+                .setFooter({ text: isSuccess ? "Crime pays!" : "Busted!" });
 
             await i.update({
                 embeds: [resultEmbed],
@@ -112,18 +131,16 @@ module.exports = {
         });
 
         collector.on('end', async (collected, reason) => {
-            // Release lock when collector ends
             releaseLock(userId);
 
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
-                // If timed out, disable buttons and show message
                 const disabledRow = new ActionRowBuilder().addComponents(
                     buttons.map(btn => btn.setDisabled(true))
                 );
 
                 const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('So quiet...')
-                    .setDescription(`Guess <@${userId}> did not want to search anywhere?`);
+                    .setTitle('Chicken?')
+                    .setDescription(`Guess <@${userId}> did not want to commit crimes anymore?`);
 
                 try {
                     await interaction.editReply({
