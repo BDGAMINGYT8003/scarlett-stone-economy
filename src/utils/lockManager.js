@@ -2,7 +2,7 @@
 // Map<userId, expireTimestamp>
 const activeLocks = new Map();
 
-const acquireLock = (userId) => {
+const acquireLock = (userId, duration = 60000) => {
     const now = Date.now();
     if (activeLocks.has(userId)) {
         const expireTime = activeLocks.get(userId);
@@ -10,8 +10,8 @@ const acquireLock = (userId) => {
             return false; // Locked
         }
     }
-    // Lock for 30 seconds by default as a safety net
-    activeLocks.set(userId, now + 30000);
+    // Lock for duration (default 60 seconds) to allow collector to finish cleanly before auto-expiry
+    activeLocks.set(userId, now + duration);
     return true;
 };
 

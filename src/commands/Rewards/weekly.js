@@ -23,7 +23,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(0xFFA500)
             .setTitle('Weekly Reward')
-            .setDescription(`You claimed your weekly reward of **֍ ${amount}**!`)
+            .setDescription(`You claimed your weekly reward of **֍ ${amount.toLocaleString()}**!`)
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

@@ -131,8 +131,6 @@ module.exports = {
         });
 
         collector.on('end', async (collected, reason) => {
-            releaseLock(userId);
-
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
                 // Set Cooldown on timeout
                 setDurationCooldown(userId, 'crime', 25);
@@ -154,6 +152,9 @@ module.exports = {
                     // Message might have been deleted
                 }
             }
+
+            // Release lock when collector ends
+            releaseLock(userId);
         });
     },
 };

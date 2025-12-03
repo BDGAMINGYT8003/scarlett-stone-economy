@@ -36,7 +36,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor(0x00FFFF)
-            .setDescription(`You begged and received **֍ ${amount}**!`);
+            .setDescription(`You begged and received **֍ ${amount.toLocaleString()}**!`);
 
         await interaction.reply({ embeds: [embed] });
     },
