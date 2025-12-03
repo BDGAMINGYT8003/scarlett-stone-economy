@@ -7,6 +7,7 @@ db.prepare(`
         id TEXT PRIMARY KEY,
         balance INTEGER DEFAULT 0,
         bank INTEGER DEFAULT 0,
+        bank_capacity INTEGER DEFAULT 5000,
         daily_last_claimed INTEGER DEFAULT 0,
         weekly_last_claimed INTEGER DEFAULT 0,
         monthly_last_claimed INTEGER DEFAULT 0

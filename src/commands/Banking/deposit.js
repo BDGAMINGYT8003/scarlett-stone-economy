@@ -25,10 +25,15 @@ module.exports = {
             return interaction.reply({ content: `You don't have that much money in your wallet! You only have **֍ ${userData.balance.toLocaleString()}**.`, ephemeral: true });
         }
 
+        // Check Bank Capacity
+        const availableSpace = userData.bank_capacity - userData.bank;
+        if (amount > availableSpace) {
+            return interaction.reply({ content: `You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`, ephemeral: true });
+        }
+
         db.removeBalance(userId, amount);
         db.addBank(userId, amount);
 
-        // Fetch updated data for the embed
         const updatedUser = db.getUser(userId);
 
         const embed = new EmbedBuilder()
