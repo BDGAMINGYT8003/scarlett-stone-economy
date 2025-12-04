@@ -14,23 +14,33 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction) {
         const targetUser = interaction.options.getUser('user') || interaction.user;
-        const inventory = db.getInventory(targetUser.id);
+
+        // Initial Fetch
+        let inventory = db.getInventory(targetUser.id);
+
+        // Helper to refresh data
+        const refreshInventory = () => {
+            inventory = db.getInventory(targetUser.id);
+             // Sort alphabetically
+            inventory.sort((a, b) => {
+                const itemA = items.find(i => i.id === a.item_id);
+                const itemB = items.find(i => i.id === b.item_id);
+                return (itemA?.name || '').localeCompare(itemB?.name || '');
+            });
+        };
+
+        refreshInventory();
 
         if (inventory.length === 0) {
             return interaction.reply({ content: `${targetUser.username} has no items in their inventory.`, ephemeral: true });
         }
 
-        // Sort alphabetically or by ID for consistency
-        inventory.sort((a, b) => {
-            const itemA = items.find(i => i.id === a.item_id);
-            const itemB = items.find(i => i.id === b.item_id);
-            return (itemA?.name || '').localeCompare(itemB?.name || '');
-        });
-
         let currentPage = 0;
-        const maxPages = Math.ceil(inventory.length / ITEMS_PER_PAGE);
+
+        const getMaxPages = () => Math.max(1, Math.ceil(inventory.length / ITEMS_PER_PAGE));
 
         const generateEmbed = (page) => {
+            const maxPages = getMaxPages();
             const start = page * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             const currentItems = inventory.slice(start, end);
@@ -53,21 +63,23 @@ module.exports = {
         };
 
         const generateComponents = (page) => {
+            const maxPages = getMaxPages();
+
             const prevButton = new ButtonBuilder()
                 .setCustomId('inv_prev')
                 .setLabel('Previous')
-                .setStyle(ButtonStyle.Primary) // Requested Blue
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(page === 0);
 
             const refreshButton = new ButtonBuilder()
                 .setCustomId('inv_refresh')
                 .setEmoji('🔄')
-                .setStyle(ButtonStyle.Primary); // Requested Blue
+                .setStyle(ButtonStyle.Primary);
 
             const nextButton = new ButtonBuilder()
                 .setCustomId('inv_next')
                 .setLabel('Next')
-                .setStyle(ButtonStyle.Primary) // Requested Blue
+                .setStyle(ButtonStyle.Primary)
                 .setDisabled(page >= maxPages - 1);
 
             return [new ActionRowBuilder().addComponents(prevButton, refreshButton, nextButton)];
@@ -92,9 +104,15 @@ module.exports = {
             if (i.customId === 'inv_prev') {
                 currentPage = Math.max(0, currentPage - 1);
             } else if (i.customId === 'inv_next') {
+                const maxPages = getMaxPages();
                 currentPage = Math.min(maxPages - 1, currentPage + 1);
             } else if (i.customId === 'inv_refresh') {
-                // Just reload current page
+                refreshInventory();
+                // Reset page if it exceeds new max
+                const maxPages = getMaxPages();
+                if (currentPage >= maxPages) {
+                    currentPage = maxPages - 1;
+                }
             }
 
             await i.update({
