@@ -18,10 +18,20 @@ module.exports = {
                 .setRequired(false)),
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused().toLowerCase();
-        // Filter only usable items
-        const usableItems = items.filter(i => i.usable && i.name.toLowerCase().includes(focusedValue));
+        const userId = interaction.user.id;
+
+        // Get user inventory
+        const inventory = db.getInventory(userId);
+
+        // Filter inventory items that are usable AND match search
+        // We need to map inventory item_ids to item config to check 'usable' property and name
+        const usableUserItems = inventory.map(invItem => {
+            const configItem = items.find(i => i.id === invItem.item_id);
+            return configItem ? { ...configItem, quantity: invItem.quantity } : null;
+        }).filter(item => item && item.usable && item.quantity > 0 && item.name.toLowerCase().includes(focusedValue));
+
         await interaction.respond(
-            usableItems.slice(0, 25).map(i => ({ name: i.name, value: i.id }))
+            usableUserItems.slice(0, 25).map(i => ({ name: `${i.name} (${i.quantity})`, value: i.id }))
         );
     },
     async execute(interaction) {
@@ -65,19 +75,60 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(0x00FF00)
-                .setTitle('Bank Space Expanded!')
-                .setDescription(`Used ${quantity} ${item.emoji} **${item.name}**\n\n**Added Bank Space**\n֍ ${totalAdded.toLocaleString()}\n\n**Total Bank Space**\n֍ ${userData.bank_capacity.toLocaleString()}`)
-                .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nAdded Bank Space: **֍ ${totalAdded.toLocaleString()}**\nTotal Bank Space: **֍ ${userData.bank_capacity.toLocaleString()}**`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
 
             await interaction.reply({ embeds: [embed] });
-        } else {
-            // Generic placeholder for other usable items
+        } else if (item.id === 'alcohol') {
              db.removeItem(userId, item.id, quantity);
              const embed = new EmbedBuilder()
                 .setColor(0x00FF00)
-                .setTitle(`${item.name} Used`)
-                .setDescription(`You used ${quantity} **${item.name}**. It didn't do much yet...`)
-                .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nYou are now drunk. Don't drive!`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
+             await interaction.reply({ embeds: [embed] });
+
+        } else if (item.id === 'lucky_clover') {
+             db.removeItem(userId, item.id, quantity);
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nYou feel luckier!`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
+             await interaction.reply({ embeds: [embed] });
+        } else if (item.id === 'pizza') {
+             db.removeItem(userId, item.id, quantity);
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nYummy! You feel energized.`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
+             await interaction.reply({ embeds: [embed] });
+        } else if (item.id === 'apple') {
+             db.removeItem(userId, item.id, quantity);
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nAn apple a day...`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
+             await interaction.reply({ embeds: [embed] });
+        } else if (item.id === 'padlock') {
+             db.removeItem(userId, item.id, quantity);
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nYour wallet is locked! (Not really implemented yet but pretend it is).`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
+             await interaction.reply({ embeds: [embed] });
+        } else {
+            // Generic fallback
+             db.removeItem(userId, item.id, quantity);
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle('Used')
+                .setDescription(`${quantity} **${item.emoji} ${item.name}** used\nNothing happened.`)
+                .setFooter({ text: `Remaining ${item.name}s in inventory: ${(ownedQuantity - quantity).toLocaleString()}` });
 
              await interaction.reply({ embeds: [embed] });
         }

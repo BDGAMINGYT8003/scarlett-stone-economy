@@ -18,7 +18,7 @@ module.exports = {
             });
         }
 
-        // Apply Cooldown immediately as per previous logic (non-interactive)
+        // Apply Cooldown immediately
         setDurationCooldown(userId, 'beg', 20);
 
         // Select Random Person
@@ -31,15 +31,39 @@ module.exports = {
             .setTitle(person.name);
 
         if (isSuccess) {
-            const amount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
-            db.addBalance(userId, amount);
+            // Check for Special Outcome (Money + Item)
+            let specialOutcome = null;
+            if (person.special_outcomes && person.special_outcomes.length > 0) {
+                 for (const special of person.special_outcomes) {
+                     if (Math.random() * 100 < special.chance) {
+                         specialOutcome = special;
+                         break; // Pick the first success
+                     }
+                 }
+            }
 
-            const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
-            const formattedQuote = quote.replace('{amount}', amount.toLocaleString());
+            if (specialOutcome) {
+                const amount = specialOutcome.bonus_money;
+                db.addBalance(userId, amount);
+                db.addItem(userId, specialOutcome.item_id, 1);
 
-            embed.setColor(0x00FF00)
-                .setDescription(formattedQuote)
-                .setFooter({ text: 'They felt bad for you' });
+                const message = specialOutcome.message.replace('{amount}', amount.toLocaleString());
+
+                embed.setColor(0x00FF00)
+                    .setDescription(message)
+                    .setFooter({ text: 'You got super lucky!' });
+            } else {
+                // Standard Outcome
+                const amount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
+                db.addBalance(userId, amount);
+
+                const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
+                const formattedQuote = quote.replace('{amount}', amount.toLocaleString());
+
+                embed.setColor(0x00FF00)
+                    .setDescription(formattedQuote)
+                    .setFooter({ text: 'They felt bad for you' });
+            }
         } else {
             const quote = person.fail_quotes[Math.floor(Math.random() * person.fail_quotes.length)];
 

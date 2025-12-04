@@ -14,7 +14,15 @@
         "You got banned from the server before you could find anything.",
         "Wumpus chased you away."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 2,
+        "message": "You found **֍ {amount}** inside a boosted server along with a **<:Mouse:1012476827496894534> Mouse**!",
+        "bonus_money": 2000,
+        "item_id": "mouse"
+      }
+    ]
   },
   {
     "name": "Couch",
@@ -31,7 +39,8 @@
         "You touched something sticky... gross. No coins found.",
         "You found a spider instead of money. You ran away."
       ]
-    }
+    },
+    "special_outcomes": []
   },
   {
     "name": "Street",
@@ -48,7 +57,15 @@
         "You got mugged. Better luck next time.",
         "It started raining and you ran home empty-handed."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 5,
+        "message": "You found a suitcase with **֍ {amount}** and a **<:FakeID:1012476827496894534> Fake ID** in the gutter.",
+        "bonus_money": 1000,
+        "item_id": "fake_id"
+      }
+    ]
   },
   {
     "name": "Pocket",
@@ -65,7 +82,15 @@
         "Just lint.",
         "There's a hole in your pocket..."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 1,
+        "message": "Jackpot! You stumbled upon **֍ {amount}** and a **<:AncientCoin:1012476827496894534> Ancient Coin** hidden under the old bookshelf. Luck’s on your side!",
+        "bonus_money": 3120,
+        "item_id": "ancient_coin"
+      }
+    ]
   },
   {
     "name": "Attic",
@@ -82,7 +107,15 @@
         "It's just full of dust and disappointment.",
         "A raccoon attacked you. You fled."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 3,
+        "message": "You found **֍ {amount}** and a spooky **<:Padlock:1012476827496894534> Padlock** in a chest.",
+        "bonus_money": 1500,
+        "item_id": "padlock"
+      }
+    ]
   },
   {
     "name": "Sewer",
@@ -99,6 +132,14 @@
         "It smells terrible and you found nothing.",
         "You saw a red balloon and noped out of there."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 5,
+        "message": "You found **֍ {amount}** and a **<:Trash:1012476827496894534> Trash**... wait, why did you pick that up?",
+        "bonus_money": 500,
+        "item_id": "trash"
+      }
+    ]
   }
 ]

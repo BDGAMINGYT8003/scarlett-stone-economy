@@ -9,6 +9,14 @@
     "fail_quotes": [
       "I'm too busy tweeting to give you money.",
       "Crypto is down, ask me later."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 5,
+        "message": "Elon accidentally dropped a **<:Laptop:1012476827496894534> Laptop** and **֍ {amount}** while walking to his jet!",
+        "bonus_money": 2000,
+        "item_id": "laptop"
+      }
     ]
   },
   {
@@ -21,7 +29,8 @@
     "fail_quotes": [
       "Can you smell what The Rock is cooking? It's rejection.",
       "Focus and drive. Earn your own money."
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Your Mom",
@@ -33,6 +42,14 @@
     "fail_quotes": [
       "We have food at home.",
       "Go clean your room first."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 10,
+        "message": "Mom gave you **֍ {amount}** and a packed lunch... wait, it's a **<:Pizza:1012476827496894534> Pizza**!",
+        "bonus_money": 500,
+        "item_id": "pizza"
+      }
     ]
   },
   {
@@ -45,7 +62,8 @@
     "fail_quotes": [
       "THIS BEGGING IS RAW!",
       "Get out of my kitchen!"
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Shrek",
@@ -57,6 +75,14 @@
     "fail_quotes": [
       "This is my swamp.",
       "Donkey, get him out of here."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 8,
+        "message": "Shrek gave you **֍ {amount}** and... is that a **<:BeggarsBowl:1012476827496894534> Beggars Bowl** filled with onions?",
+        "bonus_money": 1000,
+        "item_id": "beggars_bowl"
+      }
     ]
   },
   {
@@ -69,6 +95,14 @@
     "fail_quotes": [
       "You're on the naughty list.",
       "Coal for you."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 2,
+        "message": "Santa checked his list twice. You get **֍ {amount}** and a shiny **<:Diamond:1012476827496894534> Diamond**!",
+        "bonus_money": 5000,
+        "item_id": "diamond"
+      }
     ]
   },
   {
@@ -81,6 +115,14 @@
     "fail_quotes": [
       "Subscribe to my channel first.",
       "I gave away all my money in the last video."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 5,
+        "message": "MrBeast challenged you to keep your hand on a **<:Keyboard:1012476827496894534> Keyboard** for 24 hours. You won **֍ {amount}** and the keyboard!",
+        "bonus_money": 3000,
+        "item_id": "keyboard"
+      }
     ]
   },
   {
@@ -93,7 +135,8 @@
     "fail_quotes": [
       "Sir, this is a Wendy's.",
       "Go to McDonald's if you want cheap handouts."
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Rick Astley",
@@ -105,7 +148,8 @@
     "fail_quotes": [
       "Never gonna let you down (except right now).",
       "I wouldn't give you up, but I won't give you cash."
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Batman",
@@ -117,6 +161,14 @@
     "fail_quotes": [
       "I work alone.",
       "WHERE IS SHE? (Also, no money for you)"
+    ],
+    "special_outcomes": [
+      {
+        "chance": 3,
+        "message": "I am the night. Take this **<:HuntingRifle:1012476827496894534> Hunting Rifle** and **֍ {amount}**.",
+        "bonus_money": 2500,
+        "item_id": "hunting_rifle"
+      }
     ]
   },
   {
@@ -129,7 +181,8 @@
     "fail_quotes": [
       "I need these for Gary's food.",
       "Barnacles! I'm broke."
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Deadpool",
@@ -141,6 +194,14 @@
     "fail_quotes": [
       "I spent it all on chimichangas.",
       "Fourth wall break: The dev said no."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 4,
+        "message": "Oh hey, here’s something for you, take **֍ {amount}** and this **<:BeggarsBowl:1012476827496894534> Beggars Bowl**. Don’t spend it all on candy!",
+        "bonus_money": 2500,
+        "item_id": "beggars_bowl"
+      }
     ]
   },
   {
@@ -153,6 +214,14 @@
     "fail_quotes": [
       "Reality is often disappointing.",
       "You should have gone for the head."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 1,
+        "message": "A small price to pay for salvation. You found **֍ {amount}** and an **<:AncientCoin:1012476827496894534> Ancient Coin**.",
+        "bonus_money": 5000,
+        "item_id": "ancient_coin"
+      }
     ]
   },
   {
@@ -165,7 +234,8 @@
     "fail_quotes": [
       "I want to speak to your manager.",
       "I'm calling the police."
-    ]
+    ],
+    "special_outcomes": []
   },
   {
     "name": "Dank Memer",
@@ -177,6 +247,14 @@
     "fail_quotes": [
       "L + Ratio.",
       "Skill issue."
+    ],
+    "special_outcomes": [
+      {
+        "chance": 1,
+        "message": "Poggers! You got **֍ {amount}** and a **<:BankNote:1012476827496894534> Bank Note**!",
+        "bonus_money": 5000,
+        "item_id": "bank_note"
+      }
     ]
   }
 ]

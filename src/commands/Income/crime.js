@@ -1,179 +1,159 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../utils/db');
+const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const crimes = require('../../config/crimes.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
-const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('crime')
-        .setDescription('Commit a fake crime for items and coins, with some risk.'),
+        .setDescription('Commit a crime to earn money (or lose it).'),
     async execute(interaction) {
         const userId = interaction.user.id;
+        const user = db.getUser(userId);
+        const walletBalance = user.balance ?? 0;
+
+        // Check Minimum Balance
+        if (walletBalance < 1000) {
+            const poorEmbed = new EmbedBuilder()
+                .setColor(0xFFA500)
+                .setTitle('Too Poor to Commit Crime')
+                .setDescription('You need at least **֍ 1,000** in your wallet to commit a crime. You can\'t risk what you don\'t have!')
+                .setFooter({ text: 'Come back when you have some cash.' });
+            return interaction.reply({ embeds: [poorEmbed], ephemeral: true });
+        }
+
+        // Check Lock
+        if (!acquireLock(userId)) {
+             return interaction.reply({ content: 'You have an ongoing command running. Please finish it first.', ephemeral: true });
+        }
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'crime', 25);
+        const cooldown = checkDurationCooldown(userId, 'crime', 45);
         if (cooldown.onCooldown) {
+            releaseLock(userId);
             return interaction.reply({
-                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)]
+                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 45, 8)]
             });
         }
 
-        // Check Minimum Balance
-        const userData = db.getUser(userId);
-        const userBalance = userData.balance ?? 0;
-        if (userBalance < 1000) {
-             const brokeEmbed = new EmbedBuilder()
-                .setTitle('Too broke for this')
-                .setDescription('You need at least **֍ 1,000** to commit a crime. You can\'t even afford a getaway Uber right now.')
-                .setFooter({ text: 'Imagine being too poor to break the law' })
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [brokeEmbed] });
-        }
-
-        // Check Safety Lock
-        if (!acquireLock(userId)) {
-             const lockEmbed = new EmbedBuilder()
-                .setTitle('Hold tight')
-                .setDescription('You are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.');
-            return interaction.reply({ embeds: [lockEmbed], ephemeral: true });
-        }
-
-        // Select 3 random unique crimes
-        const shuffled = [...crimes].sort(() => 0.5 - Math.random());
+        // Pick 3 random crimes
+        const shuffled = crimes.sort(() => 0.5 - Math.random());
         const selectedCrimes = shuffled.slice(0, 3);
 
-        const embed = new EmbedBuilder()
-            .setColor(0x8B0000)
-            .setTitle('**Which crime do you want to commit?**')
-            .setDescription('*Pick an option below to start committing one!*');
-
-        const buttons = selectedCrimes.map(crime =>
+        const buttons = selectedCrimes.map(c =>
             new ButtonBuilder()
-                .setCustomId(`crime_${crime.id}`)
-                .setLabel(crime.name)
-                .setStyle(ButtonStyle.Secondary)
+                .setCustomId(`crime_${c.id}`)
+                .setLabel(c.name)
+                .setStyle(ButtonStyle.Danger)
         );
 
         const row = new ActionRowBuilder().addComponents(buttons);
 
-        const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            fetchReply: true
-        });
+        const embed = new EmbedBuilder()
+            .setColor(0x8B0000)
+            .setTitle('What crime do you want to commit?')
+            .setDescription('Choose a crime to attempt.')
+            .setFooter({ text: 'You have 15 seconds to choose.' });
 
-        const collector = response.createMessageComponentCollector({
-            componentType: ComponentType.Button,
-            time: 30000
-        });
+        const response = await interaction.reply({ embeds: [embed], components: [row] });
+
+        const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, time: 15000 });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your crime session!', ephemeral: true });
+            if (i.user.id !== userId) {
+                return i.reply({ content: 'These buttons are not for you!', ephemeral: true });
             }
 
             const crimeId = i.customId.replace('crime_', '');
-            const crime = selectedCrimes.find(c => c.id === crimeId);
+            const crime = crimes.find(c => c.id === crimeId);
 
-            if (!crime) return;
+            if (!crime) {
+                setDurationCooldown(userId, 'crime', 45);
+                releaseLock(userId);
+                return i.update({ content: 'Something went wrong.', components: [], embeds: [] });
+            }
 
             // Determine Outcome
-            const isSuccess = Math.random() * 100 < crime.success_chance;
-            let amount = 0;
-            let fine = 0;
-            let message = "";
-            let outcomeKey = 'success'; // Default
+            // Roll: 0-100
+            const roll = Math.random() * 100;
+            const resultEmbed = new EmbedBuilder().setTitle(`Crime Attempt: ${crime.name}`);
 
-            if (isSuccess) {
+            if (roll < crime.success_chance) {
                 // Success
-                outcomeKey = 'success';
-                const outcomes = crime.outcomes.success;
-                message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                let specialOutcome = null;
+                 if (crime.special_outcomes && crime.special_outcomes.length > 0) {
+                     for (const special of crime.special_outcomes) {
+                         if (Math.random() * 100 < special.chance) {
+                             specialOutcome = special;
+                             break;
+                         }
+                     }
+                }
 
-                amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
-                db.addBalance(userId, amount);
-                message = message.replace('{amount}', amount.toLocaleString());
+                if (specialOutcome) {
+                    const amount = specialOutcome.bonus_money;
+                    db.addBalance(userId, amount);
+                    db.addItem(userId, specialOutcome.item_id, 1);
+
+                    const message = specialOutcome.message.replace('{amount}', amount.toLocaleString());
+
+                    resultEmbed.setColor(0x00FF00)
+                        .setDescription(message)
+                        .setFooter({ text: 'Criminal Mastermind!' });
+                } else {
+                    const amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
+                    db.addBalance(userId, amount);
+
+                    const outcomeMsg = crime.outcomes.success[Math.floor(Math.random() * crime.outcomes.success.length)];
+                    resultEmbed.setColor(0x00FF00)
+                        .setDescription(outcomeMsg.replace('{amount}', amount.toLocaleString()));
+                }
+
             } else {
-                // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
-                const isFined = Math.random() > 0.5;
+                // Fail
+                // Split fail into Safe Fail and Fined Fail (50/50 split of remaining chance?)
+                // Actually usually it's just a another roll. Let's say 30% of fails are fines.
+                const isFined = Math.random() < 0.3;
+
                 if (isFined) {
-                    outcomeKey = 'fail_fined';
-                    const outcomes = crime.outcomes.fail_fined;
-                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-                    // Fetch fresh balance to ensure we don't go negative
-                    const currentData = db.getUser(userId);
-                    const currentBalance = currentData.balance ?? 0;
-
-                    let potentialFine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
-
-                    // Cap fine at current balance
-                    fine = Math.min(potentialFine, currentBalance);
+                    let fine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
+                    // Cap fine at wallet balance
+                    const currentWallet = db.getUser(userId).balance ?? 0;
+                    if (fine > currentWallet) fine = currentWallet;
 
                     db.removeBalance(userId, fine);
-                    message = message.replace('{fine}', fine.toLocaleString());
+
+                    const outcomeMsg = crime.outcomes.fail_fined[Math.floor(Math.random() * crime.outcomes.fail_fined.length)];
+                    resultEmbed.setColor(0xFF0000)
+                        .setDescription(outcomeMsg.replace('{fine}', fine.toLocaleString()));
                 } else {
-                    outcomeKey = 'fail_safe';
-                    const outcomes = crime.outcomes.fail_safe;
-                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                    const outcomeMsg = crime.outcomes.fail_safe[Math.floor(Math.random() * crime.outcomes.fail_safe.length)];
+                    resultEmbed.setColor(0xFFA500) // Orange for close call
+                        .setDescription(outcomeMsg);
                 }
             }
 
-            // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'crime', 25);
+            // Set Cooldown HERE
+            setDurationCooldown(userId, 'crime', 45);
 
-            // Update UI
-            const updatedButtons = buttons.map(btn => {
-                const isSelected = btn.data.custom_id === i.customId;
-                btn.setDisabled(true);
-                if (isSelected) {
-                    btn.setStyle(isSuccess ? ButtonStyle.Success : ButtonStyle.Danger);
-                }
-                return btn;
-            });
-
-            const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
-
-            const resultEmbed = new EmbedBuilder()
-                .setColor(isSuccess ? 0x00FF00 : 0xFF0000)
-                .setTitle(`${interaction.user.username} committed ${crime.name}`)
-                .setDescription(message)
-                .setFooter({ text: isSuccess ? "Crime pays!" : "Busted!" });
-
-            await i.update({
-                embeds: [resultEmbed],
-                components: [updatedRow]
-            });
-
-            collector.stop('user_interaction');
+            await i.update({ embeds: [resultEmbed], components: [] });
+            collector.stop('choice_made');
         });
 
-        collector.on('end', async (collected, reason) => {
-            if (reason !== 'user_interaction' && reason !== 'messageDelete') {
-                // Set Cooldown on timeout
-                setDurationCooldown(userId, 'crime', 25);
-
-                const disabledRow = new ActionRowBuilder().addComponents(
-                    buttons.map(btn => btn.setDisabled(true))
-                );
-
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('Chicken?')
-                    .setDescription(`Guess <@${userId}> did not want to commit crimes anymore?`);
-
-                try {
-                    await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledRow]
-                    });
-                } catch (e) {
-                    // Message might have been deleted
-                }
-            }
-
-            // Release lock when collector ends
+        collector.on('end', (collected, reason) => {
             releaseLock(userId);
+            if (reason === 'time') {
+                 // Timeout embed logic
+                 const timeoutEmbed = new EmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle('Crime Timeout')
+                    .setDescription(`You chickened out, <@${userId}>. The opportunity has passed.`)
+                    .setFooter({ text: 'Maybe next time.' });
+
+                interaction.editReply({ embeds: [timeoutEmbed], components: [] });
+                setDurationCooldown(userId, 'crime', 45);
+            }
         });
     },
 };

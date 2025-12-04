@@ -20,7 +20,8 @@
         "The IRS caught you and you had to pay **֍ {fine}** in back taxes.",
         "You got audited and fined **֍ {fine}** for claiming your cat as a dependent."
       ]
-    }
+    },
+    "special_outcomes": []
   },
   {
     "name": "Shoplifting",
@@ -43,7 +44,15 @@
         "Security tackled you. You paid **֍ {fine}** to avoid jail.",
         "You were caught on camera and fined **֍ {fine}**."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 2,
+        "message": "You found **֍ {amount}** after robbing poor people begging on the highway and also found a **<:BeggarsBowl:1012476827496894534> Beggars Bowl**!",
+        "bonus_money": 1588,
+        "item_id": "beggars_bowl"
+      }
+    ]
   },
   {
     "name": "Identity Theft",
@@ -66,7 +75,15 @@
         "You hacked into your own router and fined yourself **֍ {fine}** for stupidity.",
         "The cyber police backtraced you. You paid **֍ {fine}** in legal fees."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 1,
+        "message": "You stole a gamer's identity and found **֍ {amount}** plus their **<:Keyboard:1012476827496894534> Keyboard**.",
+        "bonus_money": 2000,
+        "item_id": "keyboard"
+      }
+    ]
   },
   {
     "name": "Bank Heist",
@@ -89,6 +106,14 @@
         "You tripped over a laser and had to pay **֍ {fine}** for damages.",
         "You attempted a high level heist but tripped over your own shoelaces and had to pay **֍ {fine}** in fines for public clumsiness."
       ]
-    }
+    },
+    "special_outcomes": [
+      {
+        "chance": 2,
+        "message": "You broke into the deposit box and found **֍ {amount}** and a **<:BankNote:1012476827496894534> Bank Note**.",
+        "bonus_money": 10000,
+        "item_id": "bank_note"
+      }
+    ]
   }
 ]

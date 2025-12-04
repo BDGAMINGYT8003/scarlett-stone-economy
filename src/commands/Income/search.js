@@ -1,142 +1,128 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../utils/db');
+const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const locations = require('../../config/locations.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
-const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('search')
-        .setDescription('Search various places for items and coins, with some risks.'),
+        .setDescription('Search for money in various locations.'),
     async execute(interaction) {
         const userId = interaction.user.id;
 
+        // Check Lock
+        if (!acquireLock(userId)) {
+             return interaction.reply({ content: 'You have an ongoing command running. Please finish it first.', ephemeral: true });
+        }
+
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'search', 25);
+        const cooldown = checkDurationCooldown(userId, 'search', 30);
         if (cooldown.onCooldown) {
+            releaseLock(userId);
             return interaction.reply({
-                embeds: [getCooldownEmbed('search', cooldown.readyAt, 25, 10)]
+                embeds: [getCooldownEmbed('search', cooldown.readyAt, 30, 8)]
             });
         }
 
-        // Check Safety Lock
-        if (!acquireLock(userId)) {
-             const lockEmbed = new EmbedBuilder()
-                .setTitle('Hold tight')
-                .setDescription('You are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.');
-            return interaction.reply({ embeds: [lockEmbed], ephemeral: true });
-        }
-
-        // Select 3 random unique locations
-        const shuffled = [...locations].sort(() => 0.5 - Math.random());
+        // Pick 3 random locations
+        const shuffled = locations.sort(() => 0.5 - Math.random());
         const selectedLocations = shuffled.slice(0, 3);
-
-        const embed = new EmbedBuilder()
-            .setColor(0xFFA500)
-            .setTitle('**Where do you want to search?**')
-            .setDescription('*Pick an option below to start searching that location!*');
 
         const buttons = selectedLocations.map(loc =>
             new ButtonBuilder()
                 .setCustomId(`search_${loc.id}`)
                 .setLabel(loc.name)
-                .setStyle(ButtonStyle.Secondary)
+                .setStyle(ButtonStyle.Primary)
         );
 
         const row = new ActionRowBuilder().addComponents(buttons);
 
-        const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            fetchReply: true
-        });
+        const embed = new EmbedBuilder()
+            .setColor(0xFFFF00)
+            .setTitle('Where do you want to search?')
+            .setDescription('Choose a location to search for money.')
+            .setFooter({ text: 'You have 15 seconds to choose.' });
 
-        const collector = response.createMessageComponentCollector({
-            componentType: ComponentType.Button,
-            time: 30000
-        });
+        const response = await interaction.reply({ embeds: [embed], components: [row] });
+
+        const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, time: 15000 });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your search session!', ephemeral: true });
+            if (i.user.id !== userId) {
+                return i.reply({ content: 'These buttons are not for you!', ephemeral: true });
             }
 
             const locationId = i.customId.replace('search_', '');
-            const location = selectedLocations.find(l => l.id === locationId);
+            const location = locations.find(l => l.id === locationId);
 
-            if (!location) return;
+            if (!location) {
+                setDurationCooldown(userId, 'search', 30);
+                releaseLock(userId);
+                return i.update({ content: 'Something went wrong.', components: [], embeds: [] });
+            }
 
             // Determine Outcome
             const isSuccess = Math.random() * 100 < location.success_chance;
-            let amount = 0;
-            let message = "";
-            let outcomeType = isSuccess ? 'success' : 'fail';
 
-            // Select random outcome message
-            const outcomes = location.outcomes[outcomeType];
-            message = outcomes[Math.floor(Math.random() * outcomes.length)];
+            const resultEmbed = new EmbedBuilder().setTitle(`Searched: ${location.name}`);
 
             if (isSuccess) {
-                amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
-                db.addBalance(userId, amount);
-                message = message.replace('{amount}', amount.toLocaleString());
+                // Check Special Outcome
+                let specialOutcome = null;
+                if (location.special_outcomes && location.special_outcomes.length > 0) {
+                     for (const special of location.special_outcomes) {
+                         if (Math.random() * 100 < special.chance) {
+                             specialOutcome = special;
+                             break;
+                         }
+                     }
+                }
+
+                if (specialOutcome) {
+                    const amount = specialOutcome.bonus_money;
+                    db.addBalance(userId, amount);
+                    db.addItem(userId, specialOutcome.item_id, 1);
+
+                    const message = specialOutcome.message.replace('{amount}', amount.toLocaleString());
+
+                    resultEmbed.setColor(0x00FF00)
+                        .setDescription(message)
+                        .setFooter({ text: 'What a find!' });
+                } else {
+                    const amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
+                    db.addBalance(userId, amount);
+
+                    const outcomeMsg = location.outcomes.success[Math.floor(Math.random() * location.outcomes.success.length)];
+                    resultEmbed.setColor(0x00FF00)
+                        .setDescription(outcomeMsg.replace('{amount}', amount.toLocaleString()));
+                }
+            } else {
+                const outcomeMsg = location.outcomes.fail[Math.floor(Math.random() * location.outcomes.fail.length)];
+                resultEmbed.setColor(0xFF0000)
+                    .setDescription(outcomeMsg);
             }
 
-            // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'search', 25);
+            // Set Cooldown HERE
+            setDurationCooldown(userId, 'search', 30);
 
-            // Update UI
-            const updatedButtons = buttons.map(btn => {
-                const isSelected = btn.data.custom_id === i.customId;
-                btn.setDisabled(true);
-                if (isSelected) {
-                    btn.setStyle(isSuccess ? ButtonStyle.Success : ButtonStyle.Danger);
-                }
-                return btn;
-            });
-
-            const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
-
-            const resultEmbed = new EmbedBuilder()
-                .setColor(isSuccess ? 0x00FF00 : 0xFF0000)
-                .setTitle(`${interaction.user.username} searched the ${location.name}`)
-                .setDescription(message)
-                .setFooter({ text: isSuccess ? "Lucky you!" : "Better luck next time." });
-
-            await i.update({
-                embeds: [resultEmbed],
-                components: [updatedRow]
-            });
-
-            collector.stop('user_interaction');
+            await i.update({ embeds: [resultEmbed], components: [] });
+            collector.stop('choice_made');
         });
 
-        collector.on('end', async (collected, reason) => {
-            if (reason !== 'user_interaction' && reason !== 'messageDelete') {
-                // Set Cooldown on timeout
-                setDurationCooldown(userId, 'search', 25);
-
-                // If timed out, disable buttons and show message
-                const disabledRow = new ActionRowBuilder().addComponents(
-                    buttons.map(btn => btn.setDisabled(true))
-                );
-
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('So quiet...')
-                    .setDescription(`Guess <@${userId}> did not want to search anywhere?`);
-
-                try {
-                    await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledRow]
-                    });
-                } catch (e) {
-                    // Message might have been deleted
-                }
-            }
-
-            // Release lock when collector ends (after setting cooldown if needed)
+        collector.on('end', (collected, reason) => {
             releaseLock(userId);
+            if (reason === 'time') {
+                 // Timeout embed logic
+                 const timeoutEmbed = new EmbedBuilder()
+                    .setColor(0xFF0000)
+                    .setTitle('Search Timeout')
+                    .setDescription(`You took too long to choose a location, <@${userId}>. The opportunity has passed.`)
+                    .setFooter({ text: 'Be faster next time!' });
+
+                interaction.editReply({ embeds: [timeoutEmbed], components: [] });
+                setDurationCooldown(userId, 'search', 30);
+            }
         });
     },
 };
