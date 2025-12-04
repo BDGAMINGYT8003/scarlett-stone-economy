@@ -19,6 +19,18 @@ module.exports = {
             });
         }
 
+        // Check Minimum Balance
+        const userData = db.getUser(userId);
+        const userBalance = userData.balance ?? 0;
+        if (userBalance < 1000) {
+             const brokeEmbed = new EmbedBuilder()
+                .setTitle('Too broke for this')
+                .setDescription('You need at least **֍ 1,000** to commit a crime. You can\'t even afford a getaway Uber right now.')
+                .setFooter({ text: 'Imagine being too poor to break the law' })
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [brokeEmbed] });
+        }
+
         // Check Safety Lock
         if (!acquireLock(userId)) {
              const lockEmbed = new EmbedBuilder()
@@ -83,15 +95,22 @@ module.exports = {
                 db.addBalance(userId, amount);
                 message = message.replace('{amount}', amount.toLocaleString());
             } else {
-                // Fail - Determine if fined (50/50 for simplicity unless specified otherwise? "Each crime must include two success outcomes and two failure outcomes. One failure outcome should involve no fine, while the other should include a fine")
-                // Let's assume 50/50 chance between fail_safe and fail_fined if user fails.
+                // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
                 const isFined = Math.random() > 0.5;
                 if (isFined) {
                     outcomeKey = 'fail_fined';
                     const outcomes = crime.outcomes.fail_fined;
                     message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
-                    fine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
+                    // Fetch fresh balance to ensure we don't go negative
+                    const currentData = db.getUser(userId);
+                    const currentBalance = currentData.balance ?? 0;
+
+                    let potentialFine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
+
+                    // Cap fine at current balance
+                    fine = Math.min(potentialFine, currentBalance);
+
                     db.removeBalance(userId, fine);
                     message = message.replace('{fine}', fine.toLocaleString());
                 } else {
