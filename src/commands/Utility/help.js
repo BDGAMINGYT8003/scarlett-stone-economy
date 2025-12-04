@@ -10,7 +10,10 @@ const categories = {
         { name: '/crime', description: 'Commit a fake crime for items and coins, with some risk.' },
         { name: '/daily', description: 'Each day you can get a small amount of coins and maintain a streak.' },
         { name: '/weekly', description: 'Once per week, get a moderate amount of coins.' },
-        { name: '/monthly', description: 'Each month, receive a large amount of coins.' }
+        { name: '/monthly', description: 'Each month, receive a large amount of coins.' },
+        { name: '/item', description: 'View information about an item.' },
+        { name: '/inventory', description: 'View your inventory or someone else’s.' },
+        { name: '/use', description: 'Use an item from your inventory.' }
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' }

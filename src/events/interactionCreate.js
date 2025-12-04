@@ -4,6 +4,20 @@ const { log } = require('../utils/logger');
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
+        // Handle Autocomplete
+        if (interaction.isAutocomplete()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+            if (!command) return;
+
+            try {
+                await command.autocomplete(interaction);
+            } catch (error) {
+                console.error(error);
+            }
+            return;
+        }
+
+        // Handle Slash Commands
         if (!interaction.isChatInputCommand()) return;
 
         const command = interaction.client.commands.get(interaction.commandName);
