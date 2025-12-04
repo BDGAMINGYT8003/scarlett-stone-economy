@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const parseAmount = require('../../utils/numberParser');
 
@@ -16,14 +16,17 @@ module.exports = {
 
         const getEmbed = () => {
             const userData = db.getUser(targetUser.id);
-            const freeSpace = userData.bank_capacity - userData.bank;
+            const balance = userData.balance ?? 0;
+            const bank = userData.bank ?? 0;
+            const bankCapacity = userData.bank_capacity ?? 5000;
+            const freeSpace = bankCapacity - bank;
 
             return new EmbedBuilder()
                 .setColor(0x00FF00)
                 .setTitle(`${targetUser.username}'s Balance`)
                 .addFields(
-                    { name: 'Wallet', value: `֍ ${userData.balance.toLocaleString()}`, inline: false },
-                    { name: 'Bank', value: `Total: ֍ ${userData.bank.toLocaleString()} / ֍ ${userData.bank_capacity.toLocaleString()}\nFree space: ֍ ${freeSpace.toLocaleString()}`, inline: false }
+                    { name: 'Wallet', value: `֍ ${balance.toLocaleString()}`, inline: false },
+                    { name: 'Bank', value: `Total: ֍ ${bank.toLocaleString()} / ֍ ${bankCapacity.toLocaleString()}\nFree space: ֍ ${freeSpace.toLocaleString()}`, inline: false }
                 )
                 .setTimestamp();
         };
@@ -65,7 +68,7 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your balance session!', ephemeral: true });
+                return i.reply({ content: 'This is not your balance session!', flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'balance_refresh') {
@@ -100,22 +103,27 @@ module.exports = {
                     const amountStr = submission.fields.getTextInputValue('amountInput');
                     const userData = db.getUser(targetUser.id);
 
+                    // Safe defaults
+                    const userBalance = userData.balance ?? 0;
+                    const userBank = userData.bank ?? 0;
+                    const userBankCapacity = userData.bank_capacity ?? 5000;
+
                     let amount = 0;
                     let embed = null;
 
                     if (action === 'Deposit') {
-                        amount = parseAmount(amountStr, userData.balance);
+                        amount = parseAmount(amountStr, userBalance);
                         if (amount <= 0) {
-                            await submission.reply({ content: 'Invalid amount specified.', ephemeral: true });
+                            await submission.reply({ content: 'Invalid amount specified.', flags: MessageFlags.Ephemeral });
                             return;
                         }
-                        if (amount > userData.balance) {
-                            await submission.reply({ content: `You don't have that much money in your wallet! You only have **֍ ${userData.balance.toLocaleString()}**.`, ephemeral: true });
+                        if (amount > userBalance) {
+                            await submission.reply({ content: `You don't have that much money in your wallet! You only have **֍ ${userBalance.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
                             return;
                         }
-                        const availableSpace = userData.bank_capacity - userData.bank;
+                        const availableSpace = userBankCapacity - userBank;
                         if (amount > availableSpace) {
-                            await submission.reply({ content: `You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`, ephemeral: true });
+                            await submission.reply({ content: `You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`, flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -123,19 +131,22 @@ module.exports = {
                         db.addBank(targetUser.id, amount);
 
                         const updatedUser = db.getUser(targetUser.id);
+                        const newBalance = updatedUser.balance ?? 0;
+                        const newBank = updatedUser.bank ?? 0;
+
                         embed = new EmbedBuilder()
                             .setColor(0x00FF00)
                             .setTitle('Deposited to Bank')
-                            .setDescription(`**֍ ${amount.toLocaleString()}** deposited.\n\n**Wallet:** ֍ ${updatedUser.balance.toLocaleString()}\n**Bank:** ֍ ${updatedUser.bank.toLocaleString()}`);
+                            .setDescription(`**֍ ${amount.toLocaleString()}** deposited.\n\n**Wallet:** ֍ ${newBalance.toLocaleString()}\n**Bank:** ֍ ${newBank.toLocaleString()}`);
 
                     } else { // Withdraw
-                        amount = parseAmount(amountStr, userData.bank);
+                        amount = parseAmount(amountStr, userBank);
                         if (amount <= 0) {
-                            await submission.reply({ content: 'Invalid amount specified.', ephemeral: true });
+                            await submission.reply({ content: 'Invalid amount specified.', flags: MessageFlags.Ephemeral });
                             return;
                         }
-                        if (amount > userData.bank) {
-                            await submission.reply({ content: `You don't have that much money in your bank! You only have **֍ ${userData.bank.toLocaleString()}**.`, ephemeral: true });
+                        if (amount > userBank) {
+                            await submission.reply({ content: `You don't have that much money in your bank! You only have **֍ ${userBank.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -143,10 +154,13 @@ module.exports = {
                         db.addBalance(targetUser.id, amount);
 
                         const updatedUser = db.getUser(targetUser.id);
+                        const newBalance = updatedUser.balance ?? 0;
+                        const newBank = updatedUser.bank ?? 0;
+
                         embed = new EmbedBuilder()
                             .setColor(0x00FF00)
                             .setTitle('Withdrawn from Bank')
-                            .setDescription(`**֍ ${amount.toLocaleString()}** withdrawn.\n\n**Wallet:** ֍ ${updatedUser.balance.toLocaleString()}\n**Bank:** ֍ ${updatedUser.bank.toLocaleString()}`);
+                            .setDescription(`**֍ ${amount.toLocaleString()}** withdrawn.\n\n**Wallet:** ֍ ${newBalance.toLocaleString()}\n**Bank:** ֍ ${newBank.toLocaleString()}`);
                     }
 
                     await submission.reply({ embeds: [embed] });
