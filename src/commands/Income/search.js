@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../utils/db');
 const locations = require('../../config/locations.json');
+const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -66,20 +67,41 @@ module.exports = {
 
             if (!location) return;
 
-            // Determine Outcome
-            const isSuccess = Math.random() * 100 < location.success_chance;
+            let isSpecial = false;
             let amount = 0;
             let message = "";
-            let outcomeType = isSuccess ? 'success' : 'fail';
+            let item = null;
 
-            // Select random outcome message
-            const outcomes = location.outcomes[outcomeType];
-            message = outcomes[Math.floor(Math.random() * outcomes.length)];
+            // Check for Special Outcome First
+            if (location.special_outcome && Math.random() * 100 < location.special_outcome.chance) {
+                isSpecial = true;
+                const special = location.special_outcome;
+                amount = Math.floor(Math.random() * (special.money_max - special.money_min + 1)) + special.money_min;
+                item = items.find(it => it.id === special.item_id);
 
-            if (isSuccess) {
-                amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
                 db.addBalance(userId, amount);
-                message = message.replace('{amount}', amount.toLocaleString());
+                if (item) {
+                    db.addItem(userId, item.id, 1);
+                }
+
+                message = special.message.replace('{amount}', amount.toLocaleString());
+                if (item) {
+                    message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
+                }
+            } else {
+                // Determine Outcome
+                const isSuccess = Math.random() * 100 < location.success_chance;
+                const outcomeType = isSuccess ? 'success' : 'fail';
+
+                // Select random outcome message
+                const outcomes = location.outcomes[outcomeType];
+                message = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+                if (isSuccess) {
+                    amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
+                    db.addBalance(userId, amount);
+                    message = message.replace('{amount}', amount.toLocaleString());
+                }
             }
 
             // Set Cooldown on successful interaction
@@ -90,7 +112,7 @@ module.exports = {
                 const isSelected = btn.data.custom_id === i.customId;
                 btn.setDisabled(true);
                 if (isSelected) {
-                    btn.setStyle(isSuccess ? ButtonStyle.Success : ButtonStyle.Danger);
+                    btn.setStyle(isSpecial || amount > 0 ? ButtonStyle.Success : ButtonStyle.Danger);
                 }
                 return btn;
             });
@@ -98,10 +120,19 @@ module.exports = {
             const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
 
             const resultEmbed = new EmbedBuilder()
-                .setColor(isSuccess ? 0x00FF00 : 0xFF0000)
                 .setTitle(`${interaction.user.username} searched the ${location.name}`)
-                .setDescription(message)
-                .setFooter({ text: isSuccess ? "Lucky you!" : "Better luck next time." });
+                .setDescription(message);
+
+            if (isSpecial) {
+                resultEmbed.setColor(0xFFD700);
+                resultEmbed.setFooter({ text: 'RARE DROP!' });
+            } else if (amount > 0) {
+                resultEmbed.setColor(0x00FF00);
+                resultEmbed.setFooter({ text: 'Lucky you!' });
+            } else {
+                resultEmbed.setColor(0xFF0000);
+                resultEmbed.setFooter({ text: 'Better luck next time.' });
+            }
 
             await i.update({
                 embeds: [resultEmbed],
