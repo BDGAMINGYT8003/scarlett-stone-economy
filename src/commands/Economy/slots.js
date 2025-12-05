@@ -94,9 +94,8 @@ async function runSlots(interaction, betAmount) {
     }
 
     // Initial State
-    // We need 11 edits.
-    // 1-10: Random frames.
-    // 11: Final result.
+    // We need 5 edits total now (prompt request).
+    // 4 random frames + 1 final result frame.
 
     const getEmbed = (row1, row2, row3, isFinal = false, multiplier = 0) => {
         const currentBalance = (db.getUser(userId).balance ?? 0);
@@ -110,7 +109,7 @@ async function runSlots(interaction, betAmount) {
         desc += `<:emptyspace:1446608999293391140>\n`;
         desc += `<:emptyspace:1446608999293391140>\n`;
         desc += `## <:emptyspace:1446608999293391140> **[** ${row1.join(' ')} **]**\n`;
-        desc += `## <:DoubleArrowRight:863198630688981013> **[** ${row2.join(' ')} **]**${isFinal && multiplier > 0 ? ` \` ${multiplier}x \` ` : ''}\n`;
+        desc += `## <:DoubleArrowRight:1446611400251281542> **[** ${row2.join(' ')} **]**${isFinal && multiplier > 0 ? ` \` ${multiplier}x \` ` : ''}\n`;
         desc += `## <:emptyspace:1446608999293391140> **[** ${row3.join(' ')} **]**\n`;
         desc += `<:emptyspace:1446608999293391140>\n`;
         desc += `<:emptyspace:1446608999293391140>`;
@@ -131,10 +130,6 @@ async function runSlots(interaction, betAmount) {
     );
 
     // Animation Loop
-    // We need to determine the FINAL result first to know if we won, but the prompt says
-    // "On the final edit, show the actual determined result".
-    // We can pre-calculate it.
-
     // Determine Final Rows
     const finalRow1 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
     const finalRow2 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]; // Payline
@@ -142,18 +137,6 @@ async function runSlots(interaction, betAmount) {
 
     const multiplier = calculateMultiplier(finalRow2);
     const winnings = Math.floor(betAmount * multiplier);
-
-    // Send initial frame (Frame 1 of animation? Prompt: "1. Send the initial embed. 2. ... Edit the message 11 times")
-    // If we count the "initial embed" as distinct from the "11 edits", then 12 steps total?
-    // "Edit the message 11 times total".
-    // This implies the message exists, then we edit it 11 times.
-    // So 1 initial + 11 edits = 12 visible states?
-    // Or 1 initial (edit #0 if using button) + 11 edits.
-
-    // Let's assume 11 edits means 11 frames of animation/result update.
-
-    // First, display "Spinning..." state?
-    // The prompt format requires 3 rows of symbols.
 
     // Initial display (before loop):
     if (interaction.isButton() || interaction.isModalSubmit()) {
@@ -176,9 +159,8 @@ async function runSlots(interaction, betAmount) {
          });
     }
 
-    // Now edit 11 times.
-    // 10 times random, 1 time final.
-    for (let i = 0; i < 10; i++) {
+    // Now edit 4 times (random).
+    for (let i = 0; i < 4; i++) {
         await sleep(200);
         await interaction.editReply({
             embeds: [getEmbed(
@@ -189,7 +171,7 @@ async function runSlots(interaction, betAmount) {
         });
     }
 
-    // Final Edit (11th)
+    // Final Edit (5th edit total)
     await sleep(200);
 
     // Update DB if win
