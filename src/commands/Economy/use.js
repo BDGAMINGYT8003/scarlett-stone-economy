@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
 const parseAmount = require('../../utils/numberParser');
@@ -18,10 +18,23 @@ module.exports = {
                 .setRequired(false)),
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused().toLowerCase();
-        // Filter only usable items
-        const usableItems = items.filter(i => i.usable && i.name.toLowerCase().includes(focusedValue));
+        const userId = interaction.user.id;
+
+        // Get user inventory
+        const userInventory = db.getInventory(userId);
+
+        // Filter items that are usable AND owned by user
+        const ownedUsableItems = items.filter(i => {
+            if (!i.usable) return false;
+            // Check if user has at least 1 of this item
+            const invItem = userInventory.find(inv => inv.item_id === i.id);
+            return invItem && invItem.quantity > 0;
+        });
+
+        const filtered = ownedUsableItems.filter(i => i.name.toLowerCase().includes(focusedValue));
+
         await interaction.respond(
-            usableItems.slice(0, 25).map(i => ({ name: i.name, value: i.id }))
+            filtered.slice(0, 25).map(i => ({ name: i.name, value: i.id }))
         );
     },
     async execute(interaction) {
@@ -32,22 +45,22 @@ module.exports = {
         const item = items.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
 
         if (!item) {
-            return interaction.reply({ content: 'Item not found.', ephemeral: true });
+            return interaction.reply({ content: 'Item not found.', flags: MessageFlags.Ephemeral });
         }
 
         if (!item.usable) {
-            return interaction.reply({ content: 'This item cannot be used.', ephemeral: true });
+            return interaction.reply({ content: 'This item cannot be used.', flags: MessageFlags.Ephemeral });
         }
 
         const ownedQuantity = db.getItemCount(userId, item.id);
         const quantity = parseAmount(quantityStr, ownedQuantity);
 
         if (quantity <= 0) {
-             return interaction.reply({ content: 'Invalid quantity.', ephemeral: true });
+             return interaction.reply({ content: 'Invalid quantity.', flags: MessageFlags.Ephemeral });
         }
 
         if (quantity > ownedQuantity) {
-            return interaction.reply({ content: `You don't have enough ${item.name}s! You only have **${ownedQuantity.toLocaleString()}**.`, ephemeral: true });
+            return interaction.reply({ content: `You don't have enough ${item.name}s! You only have **${ownedQuantity.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
         }
 
         // Logic for specific items

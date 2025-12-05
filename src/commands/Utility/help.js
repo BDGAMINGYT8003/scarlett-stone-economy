@@ -17,6 +17,9 @@ const categories = {
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' }
+    ],
+    Admin: [
+        { name: '/grant', description: 'Grants money or items to a user (Developer Only).' }
     ]
 };
 
@@ -61,7 +64,8 @@ module.exports = {
                 .setPlaceholder('Select a category')
                 .addOptions(
                     { label: 'Currency', value: 'Currency', default: category === 'Currency' },
-                    { label: 'Utility', value: 'Utility', default: category === 'Utility' }
+                    { label: 'Utility', value: 'Utility', default: category === 'Utility' },
+                    { label: 'Admin', value: 'Admin', default: category === 'Admin' }
                 );
 
             const row1 = new ActionRowBuilder().addComponents(selectMenu);

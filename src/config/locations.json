@@ -14,6 +14,13 @@
         "You got banned from the server before you could find anything.",
         "Wumpus chased you away."
       ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You found a bug bounty! You earned **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "mouse",
+      "money_min": 1000,
+      "money_max": 2000
     }
   },
   {
@@ -31,6 +38,13 @@
         "You touched something sticky... gross. No coins found.",
         "You found a spider instead of money. You ran away."
       ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "Jackpot! You stumbled upon **֍ {amount}** and a **{item_emoji} {item_name}** hidden under the old bookshelf. Luck’s on your side!",
+      "item_id": "ancient_coin",
+      "money_min": 2500,
+      "money_max": 5000
     }
   },
   {
@@ -48,6 +62,13 @@
         "You got mugged. Better luck next time.",
         "It started raining and you ran home empty-handed."
       ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You found a stash on the street! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "trash",
+      "money_min": 100,
+      "money_max": 500
     }
   },
   {
@@ -82,6 +103,13 @@
         "It's just full of dust and disappointment.",
         "A raccoon attacked you. You fled."
       ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You found a hidden safe in the attic! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "camera",
+      "money_min": 2000,
+      "money_max": 5000
     }
   },
   {
@@ -99,6 +127,13 @@
         "It smells terrible and you found nothing.",
         "You saw a red balloon and noped out of there."
       ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You found a mutant turtle's stash! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "pizza",
+      "money_min": 500,
+      "money_max": 1500
     }
   }
 ]

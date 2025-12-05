@@ -9,7 +9,14 @@
     "fail_quotes": [
       "I'm too busy tweeting to give you money.",
       "Crypto is down, ask me later."
-    ]
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "Elon Musk liked your meme! He gave you **֍ {amount}** and a **{item_emoji} {item_name}** he found in his rocket.",
+      "item_id": "laptop",
+      "money_min": 1000,
+      "money_max": 5000
+    }
   },
   {
     "name": "The Rock",
@@ -33,7 +40,14 @@
     "fail_quotes": [
       "We have food at home.",
       "Go clean your room first."
-    ]
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "Mom loves you! She gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "apple",
+      "money_min": 500,
+      "money_max": 2000
+    }
   },
   {
     "name": "Gordon Ramsay",
@@ -45,7 +59,14 @@
     "fail_quotes": [
       "THIS BEGGING IS RAW!",
       "Get out of my kitchen!"
-    ]
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "Gordon Ramsay loved your dish! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "pizza",
+      "money_min": 1000,
+      "money_max": 3000
+    }
   },
   {
     "name": "Shrek",
@@ -69,7 +90,14 @@
     "fail_quotes": [
       "You're on the naughty list.",
       "Coal for you."
-    ]
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "Santa checked his list twice! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "beggars_bowl",
+      "money_min": 2500,
+      "money_max": 5000
+    }
   },
   {
     "name": "MrBeast",
@@ -81,7 +109,14 @@
     "fail_quotes": [
       "Subscribe to my channel first.",
       "I gave away all my money in the last video."
-    ]
+    ],
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "You won the challenge! MrBeast gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "diamond",
+      "money_min": 10000,
+      "money_max": 50000
+    }
   },
   {
     "name": "Wendy's",
@@ -117,7 +152,14 @@
     "fail_quotes": [
       "I work alone.",
       "WHERE IS SHE? (Also, no money for you)"
-    ]
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "Batman needs help! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "padlock",
+      "money_min": 2000,
+      "money_max": 4000
+    }
   },
   {
     "name": "SpongeBob",
@@ -129,7 +171,14 @@
     "fail_quotes": [
       "I need these for Gary's food.",
       "Barnacles! I'm broke."
-    ]
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "Oh hey, here’s something for you, take **֍ {amount}** and this **{item_emoji} {item_name}**. Don’t spend it all on candy!",
+      "item_id": "beggars_bowl",
+      "money_min": 1500,
+      "money_max": 3000
+    }
   },
   {
     "name": "Deadpool",

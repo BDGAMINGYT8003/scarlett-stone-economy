@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const db = require('../../utils/db');
 const crimes = require('../../config/crimes.json');
+const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -78,45 +79,62 @@ module.exports = {
 
             if (!crime) return;
 
-            // Determine Outcome
-            const isSuccess = Math.random() * 100 < crime.success_chance;
+            let isSpecial = false;
             let amount = 0;
             let fine = 0;
             let message = "";
-            let outcomeKey = 'success'; // Default
+            let item = null;
 
-            if (isSuccess) {
-                // Success
-                outcomeKey = 'success';
-                const outcomes = crime.outcomes.success;
-                message = outcomes[Math.floor(Math.random() * outcomes.length)];
+            // Check for Special Outcome First
+            if (crime.special_outcome && Math.random() * 100 < crime.special_outcome.chance) {
+                isSpecial = true;
+                const special = crime.special_outcome;
+                amount = Math.floor(Math.random() * (special.money_max - special.money_min + 1)) + special.money_min;
+                item = items.find(it => it.id === special.item_id);
 
-                amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
                 db.addBalance(userId, amount);
-                message = message.replace('{amount}', amount.toLocaleString());
+                if (item) {
+                    db.addItem(userId, item.id, 1);
+                }
+
+                message = special.message.replace('{amount}', amount.toLocaleString());
+                if (item) {
+                    message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
+                }
             } else {
-                // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
-                const isFined = Math.random() > 0.5;
-                if (isFined) {
-                    outcomeKey = 'fail_fined';
-                    const outcomes = crime.outcomes.fail_fined;
+                // Regular Outcome
+                const isSuccess = Math.random() * 100 < crime.success_chance;
+
+                if (isSuccess) {
+                    // Success
+                    const outcomes = crime.outcomes.success;
                     message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
-                    // Fetch fresh balance to ensure we don't go negative
-                    const currentData = db.getUser(userId);
-                    const currentBalance = currentData.balance ?? 0;
-
-                    let potentialFine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
-
-                    // Cap fine at current balance
-                    fine = Math.min(potentialFine, currentBalance);
-
-                    db.removeBalance(userId, fine);
-                    message = message.replace('{fine}', fine.toLocaleString());
+                    amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
+                    db.addBalance(userId, amount);
+                    message = message.replace('{amount}', amount.toLocaleString());
                 } else {
-                    outcomeKey = 'fail_safe';
-                    const outcomes = crime.outcomes.fail_safe;
-                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                    // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
+                    const isFined = Math.random() > 0.5;
+                    if (isFined) {
+                        const outcomes = crime.outcomes.fail_fined;
+                        message = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+                        // Fetch fresh balance to ensure we don't go negative
+                        const currentData = db.getUser(userId);
+                        const currentBalance = currentData.balance ?? 0;
+
+                        let potentialFine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
+
+                        // Cap fine at current balance
+                        fine = Math.min(potentialFine, currentBalance);
+
+                        db.removeBalance(userId, fine);
+                        message = message.replace('{fine}', fine.toLocaleString());
+                    } else {
+                        const outcomes = crime.outcomes.fail_safe;
+                        message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                    }
                 }
             }
 
@@ -128,7 +146,7 @@ module.exports = {
                 const isSelected = btn.data.custom_id === i.customId;
                 btn.setDisabled(true);
                 if (isSelected) {
-                    btn.setStyle(isSuccess ? ButtonStyle.Success : ButtonStyle.Danger);
+                    btn.setStyle(isSpecial || (!fine && amount > 0) ? ButtonStyle.Success : ButtonStyle.Danger);
                 }
                 return btn;
             });
@@ -136,10 +154,19 @@ module.exports = {
             const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
 
             const resultEmbed = new EmbedBuilder()
-                .setColor(isSuccess ? 0x00FF00 : 0xFF0000)
                 .setTitle(`${interaction.user.username} committed ${crime.name}`)
-                .setDescription(message)
-                .setFooter({ text: isSuccess ? "Crime pays!" : "Busted!" });
+                .setDescription(message);
+
+            if (isSpecial) {
+                resultEmbed.setColor(0xFFD700);
+                resultEmbed.setFooter({ text: 'RARE DROP!' });
+            } else if (amount > 0) {
+                resultEmbed.setColor(0x00FF00);
+                resultEmbed.setFooter({ text: 'Crime pays!' });
+            } else {
+                resultEmbed.setColor(0xFF0000);
+                resultEmbed.setFooter({ text: 'Busted!' });
+            }
 
             await i.update({
                 embeds: [resultEmbed],

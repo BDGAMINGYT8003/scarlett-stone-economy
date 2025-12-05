@@ -20,6 +20,13 @@
         "The IRS caught you and you had to pay **֍ {fine}** in back taxes.",
         "You got audited and fined **֍ {fine}** for claiming your cat as a dependent."
       ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You found **֍ {amount}** after robbing poor people begging on the highway and also found a **{item_emoji} {item_name}**!",
+      "item_id": "beggars_bowl",
+      "money_min": 1000,
+      "money_max": 2000
     }
   },
   {
@@ -43,6 +50,13 @@
         "Security tackled you. You paid **֍ {fine}** to avoid jail.",
         "You were caught on camera and fined **֍ {fine}**."
       ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You raided the store and found **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "alcohol",
+      "money_min": 500,
+      "money_max": 1500
     }
   },
   {
@@ -66,6 +80,13 @@
         "You hacked into your own router and fined yourself **֍ {fine}** for stupidity.",
         "The cyber police backtraced you. You paid **֍ {fine}** in legal fees."
       ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You stole someone's identity completely! You got **֍ {amount}** and their **{item_emoji} {item_name}**.",
+      "item_id": "laptop",
+      "money_min": 2000,
+      "money_max": 5000
     }
   },
   {
@@ -89,6 +110,13 @@
         "You tripped over a laser and had to pay **֍ {fine}** for damages.",
         "You attempted a high level heist but tripped over your own shoelaces and had to pay **֍ {fine}** in fines for public clumsiness."
       ]
+    },
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "Jackpot! You cleaned out the vault! You got **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "bank_note",
+      "money_min": 10000,
+      "money_max": 30000
     }
   }
 ]
