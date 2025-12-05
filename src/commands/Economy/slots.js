@@ -3,27 +3,27 @@ const db = require('../../utils/db');
 const parseNumber = require('../../utils/numberParser');
 
 const SYMBOLS = [
-    '<:Cookie:981318260463136778>',
-    '<:Coin:1105833876032606350>',
-    '<:LuckyHorseshoe:986396363707281468>',
-    '<:RarePepe:936007340736536626>',
-    '<a:PepeMedal:948673104870252564>',
-    '<a:PepeTrophy:940712966213496842>'
+    '<:Cookie:1446608820196610149>',
+    '<:Coin:1446608996520825002>',
+    '<:LuckyHorseshoe:1446609001600127086>',
+    '<:rarepepe:1446608891965214892>',
+    '<a:PepeMedal:1446609003785228450>',
+    '<a:PepeTrophy:1446609005630984332>'
 ];
 
 const PAYOUTS_TEXT = `-# **\` low risk \`** **\` infrequent matches \`** **\` high payouts \`**
 
-<:Cookie:981318260463136778><:Cookie:981318260463136778><:emptyspace:827651824739156030> - 0.75x
-<:Coin:1105833876032606350><:Coin:1105833876032606350><:emptyspace:827651824739156030> - 1.1x
-<:LuckyHorseshoe:986396363707281468><:LuckyHorseshoe:986396363707281468><:emptyspace:827651824739156030> - 1.2x
-<:RarePepe:936007340736536626><:RarePepe:936007340736536626><:emptyspace:827651824739156030> - 1.5x
-<:Cookie:981318260463136778><:Cookie:981318260463136778><:Cookie:981318260463136778> - 2x
-<a:PepeMedal:948673104870252564><a:PepeMedal:948673104870252564><:emptyspace:827651824739156030> - 2x
-<:Coin:1105833876032606350><:Coin:1105833876032606350><:Coin:1105833876032606350> - 3x
-<:LuckyHorseshoe:986396363707281468><:LuckyHorseshoe:986396363707281468><:LuckyHorseshoe:986396363707281468> - 3x
-<:RarePepe:936007340736536626><:RarePepe:936007340736536626><:RarePepe:936007340736536626> - 7.5x
-<a:PepeMedal:948673104870252564><a:PepeMedal:948673104870252564><a:PepeMedal:948673104870252564> - 25x
-<a:PepeTrophy:940712966213496842><a:PepeTrophy:940712966213496842><a:PepeTrophy:940712966213496842> - 75x`;
+<:Cookie:1446608820196610149><:Cookie:1446608820196610149><:emptyspace:1446608999293391140> - 0.75x
+<:Coin:1446608996520825002><:Coin:1446608996520825002><:emptyspace:1446608999293391140> - 1.1x
+<:LuckyHorseshoe:1446609001600127086><:LuckyHorseshoe:1446609001600127086><:emptyspace:1446608999293391140> - 1.2x
+<:rarepepe:1446608891965214892><:rarepepe:1446608891965214892><:emptyspace:1446608999293391140> - 1.5x
+<:Cookie:1446608820196610149><:Cookie:1446608820196610149><:Cookie:1446608820196610149> - 2x
+<a:PepeMedal:1446609003785228450><a:PepeMedal:1446609003785228450><:emptyspace:1446608999293391140> - 2x
+<:Coin:1446608996520825002><:Coin:1446608996520825002><:Coin:1446608996520825002> - 3x
+<:LuckyHorseshoe:1446609001600127086><:LuckyHorseshoe:1446609001600127086><:LuckyHorseshoe:1446609001600127086> - 3x
+<:rarepepe:1446608891965214892><:rarepepe:1446608891965214892><:rarepepe:1446608891965214892> - 7.5x
+<a:PepeMedal:1446609003785228450><a:PepeMedal:1446609003785228450><a:PepeMedal:1446609003785228450> - 25x
+<a:PepeTrophy:1446609005630984332><a:PepeTrophy:1446609005630984332><a:PepeTrophy:1446609005630984332> - 75x`;
 
 const MIN_BET = 100;
 const MAX_BET = 100000;
@@ -38,21 +38,21 @@ function calculateMultiplier(row) {
 
     // Check 3 matches first
     if (s1 === s2 && s2 === s3) {
-        if (s1 === '<a:PepeTrophy:940712966213496842>') return 75;
-        if (s1 === '<a:PepeMedal:948673104870252564>') return 25;
-        if (s1 === '<:RarePepe:936007340736536626>') return 7.5;
-        if (s1 === '<:LuckyHorseshoe:986396363707281468>') return 3;
-        if (s1 === '<:Coin:1105833876032606350>') return 3;
-        if (s1 === '<:Cookie:981318260463136778>') return 2;
+        if (s1 === '<a:PepeTrophy:1446609005630984332>') return 75;
+        if (s1 === '<a:PepeMedal:1446609003785228450>') return 25;
+        if (s1 === '<:rarepepe:1446608891965214892>') return 7.5;
+        if (s1 === '<:LuckyHorseshoe:1446609001600127086>') return 3;
+        if (s1 === '<:Coin:1446608996520825002>') return 3;
+        if (s1 === '<:Cookie:1446608820196610149>') return 2;
     }
 
     // Check 2 matches (start)
     if (s1 === s2) {
-        if (s1 === '<a:PepeMedal:948673104870252564>') return 2;
-        if (s1 === '<:RarePepe:936007340736536626>') return 1.5;
-        if (s1 === '<:LuckyHorseshoe:986396363707281468>') return 1.2;
-        if (s1 === '<:Coin:1105833876032606350>') return 1.1;
-        if (s1 === '<:Cookie:981318260463136778>') return 0.75;
+        if (s1 === '<a:PepeMedal:1446609003785228450>') return 2;
+        if (s1 === '<:rarepepe:1446608891965214892>') return 1.5;
+        if (s1 === '<:LuckyHorseshoe:1446609001600127086>') return 1.2;
+        if (s1 === '<:Coin:1446608996520825002>') return 1.1;
+        if (s1 === '<:Cookie:1446608820196610149>') return 0.75;
     }
 
     return 0;
@@ -107,13 +107,13 @@ async function runSlots(interaction, betAmount) {
         let desc = `Pocket: **֍ ${currentBalance.toLocaleString()}**\n`;
         desc += `Winnings: **֍ ${winnings.toLocaleString()}**\n`;
         desc += `-# Net: **֍ ${netString}**\n`;
-        desc += `<:emptyspace:827651824739156030>\n`;
-        desc += `<:emptyspace:827651824739156030>\n`;
-        desc += `## <:emptyspace:827651824739156030> **[** ${row1.join(' ')} **]**\n`;
+        desc += `<:emptyspace:1446608999293391140>\n`;
+        desc += `<:emptyspace:1446608999293391140>\n`;
+        desc += `## <:emptyspace:1446608999293391140> **[** ${row1.join(' ')} **]**\n`;
         desc += `## <:DoubleArrowRight:863198630688981013> **[** ${row2.join(' ')} **]**${isFinal && multiplier > 0 ? ` \` ${multiplier}x \` ` : ''}\n`;
-        desc += `## <:emptyspace:827651824739156030> **[** ${row3.join(' ')} **]**\n`;
-        desc += `<:emptyspace:827651824739156030>\n`;
-        desc += `<:emptyspace:827651824739156030>`;
+        desc += `## <:emptyspace:1446608999293391140> **[** ${row3.join(' ')} **]**\n`;
+        desc += `<:emptyspace:1446608999293391140>\n`;
+        desc += `<:emptyspace:1446608999293391140>`;
 
         const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF; // Blue for spinning, Green/Red for result
 
