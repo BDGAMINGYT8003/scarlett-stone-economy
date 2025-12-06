@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
 const categories = {
     Currency: [
@@ -100,7 +100,11 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This help session is not for you!', ephemeral: true });
+                const embed = new EmbedBuilder()
+                    .setTitle('Permission Denied')
+                    .setDescription('This help session is not for you!')
+                    .setColor(0xFF0000);
+                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.componentType === ComponentType.StringSelect) {

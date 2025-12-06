@@ -67,11 +67,15 @@ async function runSlots(interaction, betAmount) {
 
     if (balance < betAmount) {
          // Reply or Edit based on context
-         const content = { content: `You don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`, ephemeral: true };
+         const embed = new EmbedBuilder()
+            .setTitle('Insufficient Funds')
+            .setDescription(`You don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`)
+            .setColor(0xFF0000);
+
          if (interaction.isButton() || interaction.isModalSubmit()) {
-             await interaction.reply(content);
+             await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
          } else {
-             await interaction.reply(content);
+             await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
          }
          return;
     }
@@ -202,10 +206,18 @@ module.exports = {
         const betAmount = parseNumber(betStr, balance);
 
         if (betAmount < MIN_BET) {
-            return interaction.reply({ content: `Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`, ephemeral: true });
+            const embed = new EmbedBuilder()
+                .setTitle('Invalid Bet')
+                .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
         if (betAmount > MAX_BET) {
-            return interaction.reply({ content: `Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`, ephemeral: true });
+             const embed = new EmbedBuilder()
+                .setTitle('Invalid Bet')
+                .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         await runSlots(interaction, betAmount);
@@ -220,8 +232,13 @@ module.exports = {
             const balance = userData.balance ?? 0;
 
             // Check constraints again (in case balance changed or hardcoded constraints changed)
-             if (betAmount < MIN_BET || betAmount > MAX_BET) { // Should not happen with valid IDs but safety
-                return interaction.reply({ content: 'Invalid bet amount.', ephemeral: true });
+             if (betAmount < MIN_BET || betAmount > MAX_BET) {
+                // Should not happen with valid IDs but safety
+                const embed = new EmbedBuilder()
+                    .setTitle('Invalid Bet')
+                    .setDescription('Invalid bet amount.')
+                    .setColor(0xFF0000);
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
 
             await runSlots(interaction, betAmount);
@@ -244,7 +261,11 @@ module.exports = {
             await interaction.showModal(modal);
 
         } else if (customId === 'slots_payouts') {
-            await interaction.reply({ content: PAYOUTS_TEXT, ephemeral: true });
+            const embed = new EmbedBuilder()
+                .setTitle('Slot Machine Payouts')
+                .setDescription(PAYOUTS_TEXT)
+                .setColor(0x00AAFF);
+            await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
     },
     async handleModal(interaction) {
@@ -256,27 +277,19 @@ module.exports = {
             const betAmount = parseNumber(betStr, balance);
 
             if (betAmount < MIN_BET) {
-                return interaction.reply({ content: `Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`, ephemeral: true });
+                 const embed = new EmbedBuilder()
+                    .setTitle('Invalid Bet')
+                    .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
+                    .setColor(0xFF0000);
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
             if (betAmount > MAX_BET) {
-                return interaction.reply({ content: `Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`, ephemeral: true });
+                 const embed = new EmbedBuilder()
+                    .setTitle('Invalid Bet')
+                    .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
+                    .setColor(0xFF0000);
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
-
-            // For modal, runSlots needs to treat it like a fresh reply,
-            // BUT runSlots logic for buttons uses deferUpdate/editReply on existing message.
-            // Modal submit creates a NEW interaction token.
-            // If we want to replace the old slots message, we can't easily do that unless we fetch it (not passed).
-            // Usually, "Change Bet" results in a new game message below.
-            // So runSlots will handle it as a new reply.
-            // Let's adjust runSlots to handle modal interaction correctly (it has reply/editReply).
-
-            // Logic in runSlots:
-            /*
-            if (interaction.isButton()) { await interaction.deferUpdate(); ... }
-            else { await interaction.deferReply(); ... }
-            */
-            // ModalSubmitInteraction is NOT a ButtonInteraction.
-            // So it falls to `else` -> deferReply -> sends new message. This is correct for "Change Bet" resulting in new output.
 
             await runSlots(interaction, betAmount);
         }

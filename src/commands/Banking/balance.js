@@ -68,7 +68,11 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your balance session!', flags: MessageFlags.Ephemeral });
+                const embed = new EmbedBuilder()
+                    .setTitle('Permission Denied')
+                    .setDescription('This is not your balance session!')
+                    .setColor(0xFF0000);
+                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'balance_refresh') {
@@ -114,16 +118,28 @@ module.exports = {
                     if (action === 'Deposit') {
                         amount = parseAmount(amountStr, userBalance);
                         if (amount <= 0) {
-                            await submission.reply({ content: 'Invalid amount specified.', flags: MessageFlags.Ephemeral });
+                            const errorEmbed = new EmbedBuilder()
+                                .setTitle('Invalid Amount')
+                                .setDescription('Invalid amount specified.')
+                                .setColor(0xFF0000);
+                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                             return;
                         }
                         if (amount > userBalance) {
-                            await submission.reply({ content: `You don't have that much money in your wallet! You only have **֍ ${userBalance.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
+                            const errorEmbed = new EmbedBuilder()
+                                .setTitle('Insufficient Funds')
+                                .setDescription(`You don't have that much money in your wallet! You only have **֍ ${userBalance.toLocaleString()}**.`)
+                                .setColor(0xFF0000);
+                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                             return;
                         }
                         const availableSpace = userBankCapacity - userBank;
                         if (amount > availableSpace) {
-                            await submission.reply({ content: `You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`, flags: MessageFlags.Ephemeral });
+                            const errorEmbed = new EmbedBuilder()
+                                .setTitle('Bank Full')
+                                .setDescription(`You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`)
+                                .setColor(0xFF0000);
+                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                             return;
                         }
 
@@ -142,11 +158,19 @@ module.exports = {
                     } else { // Withdraw
                         amount = parseAmount(amountStr, userBank);
                         if (amount <= 0) {
-                            await submission.reply({ content: 'Invalid amount specified.', flags: MessageFlags.Ephemeral });
+                            const errorEmbed = new EmbedBuilder()
+                                .setTitle('Invalid Amount')
+                                .setDescription('Invalid amount specified.')
+                                .setColor(0xFF0000);
+                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                             return;
                         }
                         if (amount > userBank) {
-                            await submission.reply({ content: `You don't have that much money in your bank! You only have **֍ ${userBank.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
+                             const errorEmbed = new EmbedBuilder()
+                                .setTitle('Insufficient Funds')
+                                .setDescription(`You don't have that much money in your bank! You only have **֍ ${userBank.toLocaleString()}**.`)
+                                .setColor(0xFF0000);
+                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                             return;
                         }
 

@@ -45,22 +45,38 @@ module.exports = {
         const item = items.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
 
         if (!item) {
-            return interaction.reply({ content: 'Item not found.', flags: MessageFlags.Ephemeral });
+            const embed = new EmbedBuilder()
+                .setTitle('Item Not Found')
+                .setDescription('Item not found.')
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         if (!item.usable) {
-            return interaction.reply({ content: 'This item cannot be used.', flags: MessageFlags.Ephemeral });
+            const embed = new EmbedBuilder()
+                .setTitle('Unusable Item')
+                .setDescription('This item cannot be used.')
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         const ownedQuantity = db.getItemCount(userId, item.id);
         const quantity = parseAmount(quantityStr, ownedQuantity);
 
         if (quantity <= 0) {
-             return interaction.reply({ content: 'Invalid quantity.', flags: MessageFlags.Ephemeral });
+             const embed = new EmbedBuilder()
+                .setTitle('Invalid Quantity')
+                .setDescription('Invalid quantity.')
+                .setColor(0xFF0000);
+             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         if (quantity > ownedQuantity) {
-            return interaction.reply({ content: `You don't have enough ${item.name}s! You only have **${ownedQuantity.toLocaleString()}**.`, flags: MessageFlags.Ephemeral });
+            const embed = new EmbedBuilder()
+                .setTitle('Insufficient Items')
+                .setDescription(`You don't have enough ${item.name}s! You only have **${ownedQuantity.toLocaleString()}**.`)
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         // Logic for specific items

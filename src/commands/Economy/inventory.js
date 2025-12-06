@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
 
@@ -32,7 +32,11 @@ module.exports = {
         refreshInventory();
 
         if (inventory.length === 0) {
-            return interaction.reply({ content: `${targetUser.username} has no items in their inventory.`, ephemeral: true });
+            const embed = new EmbedBuilder()
+                .setTitle('Empty Inventory')
+                .setDescription(`${targetUser.username} has no items in their inventory.`)
+                .setColor(0xFFFF00);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         let currentPage = 0;
@@ -98,7 +102,11 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your inventory session!', ephemeral: true });
+                const embed = new EmbedBuilder()
+                    .setTitle('Permission Denied')
+                    .setDescription('This is not your inventory session!')
+                    .setColor(0xFF0000);
+                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'inv_prev') {

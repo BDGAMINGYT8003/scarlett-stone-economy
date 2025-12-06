@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
 
@@ -23,7 +23,11 @@ module.exports = {
         const item = items.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
 
         if (!item) {
-            return interaction.reply({ content: 'Item not found.', ephemeral: true });
+            const embed = new EmbedBuilder()
+                .setTitle('Item Not Found')
+                .setDescription('Item not found.')
+                .setColor(0xFF0000);
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         const userId = interaction.user.id;

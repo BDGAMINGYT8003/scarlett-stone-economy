@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
@@ -37,7 +37,7 @@ module.exports = {
              const lockEmbed = new EmbedBuilder()
                 .setTitle('Hold tight')
                 .setDescription('You are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.');
-            return interaction.reply({ embeds: [lockEmbed], ephemeral: true });
+            return interaction.reply({ embeds: [lockEmbed], flags: MessageFlags.Ephemeral });
         }
 
         // Select 3 random unique crimes
@@ -71,7 +71,11 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your crime session!', ephemeral: true });
+                const embed = new EmbedBuilder()
+                    .setTitle('Permission Denied')
+                    .setDescription('This is not your crime session!')
+                    .setColor(0xFF0000);
+                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
 
             const crimeId = i.customId.replace('crime_', '');

@@ -30,8 +30,13 @@ module.exports = {
     },
     async execute(interaction) {
         if (interaction.user.id !== '794482283993235478') {
+            const embed = new EmbedBuilder()
+                .setTitle('Permission Denied')
+                .setDescription('You do not have permission to use this command.')
+                .setColor(0xFF0000)
+                .setFooter({ text: 'Developer Command' });
             return interaction.reply({
-                content: 'You do not have permission to use this command.',
+                embeds: [embed],
                 flags: MessageFlags.Ephemeral
             });
         }
@@ -96,8 +101,13 @@ module.exports = {
         } else {
             const item = items.find(i => i.name === selection);
             if (!item) {
+                const embed = new EmbedBuilder()
+                    .setTitle('Item Not Found')
+                    .setDescription(`Item "${selection}" not found.`)
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'Check the item name and try again' });
                 return interaction.reply({
-                    content: `Item "${selection}" not found.`,
+                    embeds: [embed],
                     flags: MessageFlags.Ephemeral
                 });
             }
