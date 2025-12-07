@@ -16,15 +16,24 @@ module.exports = {
             });
         }
 
-        const amount = 100000;
+        const amount = 500000;
         db.addBalance(userId, amount);
         db.setLastClaimed(userId, 'monthly', Date.now());
 
+        const now = Date.now();
+        // 30 days in seconds
+        const nextMonthlyTimestamp = Math.floor((now + (30 * 24 * 60 * 60 * 1000)) / 1000);
+
         const embed = new EmbedBuilder()
-            .setColor(0x800080)
-            .setTitle('Monthly Reward')
-            .setDescription(`You claimed your monthly reward of **֍ ${amount.toLocaleString()}**!`)
-            .setTimestamp();
+            .setColor(0x800080) // Purple
+            .setTitle(`${interaction.user.username}'s Monthly Coins`)
+            .setDescription(`> **֍ ${amount.toLocaleString()}** was placed in your wallet!`)
+            .addFields(
+                { name: 'Base', value: `֍ ${amount.toLocaleString()}`, inline: true },
+                { name: 'Donor Bonus', value: '֍ 0', inline: true },
+                { name: 'Next Monthly', value: `<t:${nextMonthlyTimestamp}:R>`, inline: true },
+                { name: 'Next Item Reward', value: `<a:MonthlyBoxClosed:861390900219478037> <t:${nextMonthlyTimestamp}:R>`, inline: true }
+            );
 
         await interaction.reply({ embeds: [embed] });
     },

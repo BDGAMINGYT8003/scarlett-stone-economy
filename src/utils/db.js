@@ -11,9 +11,17 @@ db.prepare(`
         bank_capacity INTEGER DEFAULT 5000,
         daily_last_claimed INTEGER DEFAULT 0,
         weekly_last_claimed INTEGER DEFAULT 0,
-        monthly_last_claimed INTEGER DEFAULT 0
+        monthly_last_claimed INTEGER DEFAULT 0,
+        daily_streak INTEGER DEFAULT 0
     )
 `).run();
+
+// Attempt to add daily_streak column if it doesn't exist (migration for existing dbs)
+try {
+    db.prepare('ALTER TABLE users ADD COLUMN daily_streak INTEGER DEFAULT 0').run();
+} catch (error) {
+    // Ignore error if column already exists
+}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -61,6 +69,11 @@ const increaseBankCapacity = (userId, amount) => {
 const setLastClaimed = (userId, type, timestamp) => {
     getUser(userId);
     db.prepare(`UPDATE users SET ${type}_last_claimed = ? WHERE id = ?`).run(timestamp, userId);
+};
+
+const setStreak = (userId, streak) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET daily_streak = ? WHERE id = ?').run(streak, userId);
 };
 
 // Inventory Methods
@@ -117,6 +130,7 @@ module.exports = {
     removeBank,
     increaseBankCapacity,
     setLastClaimed,
+    setStreak,
     addItem,
     removeItem,
     getInventory,
