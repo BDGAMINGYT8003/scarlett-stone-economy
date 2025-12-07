@@ -1,0 +1,182 @@
+[
+  {
+    "id": "discord_mod",
+    "name": "Discord Moderator",
+    "emoji": "🛡️",
+    "req_shifts": 0,
+    "cooldown": 40,
+    "salary": 85000,
+    "daily_req": 0
+  },
+  {
+    "id": "babysitter",
+    "name": "Babysitter",
+    "emoji": "🍼",
+    "req_shifts": 0,
+    "cooldown": 40,
+    "salary": 90000,
+    "daily_req": 0
+  },
+  {
+    "id": "fast_food_worker",
+    "name": "Fast Food Worker",
+    "emoji": "🍔",
+    "req_shifts": 0,
+    "cooldown": 43,
+    "salary": 100000,
+    "daily_req": 1
+  },
+  {
+    "id": "house_sitter",
+    "name": "House Sitter",
+    "emoji": "🏠",
+    "req_shifts": 0,
+    "cooldown": 43,
+    "salary": 110000,
+    "daily_req": 1
+  },
+  {
+    "id": "dog_walker",
+    "name": "Dog Walker",
+    "emoji": "🐕",
+    "req_shifts": 20,
+    "cooldown": 46,
+    "salary": 115000,
+    "daily_req": 2
+  },
+  {
+    "id": "tutor",
+    "name": "Tutor",
+    "emoji": "📚",
+    "req_shifts": 20,
+    "cooldown": 46,
+    "salary": 125000,
+    "daily_req": 2
+  },
+  {
+    "id": "twitch_streamer",
+    "name": "Twitch Streamer",
+    "emoji": "🎮",
+    "req_shifts": 30,
+    "cooldown": 49,
+    "salary": 130000,
+    "daily_req": 3
+  },
+  {
+    "id": "youtuber",
+    "name": "YouTuber",
+    "emoji": "📹",
+    "req_shifts": 30,
+    "cooldown": 49,
+    "salary": 140000,
+    "daily_req": 3
+  },
+  {
+    "id": "professional_gamer",
+    "name": "Professional Gamer",
+    "emoji": "⌨️",
+    "req_shifts": 30,
+    "cooldown": 49,
+    "salary": 150000,
+    "daily_req": 3
+  },
+  {
+    "id": "influencer",
+    "name": "Influencer",
+    "emoji": "📱",
+    "req_shifts": 30,
+    "cooldown": 49,
+    "salary": 175000,
+    "daily_req": 3
+  },
+  {
+    "id": "developer",
+    "name": "Developer",
+    "emoji": "💻",
+    "req_shifts": 40,
+    "cooldown": 49,
+    "salary": 175000,
+    "daily_req": 3
+  },
+  {
+    "id": "teacher",
+    "name": "Teacher",
+    "emoji": "🍎",
+    "req_shifts": 50,
+    "cooldown": 49,
+    "salary": 180000,
+    "daily_req": 3
+  },
+  {
+    "id": "nurse",
+    "name": "Nurse",
+    "emoji": "🏥",
+    "req_shifts": 60,
+    "cooldown": 49,
+    "salary": 190000,
+    "daily_req": 3
+  },
+  {
+    "id": "doctor",
+    "name": "Doctor",
+    "emoji": "🩺",
+    "req_shifts": 80,
+    "cooldown": 49,
+    "salary": 200000,
+    "daily_req": 3
+  },
+  {
+    "id": "musician",
+    "name": "Musician",
+    "emoji": "🎵",
+    "req_shifts": 85,
+    "cooldown": 49,
+    "salary": 205000,
+    "daily_req": 3
+  },
+  {
+    "id": "actor",
+    "name": "Actor",
+    "emoji": "🎬",
+    "req_shifts": 100,
+    "cooldown": 52,
+    "salary": 210000,
+    "daily_req": 4
+  },
+  {
+    "id": "scientist",
+    "name": "Scientist",
+    "emoji": "🔬",
+    "req_shifts": 120,
+    "cooldown": 52,
+    "salary": 215000,
+    "daily_req": 4
+  },
+  {
+    "id": "astronaut",
+    "name": "Astronaut",
+    "emoji": "🚀",
+    "req_shifts": 150,
+    "cooldown": 52,
+    "salary": 220000,
+    "daily_req": 4
+  },
+  {
+    "id": "president",
+    "name": "President",
+    "emoji": "🇺🇸",
+    "req_shifts": 175,
+    "cooldown": 55,
+    "salary": 225000,
+    "daily_req": 5
+  },
+  {
+    "id": "god",
+    "name": "God",
+    "emoji": "☁️",
+    "req_shifts": 185,
+    "cooldown": 55,
+    "salary": 230000,
+    "daily_req": 5
+  }
+]

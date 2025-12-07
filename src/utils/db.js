@@ -12,16 +12,22 @@ db.prepare(`
         daily_last_claimed INTEGER DEFAULT 0,
         weekly_last_claimed INTEGER DEFAULT 0,
         monthly_last_claimed INTEGER DEFAULT 0,
-        daily_streak INTEGER DEFAULT 0
+        daily_streak INTEGER DEFAULT 0,
+        job_id TEXT DEFAULT NULL,
+        shifts_completed_today INTEGER DEFAULT 0,
+        total_shifts_completed INTEGER DEFAULT 0,
+        last_shift_timestamp INTEGER DEFAULT 0,
+        promotions INTEGER DEFAULT 0
     )
 `).run();
 
-// Attempt to add daily_streak column if it doesn't exist (migration for existing dbs)
-try {
-    db.prepare('ALTER TABLE users ADD COLUMN daily_streak INTEGER DEFAULT 0').run();
-} catch (error) {
-    // Ignore error if column already exists
-}
+// Migrations for existing DB
+try { db.prepare('ALTER TABLE users ADD COLUMN daily_streak INTEGER DEFAULT 0').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN job_id TEXT DEFAULT NULL').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN shifts_completed_today INTEGER DEFAULT 0').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN total_shifts_completed INTEGER DEFAULT 0').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN last_shift_timestamp INTEGER DEFAULT 0').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN promotions INTEGER DEFAULT 0').run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -74,6 +80,36 @@ const setLastClaimed = (userId, type, timestamp) => {
 const setStreak = (userId, streak) => {
     getUser(userId);
     db.prepare('UPDATE users SET daily_streak = ? WHERE id = ?').run(streak, userId);
+};
+
+// Job Methods
+const setJob = (userId, jobId) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET job_id = ? WHERE id = ?').run(jobId, userId);
+};
+
+const removeJob = (userId) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET job_id = NULL, shifts_completed_today = 0 WHERE id = ?').run(userId);
+};
+
+const addShift = (userId, timestamp) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET shifts_completed_today = shifts_completed_today + 1, total_shifts_completed = total_shifts_completed + 1, last_shift_timestamp = ? WHERE id = ?').run(timestamp, userId);
+};
+
+const addPromotion = (userId) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET promotions = promotions + 1 WHERE id = ?').run(userId);
+};
+
+const resetDailyShifts = (userId) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET shifts_completed_today = 0 WHERE id = ?').run(userId);
+};
+
+const getAllUsersWithJobs = () => {
+    return db.prepare('SELECT * FROM users WHERE job_id IS NOT NULL').all();
 };
 
 // Inventory Methods
@@ -131,6 +167,12 @@ module.exports = {
     increaseBankCapacity,
     setLastClaimed,
     setStreak,
+    setJob,
+    removeJob,
+    addShift,
+    addPromotion,
+    resetDailyShifts,
+    getAllUsersWithJobs,
     addItem,
     removeItem,
     getInventory,

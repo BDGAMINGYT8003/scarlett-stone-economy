@@ -3,6 +3,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { log } = require('./utils/logger');
 const commandHandler = require('./handlers/commandHandler');
 const eventHandler = require('./handlers/eventHandler');
+const { startCron } = require('./utils/cron');
 
 const client = new Client({
     intents: [
@@ -28,6 +29,9 @@ eventHandler(client);
         // But here I passed client to commandHandler to set client.commands.
         // It's safer to call commandHandler here.
         await commandHandler(client);
+
+        // Start Cron Jobs
+        startCron();
 
     } catch (error) {
         log(error.message, 'error');
