@@ -52,38 +52,8 @@ const checkScheduledCooldown = (userId, type) => {
 
     if (!lastClaimed) return { onCooldown: false };
 
-    // Calculate when the "next" reset was relative to the last claim
-    // Actually, simpler logic:
-    // Calculate the most recent reset time that has passed.
-    // If lastClaimed > recentReset, then they already claimed for this period.
-
-    // Let's re-evaluate "getNextReset".
-    // We want to know if the user claimed *since the last reset*.
-
     const now = Date.now();
     const resetTimestamp = getNextReset(type); // This returns the FUTURE reset.
-
-    // If it's daily, the "period" is [resetTimestamp - 24h, resetTimestamp).
-    // If lastClaimed is in this period, they are on cooldown.
-
-    // Wait, simpler approach:
-    // If I claim at 7 AM. Reset is tomorrow 6 AM.
-    // getNextReset returns tomorrow 6 AM.
-    // If now < tomorrow 6 AM, I might be on cooldown IF I claimed after Today 6 AM.
-
-    // Let's look at the "Previous Reset".
-    // Previous Reset = Next Reset - Period.
-    let periodMs = 0;
-    if (type === 'daily') periodMs = 24 * 3600 * 1000;
-    if (type === 'weekly') periodMs = 7 * 24 * 3600 * 1000;
-    // Monthly is variable, so we can't just subtract.
-
-    // Alternative: Just store the "next reset time" in the DB when they claim?
-    // No, instructions say "should be available to claim each day at 6 AM".
-    // So if I claim at 5:59 AM, I can claim again at 6:01 AM.
-    // If I claim at 6:01 AM, I must wait until tomorrow 6:00 AM.
-
-    // So, we just need to check if `lastClaimed` > `mostRecentReset`.
 
     // Re-implement getMostRecentReset logic
     const currentEST = new Date(now - (5 * 60 * 60 * 1000));
@@ -107,8 +77,6 @@ const checkScheduledCooldown = (userId, type) => {
         } else {
             // Go back to Monday
             const dist = (day + 6) % 7; // distance from Monday (Mon=0, Tue=1... Sun=6)
-            // Wait, (day - 1) handles 1..6. 0 (Sun) -> -1.
-            // (day + 6) % 7: Mon(1)->0, Tue(2)->1, Sun(0)->6. Correct.
             recentReset.setUTCDate(recentReset.getUTCDate() - dist);
         }
     } else if (type === 'monthly') {
