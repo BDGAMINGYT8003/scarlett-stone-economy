@@ -205,8 +205,8 @@ module.exports = {
                     // Dead Meme
                     cooldownTime = 180; // 3 minutes
                     finalEmbed = new EmbedBuilder()
-                        .setTitle(getRandomPhrase('dead', selectedPlatform, selectedType))
-                        .setDescription('**You posted a dead meme, you cannot post another meme for another 3 minutes**')
+                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
+                        .setDescription(`${getRandomPhrase('dead', selectedPlatform, selectedType)}\n\n**You posted a dead meme, you cannot post another meme for another 3 minutes**`)
                         .setFooter({ text: 'RIP your career' })
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
@@ -214,7 +214,8 @@ module.exports = {
                 } else if (outcome.type === 'fail') {
                     // Fail
                     finalEmbed = new EmbedBuilder()
-                        .setTitle(getRandomPhrase('fail', selectedPlatform, selectedType))
+                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
+                        .setDescription(getRandomPhrase('fail', selectedPlatform, selectedType))
                         .setFooter({ text: 'Better luck next time' })
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
@@ -243,12 +244,12 @@ module.exports = {
                         db.addBalance(userId, wonMoney);
                     }
 
-                    let desc = `**You Received:**\n`;
+                    let desc = `${getRandomPhrase('success', selectedPlatform, selectedType)}\n\n**You Received:**\n`;
                     if (wonMoney > 0) desc += `- ֍ ${wonMoney.toLocaleString()}\n`;
                     if (wonItem) desc += `- 1 ${wonItem.emoji} ${wonItem.name}\n`;
 
                     finalEmbed = new EmbedBuilder()
-                        .setTitle(getRandomPhrase('success', selectedPlatform, selectedType))
+                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
                         .setDescription(desc)
                         .setFooter({ text: 'Meme Lord Status: Rising' })
                         .setColor(0x00FF00);
