@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const peoples = require('../../config/peoples.json');
@@ -15,7 +15,8 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'beg', 20);
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('beg', cooldown.readyAt, 20, 8)]
+                embeds: [getCooldownEmbed('beg', cooldown.readyAt, 20, 8)],
+                flags: MessageFlags.Ephemeral
             });
         }
 

@@ -13,7 +13,8 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'highlow', 30);
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('highlow', cooldown.readyAt, 30, 10)]
+                embeds: [getCooldownEmbed('highlow', cooldown.readyAt, 30, 10)],
+                flags: MessageFlags.Ephemeral
             });
         }
 

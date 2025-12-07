@@ -16,7 +16,8 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'crime', 25);
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)]
+                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)],
+                flags: MessageFlags.Ephemeral
             });
         }
 
