@@ -17,10 +17,18 @@ module.exports = {
             return;
         }
 
-        // Handle Buttons and Modals for Slots (and potentially others in future)
+        // Handle Buttons and Modals for Slots, SnakeEyes, etc.
         if (interaction.isButton() || interaction.isModalSubmit()) {
+            let commandName = null;
+
             if (interaction.customId.startsWith('slots_')) {
-                const command = interaction.client.commands.get('slots');
+                commandName = 'slots';
+            } else if (interaction.customId.startsWith('snakeeyes_')) {
+                commandName = 'snakeeyes';
+            }
+
+            if (commandName) {
+                const command = interaction.client.commands.get(commandName);
                 if (command) {
                     try {
                         if (interaction.isButton()) {
@@ -30,7 +38,6 @@ module.exports = {
                         }
                     } catch (error) {
                         console.error(error);
-                        // Try to reply if not already replied
                         if (!interaction.replied && !interaction.deferred) {
                              await interaction.reply({ content: 'Something went wrong processing this interaction.', ephemeral: true });
                         }

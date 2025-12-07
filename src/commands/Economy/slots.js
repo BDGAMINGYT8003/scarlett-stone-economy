@@ -127,11 +127,14 @@ async function runSlots(interaction, betAmount) {
             .setFooter({ text: `Bet: ${betAmount.toLocaleString()} | Min: ֍ ${MIN_BET.toLocaleString()} | Max: ֍ ${MAX_BET.toLocaleString()}` });
     };
 
-    const buttons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId(`slots_spin_again_${betAmount}`).setLabel('Spin Again').setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setCustomId('slots_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary)
-    );
+    // Prepare components (disabled initially)
+    const getButtons = (disabled = false) => {
+        return new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`slots_spin_again_${betAmount}`).setLabel('Spin Again').setStyle(ButtonStyle.Primary).setDisabled(disabled),
+            new ButtonBuilder().setCustomId('slots_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+            new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary).setDisabled(disabled) // Optional to disable this too, keeping consistent
+        );
+    };
 
     // Animation Loop
     // Determine Final Rows
@@ -150,7 +153,7 @@ async function runSlots(interaction, betAmount) {
                  [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
                  [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
              )],
-             components: [buttons]
+             components: [getButtons(true)]
          });
     } else {
          await interaction.editReply({
@@ -159,7 +162,7 @@ async function runSlots(interaction, betAmount) {
                  [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
                  [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
              )],
-             components: [buttons]
+             components: [getButtons(true)]
          });
     }
 
@@ -184,7 +187,8 @@ async function runSlots(interaction, betAmount) {
     }
 
     await interaction.editReply({
-        embeds: [getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier)]
+        embeds: [getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier)],
+        components: [getButtons(false)]
     });
 }
 

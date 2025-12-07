@@ -13,7 +13,9 @@ const categories = {
         { name: '/monthly', description: 'Each month, receive a large amount of coins.' },
         { name: '/item', description: 'View information about an item.' },
         { name: '/inventory', description: 'View your inventory or someone else’s.' },
-        { name: '/use', description: 'Use an item from your inventory.' }
+        { name: '/use', description: 'Use an item from your inventory.' },
+        { name: '/slots', description: 'Bet some coins on the slot machine.' },
+        { name: '/snakeeyes', description: 'Roll the dice for a chance to win big!' }
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' }
