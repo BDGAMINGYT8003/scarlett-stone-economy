@@ -15,7 +15,8 @@ const categories = {
         { name: '/inventory', description: 'View your inventory or someone else’s.' },
         { name: '/use', description: 'Use an item from your inventory.' },
         { name: '/slots', description: 'Bet some coins on the slot machine.' },
-        { name: '/snakeeyes', description: 'Roll the dice for a chance to win big!' }
+        { name: '/snakeeyes', description: 'Roll the dice for a chance to win big!' },
+        { name: '/highlow', description: 'Guess if the secret number is higher or lower!' }
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' }
