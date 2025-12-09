@@ -226,31 +226,7 @@ module.exports = {
     },
 
     async handleStars(interaction) {
-        // Logic: 1 Star per 10 Promotions.
-        // User DB has 'promotions' count.
-        // Formula: Stars = floor(promotions / 10).
-        // Display for *current* job or just generally? Prompt says "View your job mastery progress." and embed shows "Job Name".
-        // It implies tracking stars per job?
-        // But DB structure implemented only has `promotions` as a single integer on user.
-        // If the prompt implies tracking mastery *per job*, I would need a separate table like `user_jobs`.
-        // "Working 10+ shifts in a single day grants 'Promotion Progress'. Getting 10 Promotions grants 1 Star for that job."
-        // Given current simple DB implementation in Step 1 (columns on user table), I can only track global stars or current job stars if I assume promotions reset on job change.
-        // Prompt 3 says "Removes the user's current job" for Resign.
-        // Let's assume 'promotions' are global or tied to current job.
-        // However, "Embed: ` [StarCount] ` [Job Name]" implies a list.
-        // If I need to track per job, I need a new table `job_mastery`.
-
-        // I will implement a global mastery for the *current* job for now based on the DB schema I wrote.
-        // Or I can query the `promotions` and assume it applies to the *current* job?
-        // But the embed example shows a LIST of jobs.
-        // This implies I missed a requirement for persistent job history.
-        // Since I cannot change DB schema easily without migration logic again, and I already committed DB changes...
-        // Wait, I can add a table if needed.
-        // Let's try to stick to the single 'promotions' column for the *current* job, and maybe just show the current job in the list?
-        // Or, maybe I should add a `user_job_stats` table to track stars per job.
-        // Given the complexity constraints and "Implement subcommands", I'll add a helper table for job stars now.
-
-        // Quick DB update for job stars:
+        // Quick DB update for job stars if not exists
         try {
             db.prepare(`
                 CREATE TABLE IF NOT EXISTS user_job_stats (
@@ -268,14 +244,6 @@ module.exports = {
         };
 
         const userStars = getJobStars(interaction.user.id);
-        // If empty, user has no stars.
-
-        const userData = db.getUser(interaction.user.id);
-
-        // Also need to handle "Promotion Progress".
-        // If I track promotions on `users` table, is that global?
-        // Let's assume `promotions` on `users` table tracks progress towards the NEXT star for the CURRENT job.
-        // When `promotions` >= 10, we increment stars in `user_job_stats` and reset `promotions`.
 
         let desc = '> Earn stars by getting 10 promotions!\n\n';
 
@@ -292,7 +260,7 @@ module.exports = {
             .setTitle('Work Stars')
             .setDescription(desc)
             .setColor(0xFFD700)
-            .setFooter({ text: 'Page 1 of 1' }); // Pagination not strictly needed if list is small, but keeping structure
+            .setFooter({ text: 'Page 1 of 1' });
 
         await interaction.reply({ embeds: [embed] });
     },
@@ -316,22 +284,17 @@ module.exports = {
         }
 
         // Check Cooldown
-        // Duration is in minutes in JSON. Convert to seconds.
-        // Donor logic: 50% cooldown. (Assuming checking donor status via... standard?
-        // I don't have a donor check helper. I'll stick to standard for now or assume a placeholder).
-        // Let's assume standard cooldown for MVP unless I see donor logic elsewhere.
-        // Prompt: "If the user is a donor...". I'll skip complex donor check and use standard for now,
-        // or add a placeholder `isDonor` check.
-        const isDonor = false; // Placeholder
-        const cooldownMinutes = isDonor ? job.cooldown / 2 : job.cooldown;
-        const cooldownSeconds = cooldownMinutes * 60;
+        const defaultCooldownSeconds = job.cooldown * 60; // minutes to seconds
+        const premiumCooldownSeconds = Math.floor(defaultCooldownSeconds / 2); // 50%
 
-        const cooldown = checkDurationCooldown(userId, 'work_shift', cooldownSeconds);
+        const cooldown = checkDurationCooldown(userId, 'work_shift');
         if (cooldown.onCooldown) {
             const readyUnix = Math.floor(cooldown.readyAt / 1000);
+
+            // Custom embed format for Work Shift as requested
             const embed = new EmbedBuilder()
                 .setTitle("Easy tiger, let's not rush")
-                .setDescription(`You can start your next shift <t:${readyUnix}:R>.`)
+                .setDescription(`### You can start your next shift again <t:${readyUnix}:R>.\nThe __default__ cooldown is **${defaultCooldownSeconds} seconds**\nThe __premium__ cooldown is **${premiumCooldownSeconds} seconds**`)
                 .setColor(0xFF0000);
             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
@@ -340,13 +303,13 @@ module.exports = {
         const gameType = Math.random() < 0.5 ? 'RPS' : 'TicTacToe';
 
         if (gameType === 'RPS') {
-            await this.playRPS(interaction, job, userData);
+            await this.playRPS(interaction, job, userData, defaultCooldownSeconds, premiumCooldownSeconds);
         } else {
-            await this.playTicTacToe(interaction, job, userData);
+            await this.playTicTacToe(interaction, job, userData, defaultCooldownSeconds, premiumCooldownSeconds);
         }
     },
 
-    async playRPS(interaction, job, userData) {
+    async playRPS(interaction, job, userData, defaultSeconds, premiumSeconds) {
         const embed = new EmbedBuilder()
             .setTitle('Work Shift: RPS')
             .setDescription('Your shift has started! Beat the boss at RPS to finish work!')
@@ -387,12 +350,12 @@ module.exports = {
                 result = 'lose';
             }
 
-            await this.finishShift(i, result === 'win', job, userData);
+            await this.finishShift(i, result === 'win', job, userData, defaultSeconds, premiumSeconds);
             collector.stop();
         });
     },
 
-    async playTicTacToe(interaction, job, userData) {
+    async playTicTacToe(interaction, job, userData, defaultSeconds, premiumSeconds) {
         // Simple 3x3 grid logic
         let board = Array(9).fill(null);
 
@@ -443,14 +406,14 @@ module.exports = {
 
             // Check Win
             if (this.checkTTTWin(board, 'X')) {
-                await this.finishShift(i, true, job, userData);
+                await this.finishShift(i, true, job, userData, defaultSeconds, premiumSeconds);
                 collector.stop();
                 return;
             }
 
             // Check Draw (Full board)
             if (!board.includes(null)) {
-                await this.finishShift(i, false, job, userData); // Draw = Partial
+                await this.finishShift(i, false, job, userData, defaultSeconds, premiumSeconds); // Draw = Partial
                 collector.stop();
                 return;
             }
@@ -462,7 +425,7 @@ module.exports = {
 
             // Check Loss
             if (this.checkTTTWin(board, 'O')) {
-                await this.finishShift(i, false, job, userData);
+                await this.finishShift(i, false, job, userData, defaultSeconds, premiumSeconds);
                 collector.stop();
                 return;
             }
@@ -480,7 +443,7 @@ module.exports = {
         return lines.some(line => line.every(idx => board[idx] === player));
     },
 
-    async finishShift(interaction, success, job, userData) {
+    async finishShift(interaction, success, job, userData, defaultSeconds, premiumSeconds) {
         const userId = interaction.user.id;
         let salary = job.salary;
 
@@ -490,11 +453,8 @@ module.exports = {
 
         db.addBalance(userId, salary);
 
-        // Cooldown set
-        const isDonor = false;
-        const cooldownMinutes = isDonor ? job.cooldown / 2 : job.cooldown;
-        const cooldownSeconds = cooldownMinutes * 60;
-        setDurationCooldown(userId, 'work_shift', cooldownSeconds);
+        // Set Duration Cooldown
+        setDurationCooldown(userId, 'work_shift', defaultSeconds, premiumSeconds);
 
         // Update Job Stats
         db.addShift(userId, Date.now());
