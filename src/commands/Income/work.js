@@ -291,10 +291,14 @@ module.exports = {
         if (cooldown.onCooldown) {
             const readyUnix = Math.floor(cooldown.readyAt / 1000);
 
+            // Format minutes string
+            const defaultMins = `${Math.floor(defaultCooldownSeconds / 60)} minutes`;
+            const premiumMins = `${Math.floor(premiumCooldownSeconds / 60)} minutes`;
+
             // Custom embed format for Work Shift as requested
             const embed = new EmbedBuilder()
                 .setTitle("Easy tiger, let's not rush")
-                .setDescription(`### You can start your next shift again <t:${readyUnix}:R>.\nThe __default__ cooldown is **${defaultCooldownSeconds} seconds**\nThe __premium__ cooldown is **${premiumCooldownSeconds} seconds**`)
+                .setDescription(`### You can start your next shift again <t:${readyUnix}:R>.\nThe __default__ cooldown for working as **${job.name}** is **${defaultMins}**\nThe __premium__ cooldown for working as **${job.name}** is **${premiumMins}**`)
                 .setColor(0xFF0000);
             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
