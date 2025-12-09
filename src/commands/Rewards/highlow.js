@@ -10,7 +10,7 @@ module.exports = {
         const userId = interaction.user.id;
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'highlow', 30);
+        const cooldown = checkDurationCooldown(userId, 'highlow');
         if (cooldown.onCooldown) {
             return interaction.reply({
                 embeds: [getCooldownEmbed('highlow', cooldown.readyAt, 30, 10)],
@@ -114,7 +114,7 @@ module.exports = {
             );
 
             // Apply Cooldown
-            setDurationCooldown(userId, 'highlow', 30);
+            setDurationCooldown(userId, 'highlow', 30, 10);
 
             await i.update({
                 embeds: [resultEmbed],
@@ -127,7 +127,7 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason === 'time') {
                 // Apply cooldown on timeout
-                setDurationCooldown(userId, 'highlow', 30);
+                setDurationCooldown(userId, 'highlow', 30, 10);
 
                 const timeoutEmbed = new EmbedBuilder()
                     .setTitle(`${interaction.user.username}'s expired High-Low Game`)

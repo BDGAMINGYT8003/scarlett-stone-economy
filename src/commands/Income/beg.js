@@ -12,7 +12,7 @@ module.exports = {
         const userId = interaction.user.id;
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'beg', 20);
+        const cooldown = checkDurationCooldown(userId, 'beg');
         if (cooldown.onCooldown) {
             return interaction.reply({
                 embeds: [getCooldownEmbed('beg', cooldown.readyAt, 20, 8)],
@@ -20,8 +20,8 @@ module.exports = {
             });
         }
 
-        // Apply Cooldown immediately as per previous logic (non-interactive)
-        setDurationCooldown(userId, 'beg', 20);
+        // Apply Cooldown (20s default, 8s premium)
+        setDurationCooldown(userId, 'beg', 20, 8);
 
         // Select Random Person
         const person = peoples[Math.floor(Math.random() * peoples.length)];

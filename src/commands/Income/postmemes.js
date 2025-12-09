@@ -105,7 +105,7 @@ module.exports = {
         }
 
         // 2. Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'postmemes', 35);
+        const cooldown = checkDurationCooldown(userId, 'postmemes');
         if (cooldown.onCooldown) {
             return interaction.reply({
                 embeds: [getCooldownEmbed('postmemes', cooldown.readyAt, 35, 12)],
@@ -200,10 +200,12 @@ module.exports = {
                 let finalEmbed;
                 let buttonStyle;
                 let cooldownTime = 35; // Default
+                let premiumCooldownTime = 12; // Premium
 
                 if (outcome.type === 'dead') {
                     // Dead Meme
                     cooldownTime = 180; // 3 minutes
+                    premiumCooldownTime = 180; // Dead meme punishment is typically not reduced, or maybe it is? Prompt said "rises to THREE MINUTES". Doesn't specify donor exception. Assuming standard punishment.
                     finalEmbed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}'s Meme Posting Session`)
                         .setDescription(`${getRandomPhrase('dead', selectedPlatform, selectedType)}\n\n**You posted a dead meme, you cannot post another meme for another 3 minutes**`)
@@ -256,7 +258,7 @@ module.exports = {
                     buttonStyle = ButtonStyle.Success;
                 }
 
-                setDurationCooldown(userId, 'postmemes', cooldownTime);
+                setDurationCooldown(userId, 'postmemes', cooldownTime, premiumCooldownTime);
 
                 // Disable all
                 const disabledRow1 = new ActionRowBuilder().addComponents(

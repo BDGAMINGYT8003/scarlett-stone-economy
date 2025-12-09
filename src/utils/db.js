@@ -17,7 +17,8 @@ db.prepare(`
         shifts_completed_today INTEGER DEFAULT 0,
         total_shifts_completed INTEGER DEFAULT 0,
         last_shift_timestamp INTEGER DEFAULT 0,
-        promotions INTEGER DEFAULT 0
+        promotions INTEGER DEFAULT 0,
+        is_premium INTEGER DEFAULT 0
     )
 `).run();
 
@@ -28,6 +29,7 @@ try { db.prepare('ALTER TABLE users ADD COLUMN shifts_completed_today INTEGER DE
 try { db.prepare('ALTER TABLE users ADD COLUMN total_shifts_completed INTEGER DEFAULT 0').run(); } catch (e) {}
 try { db.prepare('ALTER TABLE users ADD COLUMN last_shift_timestamp INTEGER DEFAULT 0').run(); } catch (e) {}
 try { db.prepare('ALTER TABLE users ADD COLUMN promotions INTEGER DEFAULT 0').run(); } catch (e) {}
+try { db.prepare('ALTER TABLE users ADD COLUMN is_premium INTEGER DEFAULT 0').run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -38,6 +40,7 @@ db.prepare(`
     )
 `).run();
 
+// User Methods
 const getUser = (userId) => {
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     if (!user) {
@@ -47,6 +50,18 @@ const getUser = (userId) => {
     return user;
 };
 
+// Premium Methods
+const isPremium = (userId) => {
+    const user = getUser(userId);
+    return !!user.is_premium;
+};
+
+const setPremium = (userId, status) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET is_premium = ? WHERE id = ?').run(status ? 1 : 0, userId);
+};
+
+// Economy Methods
 const addBalance = (userId, amount) => {
     getUser(userId);
     db.prepare('UPDATE users SET balance = balance + ? WHERE id = ?').run(amount, userId);
@@ -72,6 +87,7 @@ const increaseBankCapacity = (userId, amount) => {
     db.prepare('UPDATE users SET bank_capacity = bank_capacity + ? WHERE id = ?').run(amount, userId);
 };
 
+// Reward Methods
 const setLastClaimed = (userId, type, timestamp) => {
     getUser(userId);
     db.prepare(`UPDATE users SET ${type}_last_claimed = ? WHERE id = ?`).run(timestamp, userId);
@@ -160,6 +176,8 @@ const calculateNetWorth = (userId) => {
 
 module.exports = {
     getUser,
+    isPremium,
+    setPremium,
     addBalance,
     removeBalance,
     addBank,

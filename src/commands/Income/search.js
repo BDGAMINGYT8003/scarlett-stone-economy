@@ -13,7 +13,7 @@ module.exports = {
         const userId = interaction.user.id;
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'search', 25);
+        const cooldown = checkDurationCooldown(userId, 'search');
         if (cooldown.onCooldown) {
             return interaction.reply({
                 embeds: [getCooldownEmbed('search', cooldown.readyAt, 25, 10)],
@@ -110,7 +110,7 @@ module.exports = {
             }
 
             // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'search', 25);
+            setDurationCooldown(userId, 'search', 25, 10);
 
             // Update UI
             const updatedButtons = buttons.map(btn => {
@@ -150,7 +150,7 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
                 // Set Cooldown on timeout
-                setDurationCooldown(userId, 'search', 25);
+                setDurationCooldown(userId, 'search', 25, 10);
 
                 // If timed out, disable buttons and show message
                 const disabledRow = new ActionRowBuilder().addComponents(

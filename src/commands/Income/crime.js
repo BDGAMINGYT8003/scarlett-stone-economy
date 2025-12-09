@@ -13,7 +13,7 @@ module.exports = {
         const userId = interaction.user.id;
 
         // Check Cooldown
-        const cooldown = checkDurationCooldown(userId, 'crime', 25);
+        const cooldown = checkDurationCooldown(userId, 'crime');
         if (cooldown.onCooldown) {
             return interaction.reply({
                 embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)],
@@ -144,7 +144,7 @@ module.exports = {
             }
 
             // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'crime', 25);
+            setDurationCooldown(userId, 'crime', 25, 10);
 
             // Update UI
             const updatedButtons = buttons.map(btn => {
@@ -184,7 +184,7 @@ module.exports = {
         collector.on('end', async (collected, reason) => {
             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
                 // Set Cooldown on timeout
-                setDurationCooldown(userId, 'crime', 25);
+                setDurationCooldown(userId, 'crime', 25, 10);
 
                 const disabledRow = new ActionRowBuilder().addComponents(
                     buttons.map(btn => btn.setDisabled(true))

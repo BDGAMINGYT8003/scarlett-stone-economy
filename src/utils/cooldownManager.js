@@ -6,13 +6,6 @@ const { EmbedBuilder } = require('discord.js');
 const getNextReset = (type) => {
     const now = new Date();
     // Use UTC for internal logic, but shift to simulate US Eastern (-5 or -4)
-    // Actually, let's keep it simple and use a fixed offset or library if needed.
-    // Replit environment might be UTC.
-    // "6 AM US Time" -> Let's assume EST (UTC-5) -> 11 AM UTC.
-    // Or EDT (UTC-4) -> 10 AM UTC.
-    // Let's stick to a fixed offset for simplicity: UTC-5 (EST)
-
-    // Convert current time to target timezone (EST)
     const targetTime = new Date(now.getTime() - (5 * 60 * 60 * 1000));
 
     let resetTime = new Date(targetTime);
@@ -53,7 +46,6 @@ const checkScheduledCooldown = (userId, type) => {
     if (!lastClaimed) return { onCooldown: false };
 
     const now = Date.now();
-    const resetTimestamp = getNextReset(type); // This returns the FUTURE reset.
 
     // Re-implement getMostRecentReset logic
     const currentEST = new Date(now - (5 * 60 * 60 * 1000));
@@ -103,7 +95,9 @@ const checkScheduledCooldown = (userId, type) => {
 // Map for short-term "duration" cooldowns (beg, search)
 const durationCooldowns = new Map();
 
-const checkDurationCooldown = (userId, commandName, durationSeconds) => {
+// Check if a duration cooldown is active. Does NOT check DB/User status, simply checks the map.
+// The expiry time is set in setDurationCooldown.
+const checkDurationCooldown = (userId, commandName) => {
     const key = `${userId}-${commandName}`;
     const now = Date.now();
     const expireTime = durationCooldowns.get(key);
@@ -114,10 +108,18 @@ const checkDurationCooldown = (userId, commandName, durationSeconds) => {
     return { onCooldown: false };
 };
 
-const setDurationCooldown = (userId, commandName, durationSeconds) => {
+// Set cooldown based on user premium status
+const setDurationCooldown = (userId, commandName, defaultSeconds, premiumSeconds) => {
     const key = `${userId}-${commandName}`;
     const now = Date.now();
-    durationCooldowns.set(key, now + (durationSeconds * 1000));
+
+    // Determine duration
+    let duration = defaultSeconds;
+    if (db.isPremium(userId)) {
+        duration = premiumSeconds;
+    }
+
+    durationCooldowns.set(key, now + (duration * 1000));
 };
 
 const getCooldownEmbed = (commandName, readyAt, defaultSeconds, premiumSeconds) => {
