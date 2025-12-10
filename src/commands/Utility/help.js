@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, ContainerBuilder, TextDisplayBuilder, SectionBuilder } = require('discord.js');
 
 const categories = {
     Currency: [
@@ -47,16 +47,21 @@ module.exports = {
             const end = start + ITEMS_PER_PAGE;
             const currentCommands = commands.slice(start, end);
 
-            const embed = new EmbedBuilder()
+            const container = new ContainerBuilder()
                 .setColor(0x0099FF)
-                .setTitle(`${category} Commands`)
-                .setFooter({ text: `Page ${page + 1} of ${maxPages}` });
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# ${category} Commands`));
 
             currentCommands.forEach(cmd => {
-                embed.addFields({ name: cmd.name, value: cmd.description });
+                const section = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`**${cmd.name}**\n${cmd.description}`)
+                    );
+                container.addSectionComponents(section);
             });
 
-            return embed;
+            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`Page ${page + 1} of ${maxPages}`));
+
+            return container;
         };
 
         const generateComponents = (category, page) => {
@@ -93,9 +98,26 @@ module.exports = {
             return [row1, row2];
         };
 
+        // Wait, V2 allows ActionRows inside Container?
+        // Documentation says: "addTextDisplayComponents(...), addSectionComponents(...), addActionRowComponents(...): Adds children to the container."
+        // So I should put the action rows INSIDE the container if possible.
+        // But `interaction.reply` takes `components` array which can accept `ContainerBuilder` AND `ActionRowBuilder` (or V2 equivalents).
+        // Actually, the prompt says "ensure that all kinds of components... are directly put inside the embed itself, using the new Components V2 elements."
+        // This implies I should use `ContainerBuilder.addActionRowComponents`.
+
+        const generateResponseComponents = (category, page) => {
+            const container = generateEmbed(category, page);
+            const actionRows = generateComponents(category, page);
+
+            // Add action rows to the container
+            container.addActionRowComponents(...actionRows);
+
+            return [container];
+        };
+
         const response = await interaction.reply({
-            embeds: [generateEmbed(currentCategory, currentPage)],
-            components: generateComponents(currentCategory, currentPage),
+            components: generateResponseComponents(currentCategory, currentPage),
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -105,11 +127,10 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This help session is not for you!')
+                const errorContainer = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Permission Denied\nThis help session is not for you!'))
                     .setColor(0xFF0000);
-                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                return i.reply({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             if (i.componentType === ComponentType.StringSelect) {
@@ -125,20 +146,24 @@ module.exports = {
             }
 
             await i.update({
-                embeds: [generateEmbed(currentCategory, currentPage)],
-                components: generateComponents(currentCategory, currentPage)
+                components: generateResponseComponents(currentCategory, currentPage)
             });
         });
 
         collector.on('end', async () => {
             // Disable all components on timeout
-            const disabledComponents = generateComponents(currentCategory, currentPage).map(row => {
+            // Since components are inside the container, I need to regenerate the container with disabled components.
+
+            const actionRows = generateComponents(currentCategory, currentPage);
+            actionRows.forEach(row => {
                 row.components.forEach(c => c.setDisabled(true));
-                return row;
             });
 
+            const container = generateEmbed(currentCategory, currentPage);
+            container.addActionRowComponents(...actionRows);
+
             try {
-                await interaction.editReply({ components: disabledComponents });
+                await interaction.editReply({ components: [container] });
             } catch (e) {
                 // Ignore if message was deleted
             }

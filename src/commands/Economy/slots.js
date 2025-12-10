@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const parseNumber = require('../../utils/numberParser');
 
@@ -66,16 +66,14 @@ async function runSlots(interaction, betAmount) {
     const balance = userData.balance ?? 0;
 
     if (balance < betAmount) {
-         // Reply or Edit based on context
-         const embed = new EmbedBuilder()
-            .setTitle('Insufficient Funds')
-            .setDescription(`You don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`)
-            .setColor(0xFF0000);
+         const embed = new ContainerBuilder()
+            .setColor(Colors.Red)
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Insufficient Funds\nYou don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`));
 
          if (interaction.isButton() || interaction.isModalSubmit()) {
-             await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             await interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
          } else {
-             await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             await interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
          }
          return;
     }
@@ -83,23 +81,11 @@ async function runSlots(interaction, betAmount) {
     // Deduct Bet Immediately
     db.removeBalance(userId, betAmount);
 
-    // Defer update or reply to ensure we have the message to edit
-    let message;
     if (interaction.isButton() || interaction.isModalSubmit()) {
-        // If it's a button click ("Spin Again"), we want to reuse the interaction to update the message
-        // But the prompt says "Edit the message 11 times".
-        // Usually, we update the existing message.
         await interaction.deferUpdate();
-        message = interaction.message;
     } else {
-        // Slash command
         await interaction.deferReply();
-        message = await interaction.fetchReply();
     }
-
-    // Initial State
-    // We need 5 edits total now (prompt request).
-    // 4 random frames + 1 final result frame.
 
     const getEmbed = (row1, row2, row3, isFinal = false, multiplier = 0) => {
         const currentBalance = (db.getUser(userId).balance ?? 0);
@@ -118,77 +104,67 @@ async function runSlots(interaction, betAmount) {
         desc += `<:emptyspace:1446608999293391140>\n`;
         desc += `<:emptyspace:1446608999293391140>`;
 
-        const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF; // Blue for spinning, Green/Red for result
+        const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF;
 
-        return new EmbedBuilder()
-            .setTitle(`${interaction.user.username}'s Slot Machine`)
+        return new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Slot Machine\n${desc}`))
             .setColor(color)
-            .setDescription(desc)
-            .setFooter({ text: `Bet: ${betAmount.toLocaleString()} | Min: ֍ ${MIN_BET.toLocaleString()} | Max: ֍ ${MAX_BET.toLocaleString()}` });
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`Bet: ${betAmount.toLocaleString()} | Min: ֍ ${MIN_BET.toLocaleString()} | Max: ֍ ${MAX_BET.toLocaleString()}`));
     };
 
-    // Prepare components (disabled initially)
     const getButtons = (disabled = false) => {
         return new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId(`slots_spin_again_${betAmount}`).setLabel('Spin Again').setStyle(ButtonStyle.Primary).setDisabled(disabled),
             new ButtonBuilder().setCustomId('slots_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-            new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary).setDisabled(disabled) // Optional to disable this too, keeping consistent
+            new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary).setDisabled(disabled)
         );
     };
 
-    // Animation Loop
-    // Determine Final Rows
     const finalRow1 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
-    const finalRow2 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]; // Payline
+    const finalRow2 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
     const finalRow3 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 
     const multiplier = calculateMultiplier(finalRow2);
     const winnings = Math.floor(betAmount * multiplier);
 
-    // Initial display (before loop):
-    if (interaction.isButton() || interaction.isModalSubmit()) {
-         await interaction.editReply({
-             embeds: [getEmbed(
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
-             )],
-             components: [getButtons(true)]
-         });
-    } else {
-         await interaction.editReply({
-             embeds: [getEmbed(
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
-             )],
-             components: [getButtons(true)]
-         });
-    }
+    const initialContainer = getEmbed(
+         [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
+         [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
+         [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
+    );
+    initialContainer.addActionRowComponents(getButtons(true));
 
-    // Now edit 4 times (random).
+    await interaction.editReply({
+         components: [initialContainer],
+         flags: MessageFlags.IsComponentsV2
+    });
+
     for (let i = 0; i < 4; i++) {
         await sleep(200);
+        const tempContainer = getEmbed(
+             [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
+             [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
+             [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
+        );
+        // Buttons must remain present (though disabled)
+        tempContainer.addActionRowComponents(getButtons(true));
+
         await interaction.editReply({
-            embeds: [getEmbed(
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()],
-                 [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]
-            )]
+            components: [tempContainer]
         });
     }
 
-    // Final Edit (5th edit total)
     await sleep(200);
 
-    // Update DB if win
     if (winnings > 0) {
         db.addBalance(userId, winnings);
     }
 
+    const finalContainer = getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier);
+    finalContainer.addActionRowComponents(getButtons(false));
+
     await interaction.editReply({
-        embeds: [getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier)],
-        components: [getButtons(false)]
+        components: [finalContainer]
     });
 }
 
@@ -206,27 +182,23 @@ module.exports = {
         const userData = db.getUser(interaction.user.id);
         const balance = userData.balance ?? 0;
 
-        // Parse bet
         const betAmount = parseNumber(betStr, balance);
 
         if (betAmount < MIN_BET) {
-            const embed = new EmbedBuilder()
-                .setTitle('Invalid Bet')
-                .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMinimum bet is **֍ ${MIN_BET.toLocaleString()}**.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
         if (betAmount > MAX_BET) {
-             const embed = new EmbedBuilder()
-                .setTitle('Invalid Bet')
-                .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMaximum bet is **֍ ${MAX_BET.toLocaleString()}**.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         await runSlots(interaction, betAmount);
     },
-    // Handler methods for external calls from interactionCreate
     async handleButton(interaction) {
         const customId = interaction.customId;
 
@@ -235,14 +207,11 @@ module.exports = {
             const userData = db.getUser(interaction.user.id);
             const balance = userData.balance ?? 0;
 
-            // Check constraints again (in case balance changed or hardcoded constraints changed)
              if (betAmount < MIN_BET || betAmount > MAX_BET) {
-                // Should not happen with valid IDs but safety
-                const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription('Invalid bet amount.')
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Invalid Bet\nInvalid bet amount.'));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             await runSlots(interaction, betAmount);
@@ -265,11 +234,10 @@ module.exports = {
             await interaction.showModal(modal);
 
         } else if (customId === 'slots_payouts') {
-            const embed = new EmbedBuilder()
-                .setTitle('Slot Machine Payouts')
-                .setDescription(PAYOUTS_TEXT)
-                .setColor(0x00AAFF);
-            await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(0x00AAFF)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Slot Machine Payouts\n${PAYOUTS_TEXT}`));
+            await interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
     },
     async handleModal(interaction) {
@@ -281,18 +249,16 @@ module.exports = {
             const betAmount = parseNumber(betStr, balance);
 
             if (betAmount < MIN_BET) {
-                 const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                 const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMinimum bet is **֍ ${MIN_BET.toLocaleString()}**.`));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
             if (betAmount > MAX_BET) {
-                 const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                 const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMaximum bet is **֍ ${MAX_BET.toLocaleString()}**.`));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             await runSlots(interaction, betAmount);

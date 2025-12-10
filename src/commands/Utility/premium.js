@@ -1,34 +1,46 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('premium')
-        .setDescription('Manage or check premium status.')
+        .setDescription('Check your premium status and perks.')
         .addSubcommand(subcommand =>
             subcommand
                 .setName('status')
-                .setDescription('Check your premium status.')),
+                .setDescription('Check your current premium status.')),
     async execute(interaction) {
         const userId = interaction.user.id;
         const isPremium = db.isPremium(userId);
 
-        const embed = new EmbedBuilder();
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Premium Status\nCurrently: **${isPremium ? 'Active ✅' : 'Inactive ❌'}**`));
 
         if (isPremium) {
             embed
-                .setTitle('Premium Status: Active')
-                .setDescription('You are a **Premium User**!\nEnjoy your perks:\n- Reduced cooldowns on economy commands\n- Shorter work shifts\n- And more!')
-                .setColor(0x00FF00) // Green
-                .setFooter({ text: 'Thank you for supporting the bot!' });
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`> You are a premium member! Enjoy your perks.`)
+                )
+                .addSectionComponents(
+                    new SectionBuilder().addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`**Perks**\n- 50% Reduced Cooldowns\n- Higher Multipliers (Coming Soon)\n- Special Badge (Coming Soon)`)
+                    )
+                )
+                .setColor(0xFFD700); // Gold
         } else {
             embed
-                .setTitle('Premium Status: Inactive')
-                .setDescription('You are currently **NOT** a Premium User.\n\n**Perks you are missing:**\n- 50% reduced cooldowns\n- Special access\n\n*Contact the developer to support the bot!*')
-                .setColor(0xFF0000) // Red
-                .setFooter({ text: 'Become a supporter today!' });
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`> You are not a premium member.`)
+                )
+                .addSectionComponents(
+                    new SectionBuilder().addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`**Perks**\n- 50% Reduced Cooldowns\n- Higher Multipliers\n- Support the dev`)
+                    )
+                )
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('Check `/help` or ask the developer how to get premium!'))
+                .setColor(0x808080); // Grey
         }
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 };

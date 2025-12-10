@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const locations = require('../../config/locations.json');
 const items = require('../../config/items.json');
@@ -16,27 +16,26 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'search');
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('search', cooldown.readyAt, 25, 10)],
-                flags: MessageFlags.Ephemeral
+                components: [getCooldownEmbed('search', cooldown.readyAt, 30, 15)],
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
         // Check Safety Lock
         if (!acquireLock(userId)) {
-             const lockEmbed = new EmbedBuilder()
-                .setTitle('Hold tight')
-                .setDescription('You are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.');
-            return interaction.reply({ embeds: [lockEmbed], flags: MessageFlags.Ephemeral });
+             const lockEmbed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Hold tight\nYou are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.'));
+            return interaction.reply({ components: [lockEmbed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         // Select 3 random unique locations
         const shuffled = [...locations].sort(() => 0.5 - Math.random());
         const selectedLocations = shuffled.slice(0, 3);
 
-        const embed = new EmbedBuilder()
-            .setColor(0xFFA500)
-            .setTitle('**Where do you want to search?**')
-            .setDescription('*Pick an option below to start searching that location!*');
+        const embed = new ContainerBuilder()
+            .setColor(0x00FF00) // Green
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent('# **Where do you want to search?**\n*Pick an option below to start searching!*'));
 
         const buttons = selectedLocations.map(loc =>
             new ButtonBuilder()
@@ -46,10 +45,11 @@ module.exports = {
         );
 
         const row = new ActionRowBuilder().addComponents(buttons);
+        embed.addActionRowComponents(row);
 
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -60,24 +60,24 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This is not your search session!')
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Permission Denied\nThis is not your search session!'))
                     .setColor(0xFF0000);
-                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                return i.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
-            const locationId = i.customId.replace('search_', '');
-            const location = selectedLocations.find(l => l.id === locationId);
+            const locId = i.customId.replace('search_', '');
+            const location = selectedLocations.find(l => l.id === locId);
 
             if (!location) return;
 
-            let isSpecial = false;
+            // Logic
             let amount = 0;
             let message = "";
             let item = null;
+            let isSpecial = false;
 
-            // Check for Special Outcome First
+            // Check Special Outcome
             if (location.special_outcome && Math.random() * 100 < location.special_outcome.chance) {
                 isSpecial = true;
                 const special = location.special_outcome;
@@ -94,85 +94,84 @@ module.exports = {
                     message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
                 }
             } else {
-                // Determine Outcome
-                const isSuccess = Math.random() * 100 < location.success_chance;
-                const outcomeType = isSuccess ? 'success' : 'fail';
+                // Regular Outcome
+                const roll = Math.random() * 100;
 
-                // Select random outcome message
-                const outcomes = location.outcomes[outcomeType];
-                message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                if (roll < location.fail_chance) {
+                    // Fail
+                    const outcomes = location.fail_outcomes;
+                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
+                } else if (roll < location.fail_chance + location.death_chance) {
+                    // Death (Simulation - just loss of coins or nothing happens in this clone yet aside from message)
+                    message = "You died while searching (not really, but you got nothing).";
+                } else {
+                    // Success
+                    const outcomes = location.success_outcomes;
+                    message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
-                if (isSuccess) {
                     amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
                     db.addBalance(userId, amount);
                     message = message.replace('{amount}', amount.toLocaleString());
                 }
             }
 
-            // Set Cooldown on successful interaction
-            setDurationCooldown(userId, 'search', 25, 10);
+            setDurationCooldown(userId, 'search', 30, 15);
 
             // Update UI
             const updatedButtons = buttons.map(btn => {
                 const isSelected = btn.data.custom_id === i.customId;
                 btn.setDisabled(true);
                 if (isSelected) {
-                    btn.setStyle(isSpecial || amount > 0 ? ButtonStyle.Success : ButtonStyle.Danger);
+                    btn.setStyle(amount > 0 ? ButtonStyle.Success : ButtonStyle.Danger);
                 }
                 return btn;
             });
 
             const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
 
-            const resultEmbed = new EmbedBuilder()
-                .setTitle(`${interaction.user.username} searched the ${location.name}`)
-                .setDescription(message);
+            const resultEmbed = new ContainerBuilder()
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# ${interaction.user.username} searched the ${location.name}\n${message}`));
 
             if (isSpecial) {
                 resultEmbed.setColor(0xFFD700);
-                resultEmbed.setFooter({ text: 'RARE DROP!' });
+                resultEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent('RARE DROP!'));
             } else if (amount > 0) {
                 resultEmbed.setColor(0x00FF00);
-                resultEmbed.setFooter({ text: 'Lucky you!' });
             } else {
                 resultEmbed.setColor(0xFF0000);
-                resultEmbed.setFooter({ text: 'Better luck next time.' });
             }
 
+            resultEmbed.addActionRowComponents(updatedRow);
+
             await i.update({
-                embeds: [resultEmbed],
-                components: [updatedRow]
+                components: [resultEmbed]
             });
 
             collector.stop('user_interaction');
         });
 
         collector.on('end', async (collected, reason) => {
-            if (reason !== 'user_interaction' && reason !== 'messageDelete') {
-                // Set Cooldown on timeout
-                setDurationCooldown(userId, 'search', 25, 10);
+             if (reason !== 'user_interaction' && reason !== 'messageDelete') {
+                setDurationCooldown(userId, 'search', 30, 15);
 
-                // If timed out, disable buttons and show message
                 const disabledRow = new ActionRowBuilder().addComponents(
                     buttons.map(btn => btn.setDisabled(true))
                 );
 
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('So quiet...')
-                    .setDescription(`Guess <@${userId}> did not want to search anywhere?`);
+                const timeoutEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Time's up\nYou took too long to decide where to search.`));
+
+                timeoutEmbed.addActionRowComponents(disabledRow);
 
                 try {
                     await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledRow]
+                        components: [timeoutEmbed]
                     });
                 } catch (e) {
-                    // Message might have been deleted
+                    // Ignore
                 }
-            }
-
-            // Release lock when collector ends (after setting cooldown if needed)
-            releaseLock(userId);
+             }
+             releaseLock(userId);
         });
     },
 };

@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
-const db = require('../../utils/db');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, MessageFlags, Colors, MediaGalleryBuilder } = require('discord.js');
 const items = require('../../config/items.json');
 
 module.exports = {
@@ -8,44 +7,52 @@ module.exports = {
         .setDescription('View information about an item.')
         .addStringOption(option =>
             option.setName('item')
-                .setDescription('Name of the item')
+                .setDescription('The item to view')
                 .setRequired(true)
                 .setAutocomplete(true)),
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused().toLowerCase();
-        const filtered = items.filter(i => i.name.toLowerCase().includes(focusedValue));
+        const choices = items.map(i => i.name);
+        const filtered = choices.filter(choice => choice.toLowerCase().includes(focusedValue));
         await interaction.respond(
-            filtered.slice(0, 25).map(i => ({ name: i.name, value: i.id }))
+            filtered.slice(0, 25).map(choice => ({ name: choice, value: choice }))
         );
     },
     async execute(interaction) {
-        const itemId = interaction.options.getString('item');
-        const item = items.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
+        const itemName = interaction.options.getString('item');
+        const item = items.find(i => i.name === itemName);
 
         if (!item) {
-            const embed = new EmbedBuilder()
-                .setTitle('Item Not Found')
-                .setDescription('Item not found.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# Item Not Found\nCould not find an item named "${itemName}".`)
+                );
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
-        const userId = interaction.user.id;
-        const itemCount = db.getItemCount(userId, item.id);
-        const netWorth = db.calculateNetWorth(userId);
+        const embed = new ContainerBuilder()
+            .setColor(0x0099FF)
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# ${item.emoji} ${item.name}\n${item.description || 'No description available.'}`)
+            )
+            .addSectionComponents(
+                new SectionBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`**Type**\n${item.type}`),
+                    new TextDisplayBuilder().setContent(`**Buy Price**\n${item.buy_price ? `֍ ${item.buy_price.toLocaleString()}` : 'Not for sale'}`),
+                    new TextDisplayBuilder().setContent(`**Sell Price**\n${item.sell_price ? `֍ ${item.sell_price.toLocaleString()}` : 'Not sellable'}`)
+                )
+            );
 
-        let ownershipPercentage = '0%';
-        if (netWorth > 0) {
-            const itemTotalValue = item.net_value * itemCount;
-            ownershipPercentage = ((itemTotalValue / netWorth) * 100).toFixed(1) + '%';
+        if (item.image) {
+             const gallery = new MediaGalleryBuilder().addItems({ media: { url: item.image }, description: item.name });
+
+             return interaction.reply({
+                 components: [embed, gallery],
+                 flags: MessageFlags.IsComponentsV2
+             });
         }
 
-        const embed = new EmbedBuilder()
-            .setColor(0x00AAFF)
-            .setTitle(item.name)
-            .setDescription(`> ${item.description}\n\nYou currently own **${itemCount.toLocaleString()}** (${ownershipPercentage} of your total net worth)\n\n**${item.usage_info || 'No usage info available.'}**\n\n**Net Value**\n֍ ${item.net_value.toLocaleString()}\n\n**Additional Info**\npurchasable in the shop for ֍ ${item.buy_price.toLocaleString()}\ncan sell the item for ֍ ${item.sell_price.toLocaleString()}`)
-            .setFooter({ text: `${item.type} | ${item.rarity}` });
-
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 };

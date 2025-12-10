@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -13,140 +13,115 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'highlow');
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('highlow', cooldown.readyAt, 30, 10)],
-                flags: MessageFlags.Ephemeral
+                components: [getCooldownEmbed('highlow', cooldown.readyAt, 30, 30)], // Cooldown: 30s
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
-        // Generate Numbers
-        const secretNumber = Math.floor(Math.random() * 100) + 1;
-        const hintNumber = Math.floor(Math.random() * 100) + 1;
+        // Generate numbers
+        const hint = Math.floor(Math.random() * 100) + 1;
+        const secret = Math.floor(Math.random() * 100) + 1;
 
-        // Determine correct answer
-        let correctAnswer = '';
-        if (secretNumber < hintNumber) correctAnswer = 'Lower';
-        else if (secretNumber > hintNumber) correctAnswer = 'Higher';
-        else correctAnswer = 'JACKPOT';
-
-        // Initial Embed
-        const embed = new EmbedBuilder()
-            .setTitle(`${interaction.user.username}'s High-Low Game`)
-            .setDescription(`I just chose a secret number between 1 and 100.\nIs the secret number *higher* or *lower* than **${hintNumber}**?`)
-            .setFooter({ text: "The jackpot button is if you think it's the same!" })
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# Higher or Lower?\nA secret number between 1 and 100 has been chosen.\nYour hint is **${hint}**.\n\nIs the secret number *higher* or *lower* than ${hint}?`)
+            )
             .setColor(0x0099FF);
 
-        // Buttons
-        const buttons = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('lower').setLabel('Lower').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId('jackpot').setLabel('JACKPOT!').setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder().setCustomId('higher').setLabel('Higher').setStyle(ButtonStyle.Primary)
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId('hl_lower').setLabel('Lower').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId('hl_jackpot').setLabel('Jackpot').setStyle(ButtonStyle.Primary),
+            new ButtonBuilder().setCustomId('hl_higher').setLabel('Higher').setStyle(ButtonStyle.Primary)
         );
+        embed.addActionRowComponents(row);
 
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [buttons],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
         const collector = response.createMessageComponentCollector({
             componentType: ComponentType.Button,
-            time: 20000
+            time: 30000
         });
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                const errorEmbed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This is not your game!')
-                    .setColor(0xFF0000);
-                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Not your game.'));
+                return i.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
-            // Game Logic
-            const choice = i.customId === 'lower' ? 'Lower' : (i.customId === 'higher' ? 'Higher' : 'JACKPOT');
-            const isWin = choice === correctAnswer;
-            let reward = 0;
+            let win = false;
+            let jackpot = false;
+            const choice = i.customId.replace('hl_', '');
 
-            let resultEmbed;
+            if (choice === 'lower' && secret < hint) win = true;
+            if (choice === 'higher' && secret > hint) win = true;
+            if (choice === 'jackpot' && secret === hint) {
+                win = true;
+                jackpot = true;
+            }
 
-            if (isWin) {
-                if (choice === 'JACKPOT') {
-                    // Jackpot Win
-                    reward = Math.floor(Math.random() * (150000 - 100000 + 1)) + 100000;
-                    db.addBalance(userId, reward);
-
-                    resultEmbed = new EmbedBuilder()
-                        .setTitle(`${interaction.user.username}'s JACKPOT HIGH-LOW GAME!`)
-                        .setDescription(`**<a:PepeTrophy:940712966213496842> HOLY MOLY! YOU HIT THE JACKPOT!**\n\n**You won ֍ ${reward.toLocaleString()}**!\n\nYour hint was **${hintNumber}**. The hidden number was **${secretNumber}**.\nIt was a perfect match!`)
-                        .setFooter({ text: "GO BUY A LOTTERY TICKET RIGHT NOW!" })
-                        .setColor(0xFFD700); // Gold
+            // Payouts
+            let amount = 0;
+            if (win) {
+                if (jackpot) {
+                    amount = Math.floor(Math.random() * (150000 - 100000 + 1)) + 100000;
                 } else {
-                    // Normal Win
-                    reward = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
-                    db.addBalance(userId, reward);
-
-                    resultEmbed = new EmbedBuilder()
-                        .setTitle(`${interaction.user.username}'s winning High-Low Game`)
-                        .setDescription(`**You won ֍ ${reward.toLocaleString()}**!\n\nYour hint was **${hintNumber}**. The hidden number was **${secretNumber}**.`)
-                        .setFooter({ text: "You're really good at this!" })
-                        .setColor(0x00FF00); // Green
+                    amount = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
                 }
-            } else {
-                // Loss
-                resultEmbed = new EmbedBuilder()
-                    .setTitle(`${interaction.user.username}'s losing High-Low Game`)
-                    .setDescription(`**You lost!**\n\nYour hint was **${hintNumber}**. The hidden number was **${secretNumber}**.`)
-                    .setFooter({ text: "Better luck next time!" })
-                    .setColor(0xFF0000); // Red
+                db.addBalance(userId, amount);
             }
 
-            // Update Buttons
-            const updatedButtons = new ActionRowBuilder().addComponents(
-                buttons.components.map(btn => {
-                    btn.setDisabled(true);
-                    if (btn.data.custom_id === i.customId) {
-                        btn.setStyle(isWin ? ButtonStyle.Success : ButtonStyle.Danger);
-                    } else {
-                        btn.setStyle(ButtonStyle.Secondary);
-                    }
-                    return btn;
-                })
-            );
+            setDurationCooldown(userId, 'highlow', 30, 30);
 
-            // Apply Cooldown
-            setDurationCooldown(userId, 'highlow', 30, 10);
+            // Update UI
+            const finalEmbed = new ContainerBuilder()
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Higher or Lower?\nThe secret number was **${secret}**.`));
 
-            await i.update({
-                embeds: [resultEmbed],
-                components: [updatedButtons]
+            if (win) {
+                finalEmbed.setColor(0x00FF00); // Green
+                finalEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent(`You guessed correctly!\nYou won **֍ ${amount.toLocaleString()}**!`));
+            } else {
+                finalEmbed.setColor(0xFF0000); // Red
+                finalEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent(`You guessed wrong!\nYou won nothing.`));
+            }
+
+            const updatedButtons = row.components.map(btn => {
+                btn.setDisabled(true);
+                // Highlight correct/incorrect
+                if (btn.data.custom_id === i.customId) {
+                    btn.setStyle(win ? ButtonStyle.Success : ButtonStyle.Danger);
+                } else {
+                    btn.setStyle(ButtonStyle.Secondary);
+                }
+                return btn;
             });
 
-            collector.stop('played');
+            finalEmbed.addActionRowComponents(new ActionRowBuilder().addComponents(updatedButtons));
+
+            await i.update({
+                components: [finalEmbed]
+            });
+
+            collector.stop();
         });
 
         collector.on('end', async (collected, reason) => {
             if (reason === 'time') {
-                // Apply cooldown on timeout
-                setDurationCooldown(userId, 'highlow', 30, 10);
-
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle(`${interaction.user.username}'s expired High-Low Game`)
-                    .setDescription(`Too slow!\nYour hint was **${hintNumber}** and the hidden number was **${secretNumber}**.`)
-                    .setFooter({ text: "This game of high-low expired!" })
-                    .setColor(0xFF0000); // Red? Prompt didn't specify color, assuming Red/Dark
-
-                const disabledButtons = new ActionRowBuilder().addComponents(
-                    buttons.components.map(btn => btn.setDisabled(true).setStyle(ButtonStyle.Secondary))
+                setDurationCooldown(userId, 'highlow', 30, 30);
+                const disabledRow = new ActionRowBuilder().addComponents(
+                    row.components.map(btn => btn.setDisabled(true))
                 );
+                const timeoutEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Time\'s up\nYou took too long to guess.'))
+                    .setColor(0xFF0000);
+                timeoutEmbed.addActionRowComponents(disabledRow);
 
                 try {
-                    await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledButtons]
-                    });
-                } catch (e) {
-                    // Ignore
-                }
+                    await interaction.editReply({ components: [timeoutEmbed] });
+                } catch (e) {}
             }
         });
     },

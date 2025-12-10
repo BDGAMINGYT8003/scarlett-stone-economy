@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
@@ -16,8 +16,8 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'crime');
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)],
-                flags: MessageFlags.Ephemeral
+                components: [getCooldownEmbed('crime', cooldown.readyAt, 25, 10)],
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
@@ -25,30 +25,30 @@ module.exports = {
         const userData = db.getUser(userId);
         const userBalance = userData.balance ?? 0;
         if (userBalance < 1000) {
-             const brokeEmbed = new EmbedBuilder()
-                .setTitle('Too broke for this')
-                .setDescription('You need at least **֍ 1,000** to commit a crime. You can\'t even afford a getaway Uber right now.')
-                .setFooter({ text: 'Imagine being too poor to break the law' })
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [brokeEmbed] });
+             const brokeEmbed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent('# Too broke for this\nYou need at least **֍ 1,000** to commit a crime. You can\'t even afford a getaway Uber right now.'),
+                    new TextDisplayBuilder().setContent('Imagine being too poor to break the law')
+                );
+            return interaction.reply({ components: [brokeEmbed], flags: MessageFlags.IsComponentsV2 });
         }
 
         // Check Safety Lock
         if (!acquireLock(userId)) {
-             const lockEmbed = new EmbedBuilder()
-                .setTitle('Hold tight')
-                .setDescription('You are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.');
-            return interaction.reply({ embeds: [lockEmbed], flags: MessageFlags.Ephemeral });
+             const lockEmbed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Hold tight\nYou are unable to interact with this because there is an active ongoing command you are already using or a minor issue occurred. It should unlock itself in about 30 seconds. Please finish any open commands or try again after 30 seconds.\nIf you keep getting this message from the same interaction, please report it to our support server so we can fix it.'));
+            return interaction.reply({ components: [lockEmbed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         // Select 3 random unique crimes
         const shuffled = [...crimes].sort(() => 0.5 - Math.random());
         const selectedCrimes = shuffled.slice(0, 3);
 
-        const embed = new EmbedBuilder()
+        const embed = new ContainerBuilder()
             .setColor(0x8B0000)
-            .setTitle('**Which crime do you want to commit?**')
-            .setDescription('*Pick an option below to start committing one!*');
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent('# **Which crime do you want to commit?**\n*Pick an option below to start committing one!*'));
 
         const buttons = selectedCrimes.map(crime =>
             new ButtonBuilder()
@@ -58,10 +58,11 @@ module.exports = {
         );
 
         const row = new ActionRowBuilder().addComponents(buttons);
+        embed.addActionRowComponents(row);
 
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -72,11 +73,10 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This is not your crime session!')
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Permission Denied\nThis is not your crime session!'))
                     .setColor(0xFF0000);
-                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                return i.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             const crimeId = i.customId.replace('crime_', '');
@@ -158,24 +158,24 @@ module.exports = {
 
             const updatedRow = new ActionRowBuilder().addComponents(updatedButtons);
 
-            const resultEmbed = new EmbedBuilder()
-                .setTitle(`${interaction.user.username} committed ${crime.name}`)
-                .setDescription(message);
+            const resultEmbed = new ContainerBuilder()
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# ${interaction.user.username} committed ${crime.name}\n${message}`));
 
             if (isSpecial) {
                 resultEmbed.setColor(0xFFD700);
-                resultEmbed.setFooter({ text: 'RARE DROP!' });
+                resultEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent('RARE DROP!'));
             } else if (amount > 0) {
                 resultEmbed.setColor(0x00FF00);
-                resultEmbed.setFooter({ text: 'Crime pays!' });
+                resultEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent('Crime pays!'));
             } else {
                 resultEmbed.setColor(0xFF0000);
-                resultEmbed.setFooter({ text: 'Busted!' });
+                resultEmbed.addTextDisplayComponents(new TextDisplayBuilder().setContent('Busted!'));
             }
 
+            resultEmbed.addActionRowComponents(updatedRow);
+
             await i.update({
-                embeds: [resultEmbed],
-                components: [updatedRow]
+                components: [resultEmbed]
             });
 
             collector.stop('user_interaction');
@@ -190,14 +190,14 @@ module.exports = {
                     buttons.map(btn => btn.setDisabled(true))
                 );
 
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('Chicken?')
-                    .setDescription(`Guess <@${userId}> did not want to commit crimes anymore?`);
+                const timeoutEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Chicken?\nGuess <@${userId}> did not want to commit crimes anymore?`));
+
+                timeoutEmbed.addActionRowComponents(disabledRow);
 
                 try {
                     await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledRow]
+                        components: [timeoutEmbed]
                     });
                 } catch (e) {
                     // Message might have been deleted

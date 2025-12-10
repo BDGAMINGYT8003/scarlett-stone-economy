@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, MessageFlags, ContainerBuilder, TextDisplayBuilder, Colors } = require('discord.js');
 const { log } = require('../utils/logger');
 
 module.exports = {
@@ -38,8 +38,12 @@ module.exports = {
                         }
                     } catch (error) {
                         console.error(error);
+                        const errorContainer = new ContainerBuilder()
+                            .setColor(Colors.Red)
+                            .addTextDisplayComponents(new TextDisplayBuilder().setContent('Something went wrong processing this interaction.'));
+
                         if (!interaction.replied && !interaction.deferred) {
-                             await interaction.reply({ content: 'Something went wrong processing this interaction.', ephemeral: true });
+                             await interaction.reply({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
                         }
                     }
                 }
@@ -62,10 +66,15 @@ module.exports = {
         } catch (error) {
             console.error(error);
             log(`Error executing ${interaction.commandName}`, 'error');
+
+            const errorContainer = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('There was an error while executing this command!'));
+
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+                await interaction.followUp({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                await interaction.reply({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
         }
     },

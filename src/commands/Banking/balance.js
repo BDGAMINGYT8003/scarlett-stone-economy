@@ -1,6 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle, Colors } = require('discord.js');
 const db = require('../../utils/db');
-const parseAmount = require('../../utils/numberParser');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,209 +7,114 @@ module.exports = {
         .setDescription('See someone’s balance, including pocket, bank, net worth, and more.')
         .addUserOption(option =>
             option.setName('user')
-                .setDescription('The user to check balance for')
-                .setRequired(false)),
+                .setDescription('The user to check balance for.')),
     async execute(interaction) {
         const targetUser = interaction.options.getUser('user') || interaction.user;
-        const isSelf = targetUser.id === interaction.user.id;
 
-        const getEmbed = () => {
-            const userData = db.getUser(targetUser.id);
-            const balance = userData.balance ?? 0;
-            const bank = userData.bank ?? 0;
-            const bankCapacity = userData.bank_capacity ?? 5000;
-            const freeSpace = bankCapacity - bank;
+        const generateBalanceEmbed = (user) => {
+            const userData = db.getUser(user.id);
+            const netWorth = (userData.balance ?? 0) + (userData.bank ?? 0);
 
-            return new EmbedBuilder()
-                .setColor(0x00FF00)
-                .setTitle(`${targetUser.username}'s Balance`)
-                .addFields(
-                    { name: 'Wallet', value: `֍ ${balance.toLocaleString()}`, inline: false },
-                    { name: 'Bank', value: `Total: ֍ ${bank.toLocaleString()} / ֍ ${bankCapacity.toLocaleString()}\nFree space: ֍ ${freeSpace.toLocaleString()}`, inline: false }
+            const container = new ContainerBuilder()
+                .setColor(0x00FF00) // Green
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# ${user.username}'s Balance`)
                 )
-                .setTimestamp();
+                .addSectionComponents(
+                    new SectionBuilder().addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`**Pocket**\n֍ ${(userData.balance ?? 0).toLocaleString()}`),
+                        new TextDisplayBuilder().setContent(`**Bank**\n֍ ${(userData.bank ?? 0).toLocaleString()} / ${(userData.bank_capacity ?? 5000).toLocaleString()}`)
+                    ),
+                    new SectionBuilder().addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`**Net Worth**\n֍ ${netWorth.toLocaleString()}`)
+                    )
+                );
+            return container;
         };
 
-        const getComponents = () => {
-            if (!isSelf) return [];
-
-            const withdrawBtn = new ButtonBuilder()
-                .setCustomId('balance_withdraw')
-                .setLabel('Withdraw')
-                .setStyle(ButtonStyle.Secondary);
-
-            const depositBtn = new ButtonBuilder()
-                .setCustomId('balance_deposit')
-                .setLabel('Deposit')
-                .setStyle(ButtonStyle.Secondary);
-
-            const refreshBtn = new ButtonBuilder()
-                .setCustomId('balance_refresh')
-                .setEmoji('🔄')
-                .setStyle(ButtonStyle.Secondary);
-
-            const row = new ActionRowBuilder().addComponents(withdrawBtn, depositBtn, refreshBtn);
-            return [row];
+        const generateButtons = (isSelf) => {
+             const row = new ActionRowBuilder();
+             if (isSelf) {
+                 row.addComponents(
+                     new ButtonBuilder().setCustomId('deposit_btn').setLabel('Deposit').setStyle(ButtonStyle.Success),
+                     new ButtonBuilder().setCustomId('withdraw_btn').setLabel('Withdraw').setStyle(ButtonStyle.Danger)
+                 );
+             }
+             row.addComponents(
+                 new ButtonBuilder().setCustomId('refresh_balance').setLabel('Refresh').setStyle(ButtonStyle.Secondary)
+             );
+             return row;
         };
+
+        const isSelf = targetUser.id === interaction.user.id;
+        const container = generateBalanceEmbed(targetUser);
+        container.addActionRowComponents(generateButtons(isSelf));
 
         const response = await interaction.reply({
-            embeds: [getEmbed()],
-            components: getComponents(),
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
-        if (!isSelf) return;
-
         const collector = response.createMessageComponentCollector({
-            componentType: ComponentType.Button,
-            time: 300000 // 5 minutes
+             componentType: ComponentType.Button,
+             time: 60000
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This is not your balance session!')
-                    .setColor(0xFF0000);
-                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
-            }
+             if (i.user.id !== interaction.user.id) {
+                 const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('These buttons are not for you.'));
+                 return i.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+             }
 
-            if (i.customId === 'balance_refresh') {
-                await i.update({ embeds: [getEmbed()] });
-                return;
-            }
+             if (i.customId === 'refresh_balance') {
+                 // Re-fetch
+                 const newContainer = generateBalanceEmbed(targetUser);
+                 newContainer.addActionRowComponents(generateButtons(isSelf));
+                 await i.update({ components: [newContainer] });
+             } else if (i.customId === 'deposit_btn') {
+                 const modal = new ModalBuilder()
+                     .setCustomId('deposit_modal')
+                     .setTitle('Deposit Coins');
 
-            // Handle Modal Triggers
-            if (i.customId === 'balance_deposit' || i.customId === 'balance_withdraw') {
-                const action = i.customId === 'balance_deposit' ? 'Deposit' : 'Withdraw';
-                const modalId = i.customId === 'balance_deposit' ? 'modal_deposit' : 'modal_withdraw';
+                 const amountInput = new TextInputBuilder()
+                     .setCustomId('amount')
+                     .setLabel('Amount to deposit (or "max", "all")')
+                     .setStyle(TextInputStyle.Short)
+                     .setRequired(true);
 
-                const modal = new ModalBuilder()
-                    .setCustomId(modalId)
-                    .setTitle(`${action} Currency`);
+                 const firstActionRow = new ActionRowBuilder().addComponents(amountInput);
+                 modal.addComponents(firstActionRow);
 
-                const amountInput = new TextInputBuilder()
-                    .setCustomId('amountInput')
-                    .setLabel(`Amount to ${action.toLowerCase()}`)
-                    .setStyle(TextInputStyle.Short)
-                    .setPlaceholder('e.g. 100, 2k, all')
-                    .setRequired(true);
+                 await i.showModal(modal);
+             } else if (i.customId === 'withdraw_btn') {
+                  const modal = new ModalBuilder()
+                     .setCustomId('withdraw_modal')
+                     .setTitle('Withdraw Coins');
 
-                const firstActionRow = new ActionRowBuilder().addComponents(amountInput);
-                modal.addComponents(firstActionRow);
+                 const amountInput = new TextInputBuilder()
+                     .setCustomId('amount')
+                     .setLabel('Amount to withdraw (or "max", "all")')
+                     .setStyle(TextInputStyle.Short)
+                     .setRequired(true);
 
-                await i.showModal(modal);
+                 const firstActionRow = new ActionRowBuilder().addComponents(amountInput);
+                 modal.addComponents(firstActionRow);
 
-                // Wait for modal submit
-                try {
-                    const submission = await i.awaitModalSubmit({ time: 60000 });
-                    const amountStr = submission.fields.getTextInputValue('amountInput');
-                    const userData = db.getUser(targetUser.id);
-
-                    // Safe defaults
-                    const userBalance = userData.balance ?? 0;
-                    const userBank = userData.bank ?? 0;
-                    const userBankCapacity = userData.bank_capacity ?? 5000;
-
-                    let amount = 0;
-                    let embed = null;
-
-                    if (action === 'Deposit') {
-                        amount = parseAmount(amountStr, userBalance);
-                        if (amount <= 0) {
-                            const errorEmbed = new EmbedBuilder()
-                                .setTitle('Invalid Amount')
-                                .setDescription('Invalid amount specified.')
-                                .setColor(0xFF0000);
-                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
-                            return;
-                        }
-                        if (amount > userBalance) {
-                            const errorEmbed = new EmbedBuilder()
-                                .setTitle('Insufficient Funds')
-                                .setDescription(`You don't have that much money in your wallet! You only have **֍ ${userBalance.toLocaleString()}**.`)
-                                .setColor(0xFF0000);
-                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
-                            return;
-                        }
-                        const availableSpace = userBankCapacity - userBank;
-                        if (amount > availableSpace) {
-                            const errorEmbed = new EmbedBuilder()
-                                .setTitle('Bank Full')
-                                .setDescription(`You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`)
-                                .setColor(0xFF0000);
-                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
-                            return;
-                        }
-
-                        db.removeBalance(targetUser.id, amount);
-                        db.addBank(targetUser.id, amount);
-
-                        const updatedUser = db.getUser(targetUser.id);
-                        const newBalance = updatedUser.balance ?? 0;
-                        const newBank = updatedUser.bank ?? 0;
-
-                        embed = new EmbedBuilder()
-                            .setColor(0x00FF00)
-                            .setTitle('Deposited to Bank')
-                            .setDescription(`**֍ ${amount.toLocaleString()}** deposited.\n\n**Wallet:** ֍ ${newBalance.toLocaleString()}\n**Bank:** ֍ ${newBank.toLocaleString()}`);
-
-                    } else { // Withdraw
-                        amount = parseAmount(amountStr, userBank);
-                        if (amount <= 0) {
-                            const errorEmbed = new EmbedBuilder()
-                                .setTitle('Invalid Amount')
-                                .setDescription('Invalid amount specified.')
-                                .setColor(0xFF0000);
-                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
-                            return;
-                        }
-                        if (amount > userBank) {
-                             const errorEmbed = new EmbedBuilder()
-                                .setTitle('Insufficient Funds')
-                                .setDescription(`You don't have that much money in your bank! You only have **֍ ${userBank.toLocaleString()}**.`)
-                                .setColor(0xFF0000);
-                            await submission.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
-                            return;
-                        }
-
-                        db.removeBank(targetUser.id, amount);
-                        db.addBalance(targetUser.id, amount);
-
-                        const updatedUser = db.getUser(targetUser.id);
-                        const newBalance = updatedUser.balance ?? 0;
-                        const newBank = updatedUser.bank ?? 0;
-
-                        embed = new EmbedBuilder()
-                            .setColor(0x00FF00)
-                            .setTitle('Withdrawn from Bank')
-                            .setDescription(`**֍ ${amount.toLocaleString()}** withdrawn.\n\n**Wallet:** ֍ ${newBalance.toLocaleString()}\n**Bank:** ֍ ${newBank.toLocaleString()}`);
-                    }
-
-                    await submission.reply({ embeds: [embed] });
-
-                    // Refresh main embed too
-                    await interaction.editReply({ embeds: [getEmbed()] });
-
-                } catch (e) {
-                    // Modal timed out or other error
-                    console.log(e);
-                }
-            }
+                 await i.showModal(modal);
+             }
         });
 
         collector.on('end', async () => {
              // Disable buttons
-            if (isSelf) {
-                 const disabledRow = new ActionRowBuilder().addComponents(
-                    getComponents()[0].components.map(btn => btn.setDisabled(true))
-                );
-                try {
-                    await interaction.editReply({ components: [disabledRow] });
-                } catch (e) {
-                    // Ignore
-                }
-            }
+             const finalContainer = generateBalanceEmbed(targetUser);
+             const buttons = generateButtons(isSelf);
+             buttons.components.forEach(b => b.setDisabled(true));
+             finalContainer.addActionRowComponents(buttons);
+
+             try {
+                await interaction.editReply({ components: [finalContainer] });
+             } catch (e) {}
         });
     },
 };

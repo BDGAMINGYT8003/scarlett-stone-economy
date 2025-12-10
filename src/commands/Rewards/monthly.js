@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -12,7 +12,8 @@ module.exports = {
         const check = checkScheduledCooldown(userId, 'monthly');
         if (check.onCooldown) {
             return interaction.reply({
-                embeds: [getScheduleCooldownEmbed('monthly', check.readyAt)]
+                components: [getScheduleCooldownEmbed('monthly', check.readyAt)],
+                flags: MessageFlags.IsComponentsV2
             });
         }
 
@@ -20,21 +21,19 @@ module.exports = {
         db.addBalance(userId, amount);
         db.setLastClaimed(userId, 'monthly', Date.now());
 
-        const now = Date.now();
-        // 30 days in seconds
-        const nextMonthlyTimestamp = Math.floor((now + (30 * 24 * 60 * 60 * 1000)) / 1000);
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Monthly Coins\n> **֍ ${amount.toLocaleString()}** was placed in your wallet!`)
+            )
+            .addSectionComponents(
+                new SectionBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`**Base**\n֍ 500,000`),
+                    new TextDisplayBuilder().setContent(`**Streak Bonus**\n֍ 0`), // Monthly doesn't usually have streak logic in this clone
+                    new TextDisplayBuilder().setContent(`**Donor Bonus**\n֍ 0`)
+                )
+            )
+            .setColor(0x000000); // Black/Dark
 
-        const embed = new EmbedBuilder()
-            .setColor(0x800080) // Purple
-            .setTitle(`${interaction.user.username}'s Monthly Coins`)
-            .setDescription(`> **֍ ${amount.toLocaleString()}** was placed in your wallet!`)
-            .addFields(
-                { name: 'Base', value: `֍ ${amount.toLocaleString()}`, inline: true },
-                { name: 'Donor Bonus', value: '֍ 0', inline: true },
-                { name: 'Next Monthly', value: `<t:${nextMonthlyTimestamp}:R>`, inline: true },
-                { name: 'Next Item Reward', value: `<a:MonthlyBoxClosed:861390900219478037> <t:${nextMonthlyTimestamp}:R>`, inline: true }
-            );
-
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 };

@@ -1,19 +1,19 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const parseNumber = require('../../utils/numberParser');
 
+const SNAKE_EYES_EMOJI = '<:SnakeEyes:1446613388049387632>';
+const DICE_1 = '<:Dice1:1446613390234619934>';
+const DICE_2 = '<:Dice2:1446613392436625449>';
+const DICE_3 = '<:Dice3:1446613394332454922>';
+const DICE_4 = '<:Dice4:1446613396559630336>';
+const DICE_5 = '<:Dice5:1446613398711308369>';
+const DICE_6 = '<:Dice6:1446613400573575239>';
+
+const DICE_FACES = [DICE_1, DICE_2, DICE_3, DICE_4, DICE_5, DICE_6];
+
 const MIN_BET = 5000;
 const MAX_BET = 500000;
-
-const DICE_EMOJIS = {
-    ANIMATED: '<a:animated_dice:1447148017630318686>',
-    1: '<:dice1:1447148019983061035>',
-    2: '<:dice2:1447148022361493617>',
-    3: '<:dice3:1447148024752242778>',
-    4: '<:dice4:1447148027088338945>',
-    5: '<:dice5:1447148029755789332>',
-    6: '<:dice6:1447148031647547412>'
-};
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -23,81 +23,99 @@ async function runSnakeEyes(interaction, betAmount) {
     const balance = userData.balance ?? 0;
 
     if (balance < betAmount) {
-        const embed = new EmbedBuilder()
-            .setTitle('Insufficient Funds')
-            .setDescription(`You don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`)
-            .setColor(0xFF0000);
+         const embed = new ContainerBuilder()
+            .setColor(Colors.Red)
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Insufficient Funds\nYou don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`));
 
-        if (interaction.isButton() || interaction.isModalSubmit()) {
-            await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
-        } else {
-            await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
-        }
-        return;
+         if (interaction.isButton() || interaction.isModalSubmit()) {
+             await interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+         } else {
+             await interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+         }
+         return;
     }
 
-    // Deduct Bet
     db.removeBalance(userId, betAmount);
 
-    let message;
     if (interaction.isButton() || interaction.isModalSubmit()) {
         await interaction.deferUpdate();
-        message = interaction.message;
     } else {
         await interaction.deferReply();
-        message = await interaction.fetchReply();
     }
 
-    // Phase 1: Rolling
-    const rollingEmbed = new EmbedBuilder()
-        .setTitle(`${interaction.user.username}'s Snake Eyes Game`)
-        .setDescription(`Pocket: **֍ ${(balance - betAmount).toLocaleString()}**\nWinnings: **Rolling...**\n<:emptyspace:1446608999293391140>\n## <:emptyspace:1446608999293391140> ${DICE_EMOJIS.ANIMATED} ${DICE_EMOJIS.ANIMATED}\n<:emptyspace:1446608999293391140>`)
-        .setFooter({ text: `Bet: ֍ ${betAmount.toLocaleString()} | Payouts: 1 eye (1.25x) 2 eyes (12x)` })
-        .setColor(0x0099FF);
+    // Animation frames
+    const getEmbed = (dice1, dice2, isFinal = false, multiplier = 0) => {
+        const currentBalance = (db.getUser(userId).balance ?? 0);
+        const winnings = isFinal ? Math.floor(betAmount * multiplier) : 0;
+        const net = isFinal ? winnings - betAmount : 0;
+        const netString = net > 0 ? `+${net.toLocaleString()}` : `${net.toLocaleString()}`;
 
-    const disabledButtons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId(`snakeeyes_roll_again_${betAmount}`).setLabel('Roll Again').setStyle(ButtonStyle.Primary).setDisabled(true),
-        new ButtonBuilder().setCustomId('snakeeyes_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(true)
-    );
+        let desc = `**Bet:** ֍ ${betAmount.toLocaleString()}\n`;
+        desc += `**Winnings:** ֍ ${winnings.toLocaleString()}\n`;
+        desc += `**Net:** ֍ ${netString}\n\n`;
+        desc += `> ${dice1} ${dice2}\n\n`; // Dice display
 
-    await interaction.editReply({ embeds: [rollingEmbed], components: [disabledButtons] });
+        if (isFinal) {
+            if (multiplier === 12) desc += `**SNAKE EYES!** (12x Payout)`;
+            else if (multiplier === 1.25) desc += `**One Eye!** (1.25x Payout)`;
+            else desc += `**Better luck next time!**`;
+        } else {
+            desc += `*Rolling...*`;
+        }
 
-    await sleep(1500);
+        const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF;
 
-    // Phase 2: Result
-    const dice1 = Math.floor(Math.random() * 6) + 1;
-    const dice2 = Math.floor(Math.random() * 6) + 1;
+        return new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Snake Eyes ${SNAKE_EYES_EMOJI}\n${desc}`))
+            .setColor(color)
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`Pocket: ֍ ${currentBalance.toLocaleString()}`));
+    };
+
+    const getButtons = (disabled = false) => {
+        return new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`snakeeyes_roll_again_${betAmount}`).setLabel('Roll Again').setStyle(ButtonStyle.Primary).setDisabled(disabled),
+            new ButtonBuilder().setCustomId('snakeeyes_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(disabled)
+        );
+    };
+
+    // Rolling animation (1.5 seconds)
+    // Show initial state
+    const initialContainer = getEmbed(DICE_FACES[Math.floor(Math.random() * 6)], DICE_FACES[Math.floor(Math.random() * 6)]);
+    initialContainer.addActionRowComponents(getButtons(true));
+    await interaction.editReply({ components: [initialContainer], flags: MessageFlags.IsComponentsV2 });
+
+    // A few frames
+    for (let i = 0; i < 3; i++) {
+        await sleep(400);
+         const tempContainer = getEmbed(DICE_FACES[Math.floor(Math.random() * 6)], DICE_FACES[Math.floor(Math.random() * 6)]);
+         tempContainer.addActionRowComponents(getButtons(true));
+        await interaction.editReply({ components: [tempContainer] });
+    }
+
+    await sleep(300);
+
+    // Final Result
+    const roll1 = Math.floor(Math.random() * 6) + 1;
+    const roll2 = Math.floor(Math.random() * 6) + 1;
+    const dice1Emoji = DICE_FACES[roll1 - 1];
+    const dice2Emoji = DICE_FACES[roll2 - 1];
 
     let multiplier = 0;
-    if (dice1 === 1 && dice2 === 1) {
+    if (roll1 === 1 && roll2 === 1) {
         multiplier = 12;
-    } else if (dice1 === 1 || dice2 === 1) {
+    } else if (roll1 === 1 || roll2 === 1) {
         multiplier = 1.25;
     }
 
     const winnings = Math.floor(betAmount * multiplier);
-    const profit = winnings - betAmount;
-
     if (winnings > 0) {
         db.addBalance(userId, winnings);
     }
 
-    // Refresh user data for final balance display
-    const newBalance = (db.getUser(userId).balance ?? 0);
-    const profitString = profit > 0 ? `+${profit.toLocaleString()}` : `${profit.toLocaleString()}`;
+    const finalContainer = getEmbed(dice1Emoji, dice2Emoji, true, multiplier);
+    finalContainer.addActionRowComponents(getButtons(false));
 
-    const resultEmbed = new EmbedBuilder()
-        .setTitle(`${interaction.user.username}'s Snake Eyes Game`)
-        .setDescription(`Pocket: **֍ ${newBalance.toLocaleString()}**\nWinnings: **֍ ${profitString}**\n<:emptyspace:1446608999293391140>\n## <:emptyspace:1446608999293391140> ${DICE_EMOJIS[dice1]} ${DICE_EMOJIS[dice2]}\n<:emptyspace:1446608999293391140>`)
-        .setFooter({ text: `Bet: ֍ ${betAmount.toLocaleString()} | Payouts: 1 eye (1.25x) 2 eyes (12x)` })
-        .setColor(profit > 0 ? 0x00FF00 : 0xFF0000);
-
-    const enabledButtons = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId(`snakeeyes_roll_again_${betAmount}`).setLabel('Roll Again').setStyle(ButtonStyle.Primary).setDisabled(false),
-        new ButtonBuilder().setCustomId('snakeeyes_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(false)
-    );
-
-    await interaction.editReply({ embeds: [resultEmbed], components: [enabledButtons] });
+    await interaction.editReply({ components: [finalContainer] });
 }
 
 module.exports = {
@@ -117,18 +135,16 @@ module.exports = {
         const betAmount = parseNumber(betStr, balance);
 
         if (betAmount < MIN_BET) {
-            const embed = new EmbedBuilder()
-                .setTitle('Invalid Bet')
-                .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMinimum bet is **֍ ${MIN_BET.toLocaleString()}**.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
         if (betAmount > MAX_BET) {
-             const embed = new EmbedBuilder()
-                .setTitle('Invalid Bet')
-                .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMaximum bet is **֍ ${MAX_BET.toLocaleString()}**.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         await runSnakeEyes(interaction, betAmount);
@@ -138,13 +154,14 @@ module.exports = {
 
         if (customId.startsWith('snakeeyes_roll_again_')) {
             const betAmount = parseInt(customId.replace('snakeeyes_roll_again_', ''));
+            const userData = db.getUser(interaction.user.id);
+            const balance = userData.balance ?? 0;
 
              if (betAmount < MIN_BET || betAmount > MAX_BET) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription('Invalid bet amount.')
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Invalid Bet\nInvalid bet amount.'));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             await runSnakeEyes(interaction, betAmount);
@@ -158,7 +175,7 @@ module.exports = {
                 .setCustomId('snakeeyes_bet_input')
                 .setLabel('New Bet Amount')
                 .setStyle(TextInputStyle.Short)
-                .setPlaceholder('e.g. 5000, 10k')
+                .setPlaceholder('e.g. 5k, 10k, all')
                 .setRequired(true);
 
             const row = new ActionRowBuilder().addComponents(betInput);
@@ -176,18 +193,16 @@ module.exports = {
             const betAmount = parseNumber(betStr, balance);
 
             if (betAmount < MIN_BET) {
-                 const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription(`Minimum bet is **֍ ${MIN_BET.toLocaleString()}**.`)
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                 const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMinimum bet is **֍ ${MIN_BET.toLocaleString()}**.`));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
             if (betAmount > MAX_BET) {
-                 const embed = new EmbedBuilder()
-                    .setTitle('Invalid Bet')
-                    .setDescription(`Maximum bet is **֍ ${MAX_BET.toLocaleString()}**.`)
-                    .setColor(0xFF0000);
-                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                 const embed = new ContainerBuilder()
+                    .setColor(Colors.Red)
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Bet\nMaximum bet is **֍ ${MAX_BET.toLocaleString()}**.`));
+                return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             await runSnakeEyes(interaction, betAmount);

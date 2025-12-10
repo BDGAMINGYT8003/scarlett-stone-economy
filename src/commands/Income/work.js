@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const jobs = require('../../config/jobs.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
@@ -90,11 +90,12 @@ module.exports = {
                 desc += `<:Reply:870665583593660476>Salary: \`֍ ${job.salary.toLocaleString()} per shift\`\n\n`;
             });
 
-            return new EmbedBuilder()
-                .setTitle('Available Jobs')
-                .setDescription(desc)
-                .setColor(0x0099FF)
-                .setFooter({ text: `Page ${page + 1} of ${maxPages}` });
+            return new ContainerBuilder()
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# Available Jobs\n${desc}`),
+                    new TextDisplayBuilder().setContent(`Page ${page + 1} of ${maxPages}`)
+                )
+                .setColor(0x0099FF);
         };
 
         const getComponents = (page) => {
@@ -105,9 +106,12 @@ module.exports = {
             return [row];
         };
 
+        const container = generateEmbed(currentPage);
+        container.addActionRowComponents(...getComponents(currentPage));
+
         const response = await interaction.reply({
-            embeds: [generateEmbed(currentPage)],
-            components: getComponents(currentPage),
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -118,15 +122,19 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'This is not your list!', flags: MessageFlags.Ephemeral });
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('This is not your list!'));
+                return i.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             if (i.customId === 'prev_page') currentPage--;
             if (i.customId === 'next_page') currentPage++;
 
+            const newContainer = generateEmbed(currentPage);
+            newContainer.addActionRowComponents(...getComponents(currentPage));
+
             await i.update({
-                embeds: [generateEmbed(currentPage)],
-                components: getComponents(currentPage)
+                components: [newContainer]
             });
         });
     },
@@ -136,66 +144,61 @@ module.exports = {
         const userData = db.getUser(interaction.user.id);
 
         if (userData.job_id) {
-            const embed = new EmbedBuilder()
-                .setTitle('Already Employed')
-                .setDescription('You already have a job! Use `/work resign` first.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Already Employed\nYou already have a job! Use \`/work resign\` first.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         const job = jobs.find(j => j.id === jobId);
         if (!job) {
-            const embed = new EmbedBuilder()
-                .setTitle('Invalid Job')
-                .setDescription('That job does not exist.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Invalid Job\nThat job does not exist.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         const totalShifts = userData.total_shifts_completed || 0;
         if (totalShifts < job.req_shifts) {
-            const embed = new EmbedBuilder()
-                .setTitle('Job Locked')
-                .setDescription(`You need **${job.req_shifts}** total shifts to apply for this job. You only have **${totalShifts}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Job Locked\nYou need **${job.req_shifts}** total shifts to apply for this job. You only have **${totalShifts}**.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         db.setJob(interaction.user.id, job.id);
 
-        const embed = new EmbedBuilder()
-            .setTitle("You're Hired!")
-            .setDescription(`Congratulations, you are now working as a **${job.name}**\n\nYou're required to work at least **${job.daily_req}** times a day via \`/work shift\`, or you'll be fired.\nYou start now, and your salary starts at **֍ ${job.salary.toLocaleString()}** per shift.`)
-            .setColor(0x00FF00);
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# You're Hired!\nCongratulations, you are now working as a **${job.name}**\n\nYou're required to work at least **${job.daily_req}** times a day via \`/work shift\`, or you'll be fired.\nYou start now, and your salary starts at **֍ ${job.salary.toLocaleString()}** per shift.`))
+            .setColor(0x00FF00); // Green
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 
     async handleResign(interaction) {
         const userData = db.getUser(interaction.user.id);
         if (!userData.job_id) {
-            const embed = new EmbedBuilder()
-                .setTitle('Unemployed')
-                .setDescription('You don\'t have a job to resign from.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Unemployed\nYou don't have a job to resign from.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         const job = jobs.find(j => j.id === userData.job_id);
 
-        const embed = new EmbedBuilder()
-            .setTitle('Resignation Confirmation')
-            .setDescription(`Are you sure you want to resign from your position as a **${job ? job.name : 'Unknown Job'}**?`)
-            .setColor(0xFFFF00);
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Resignation Confirmation\nAre you sure you want to resign from your position as a **${job ? job.name : 'Unknown Job'}**?`))
+            .setColor(0xFFFF00); // Yellow
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId('confirm_resign').setLabel('Yes, Resign').setStyle(ButtonStyle.Danger),
             new ButtonBuilder().setCustomId('cancel_resign').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
         );
+        embed.addActionRowComponents(row);
 
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -205,21 +208,22 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) return i.reply({ content: 'Not your confirmation.', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== interaction.user.id) {
+                const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Not your confirmation.'));
+                return i.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+            }
 
             if (i.customId === 'confirm_resign') {
                 db.removeJob(interaction.user.id);
-                const successEmbed = new EmbedBuilder()
-                    .setTitle('Resigned')
-                    .setDescription('You have successfully resigned from your job.')
+                const successEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Resigned\nYou have successfully resigned from your job.`))
                     .setColor(0x00FF00);
-                await i.update({ embeds: [successEmbed], components: [] });
+                await i.update({ components: [successEmbed] });
             } else {
-                const cancelEmbed = new EmbedBuilder()
-                    .setTitle('Cancelled')
-                    .setDescription('Resignation cancelled.')
+                const cancelEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Cancelled\nResignation cancelled.`))
                     .setColor(0x00AAFF);
-                await i.update({ embeds: [cancelEmbed], components: [] });
+                await i.update({ components: [cancelEmbed] });
             }
             collector.stop();
         });
@@ -256,13 +260,14 @@ module.exports = {
             });
         }
 
-        const embed = new EmbedBuilder()
-            .setTitle('Work Stars')
-            .setDescription(desc)
-            .setColor(0xFFD700)
-            .setFooter({ text: 'Page 1 of 1' });
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# Work Stars\n${desc}`),
+                new TextDisplayBuilder().setContent('Page 1 of 1')
+            )
+            .setColor(0xFFD700);
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 
     async handleShift(interaction) {
@@ -270,17 +275,17 @@ module.exports = {
         const userData = db.getUser(userId);
 
         if (!userData.job_id) {
-            const embed = new EmbedBuilder()
-                .setTitle('Unemployed')
-                .setDescription('You need a job to work! Use `/work apply` to find one.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Unemployed\nYou need a job to work! Use \`/work apply\` to find one.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         const job = jobs.find(j => j.id === userData.job_id);
         // Fallback
         if (!job) {
-             return interaction.reply({ content: 'Error: Job data not found.', flags: MessageFlags.Ephemeral });
+             const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Error: Job data not found.'));
+             return interaction.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         // Check Cooldown
@@ -296,11 +301,10 @@ module.exports = {
             const premiumMins = `${Math.floor(premiumCooldownSeconds / 60)} minutes`;
 
             // Custom embed format for Work Shift as requested
-            const embed = new EmbedBuilder()
-                .setTitle("Easy tiger, let's not rush")
-                .setDescription(`### You can start your next shift again <t:${readyUnix}:R>.\nThe __default__ cooldown for working as **${job.name}** is **${defaultMins}**\nThe __premium__ cooldown for working as **${job.name}** is **${premiumMins}**`)
+            const embed = new ContainerBuilder()
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Easy tiger, let's not rush\n### You can start your next shift again <t:${readyUnix}:R>.\nThe __default__ cooldown for working as **${job.name}** is **${defaultMins}**\nThe __premium__ cooldown for working as **${job.name}** is **${premiumMins}**`))
                 .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         // Minigame Selection
@@ -314,9 +318,8 @@ module.exports = {
     },
 
     async playRPS(interaction, job, userData, defaultSeconds, premiumSeconds) {
-        const embed = new EmbedBuilder()
-            .setTitle('Work Shift: RPS')
-            .setDescription('Your shift has started! Beat the boss at RPS to finish work!')
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Work Shift: RPS\nYour shift has started! Beat the boss at RPS to finish work!`))
             .setColor(0x0099FF);
 
         const row = new ActionRowBuilder().addComponents(
@@ -324,10 +327,11 @@ module.exports = {
             new ButtonBuilder().setCustomId('rps_paper').setLabel('Paper').setStyle(ButtonStyle.Primary).setEmoji('📄'),
             new ButtonBuilder().setCustomId('rps_scissors').setLabel('Scissors').setStyle(ButtonStyle.Primary).setEmoji('✂️')
         );
+        embed.addActionRowComponents(row);
 
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -337,7 +341,10 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) return i.reply({ content: 'Not your shift!', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== interaction.user.id) {
+                const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Not your shift!'));
+                return i.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+            }
 
             const userChoice = i.customId.replace('rps_', '');
             const choices = ['rock', 'paper', 'scissors'];
@@ -386,14 +393,16 @@ module.exports = {
             return rows;
         };
 
-        const embed = new EmbedBuilder()
-            .setTitle('Work Shift: Tic-Tac-Toe')
-            .setDescription('Your shift has started! Win Tic-Tac-Toe to finish work!\nYou are **X**.')
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Work Shift: Tic-Tac-Toe\nYour shift has started! Win Tic-Tac-Toe to finish work!\nYou are **X**.`))
             .setColor(0x0099FF);
 
+        // Add multiple rows
+        embed.addActionRowComponents(...getBoardComponents());
+
         const response = await interaction.reply({
-            embeds: [embed],
-            components: getBoardComponents(),
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -403,7 +412,10 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) return i.reply({ content: 'Not your shift!', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== interaction.user.id) {
+                const error = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Not your shift!'));
+                return i.reply({ components: [error], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
+            }
 
             const idx = parseInt(i.customId.replace('ttt_', ''));
             board[idx] = 'X';
@@ -434,7 +446,13 @@ module.exports = {
                 return;
             }
 
-            await i.update({ components: getBoardComponents() });
+            // Update board
+            const updatedEmbed = new ContainerBuilder()
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Work Shift: Tic-Tac-Toe\nYour shift has started! Win Tic-Tac-Toe to finish work!\nYou are **X**.`))
+                .setColor(0x0099FF);
+            updatedEmbed.addActionRowComponents(...getBoardComponents());
+
+            await i.update({ components: [updatedEmbed] });
         });
     },
 
@@ -464,22 +482,12 @@ module.exports = {
         db.addShift(userId, Date.now());
 
         // Check Promotions
-        // "Working 10+ shifts in a single day grants 'Promotion Progress'"
-        // So if shifts_today becomes 10 (after adding), we add a promotion.
-        // Wait, `addShift` increments `shifts_completed_today`.
-        // We need to fetch fresh data or increment local var.
         const freshUser = db.getUser(userId);
 
-        // Only trigger exactly on 10th shift? Or 20th? "Working 10+ shifts... grants Promotion Progress".
-        // It likely means once per day, after 10 shifts.
-        // Or every 10 shifts? "Getting 10 Promotions grants 1 Star".
-        // Let's assume once per day when hitting 10.
         if (freshUser.shifts_completed_today === 10) {
             db.addPromotion(userId);
             // Check for Star
             if (freshUser.promotions + 1 >= 10) { // +1 because we just added
-                // Reset promotions?
-                // Add Star
                 try {
                     // Check if entry exists
                     const existing = db.prepare('SELECT * FROM user_job_stats WHERE user_id = ? AND job_id = ?').get(userId, job.id);
@@ -488,26 +496,29 @@ module.exports = {
                     } else {
                         db.prepare('INSERT INTO user_job_stats (user_id, job_id, stars) VALUES (?, ?, 1)').run(userId, job.id);
                     }
-                    // Reset promotions on user table? Or keep counting?
-                    // Typically you reset progress.
+                    // Reset promotions on user table?
                     db.prepare('UPDATE users SET promotions = 0 WHERE id = ?').run(userId);
                 } catch(e) { console.error(e); }
             }
         }
 
-        const embed = new EmbedBuilder();
+        const embed = new ContainerBuilder();
         if (success) {
-            embed.setTitle('Shift Finished')
-                .setDescription(`Great work! You received your full salary.\n\n**You Received:**\n- ֍ ${salary.toLocaleString()}`)
-                .setColor(0x00FF00)
-                .setFooter({ text: `Working as a ${job.name}` });
+            embed
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# Shift Finished\nGreat work! You received your full salary.\n\n**You Received:**\n- ֍ ${salary.toLocaleString()}`),
+                    new TextDisplayBuilder().setContent(`Working as a ${job.name}`)
+                )
+                .setColor(0x00FF00); // Green
         } else {
-            embed.setTitle('Terrible work!')
-                .setDescription('You slacked off and the boss caught you.\n\n**You were given:**\n- ֍ ' + salary.toLocaleString() + ' for a sub-par shift')
-                .setColor(0xFF0000)
-                .setFooter({ text: `Working as a ${job.name}` });
+            embed
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# Terrible work!\nYou slacked off and the boss caught you.\n\n**You were given:**\n- ֍ ${salary.toLocaleString()} for a sub-par shift`),
+                    new TextDisplayBuilder().setContent(`Working as a ${job.name}`)
+                )
+                .setColor(0xFF0000); // Red
         }
 
-        await interaction.update({ embeds: [embed], components: [] });
+        await interaction.update({ components: [embed] });
     }
 };

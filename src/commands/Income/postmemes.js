@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
@@ -96,28 +96,30 @@ module.exports = {
         // 1. Check for Laptop
         const laptopCount = db.getItemCount(userId, 'laptop');
         if (laptopCount <= 0) {
-            const embed = new EmbedBuilder()
-                .setTitle('Missing Item')
-                .setDescription('You need a **💻 Laptop** to post memes!')
-                .setColor(0xFF0000)
-                .setFooter({ text: 'Buy one from the shop or find one!' });
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent('# Missing Item\nYou need a **💻 Laptop** to post memes!')
+                )
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('Buy one from the shop or find one!'));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         // 2. Check Cooldown
         const cooldown = checkDurationCooldown(userId, 'postmemes');
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('postmemes', cooldown.readyAt, 35, 12)],
-                flags: MessageFlags.Ephemeral
+                components: [getCooldownEmbed('postmemes', cooldown.readyAt, 35, 12)],
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
         // 3. Initial Interface
-        const embed = new EmbedBuilder()
-            .setTitle(`${interaction.user.username}'s Meme Posting Session`)
-            .setDescription('**Pick a meme type and a platform to post a meme on!**\nHopefully people will like it and give you some $$$$ and loot, but it\'s also possible they hate it and your cooldown to posting a new meme rises to THREE MINUTES!')
-            .setFooter({ text: '(Select options below)' })
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Meme Posting Session\n**Pick a meme type and a platform to post a meme on!**\nHopefully people will like it and give you some $$$$ and loot, but it's also possible they hate it and your cooldown to posting a new meme rises to THREE MINUTES!`)
+            )
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent('(Select options below)'))
             .setColor(0x0099FF);
 
         const platformSelect = new StringSelectMenuBuilder()
@@ -151,9 +153,11 @@ module.exports = {
         const row2 = new ActionRowBuilder().addComponents(typeSelect);
         const row3 = new ActionRowBuilder().addComponents(postButton);
 
+        embed.addActionRowComponents(row1, row2, row3);
+
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row1, row2, row3],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -174,11 +178,10 @@ module.exports = {
                 await i.deferUpdate();
             } else if (i.customId === 'postmeme_post') {
                 if (!selectedPlatform || !selectedType) {
-                    const errorEmbed = new EmbedBuilder()
-                        .setTitle('Missing Selection')
-                        .setDescription('Please select both a Platform and a Meme Type first.')
-                        .setColor(0xFF0000);
-                    return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                    const errorEmbed = new ContainerBuilder()
+                        .setColor(Colors.Red)
+                        .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Missing Selection\nPlease select both a Platform and a Meme Type first.'));
+                    return i.reply({ components: [errorEmbed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
                 }
 
                 // Logic
@@ -197,7 +200,7 @@ module.exports = {
 
                 if (!outcome) outcome = platformData.outcomes[platformData.outcomes.length - 1]; // Fallback
 
-                let finalEmbed;
+                let finalEmbed = new ContainerBuilder();
                 let buttonStyle;
                 let cooldownTime = 35; // Default
                 let premiumCooldownTime = 12; // Premium
@@ -205,20 +208,22 @@ module.exports = {
                 if (outcome.type === 'dead') {
                     // Dead Meme
                     cooldownTime = 180; // 3 minutes
-                    premiumCooldownTime = 180; // Dead meme punishment is typically not reduced, or maybe it is? Prompt said "rises to THREE MINUTES". Doesn't specify donor exception. Assuming standard punishment.
-                    finalEmbed = new EmbedBuilder()
-                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
-                        .setDescription(`${getRandomPhrase('dead', selectedPlatform, selectedType)}\n\n**You posted a dead meme, you cannot post another meme for another 3 minutes**`)
-                        .setFooter({ text: 'RIP your career' })
+                    premiumCooldownTime = 180;
+                    finalEmbed
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Meme Posting Session\n${getRandomPhrase('dead', selectedPlatform, selectedType)}\n\n**You posted a dead meme, you cannot post another meme for another 3 minutes**`),
+                            new TextDisplayBuilder().setContent('RIP your career')
+                        )
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
 
                 } else if (outcome.type === 'fail') {
                     // Fail
-                    finalEmbed = new EmbedBuilder()
-                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
-                        .setDescription(getRandomPhrase('fail', selectedPlatform, selectedType))
-                        .setFooter({ text: 'Better luck next time' })
+                    finalEmbed
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Meme Posting Session\n${getRandomPhrase('fail', selectedPlatform, selectedType)}`),
+                            new TextDisplayBuilder().setContent('Better luck next time')
+                        )
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
 
@@ -250,10 +255,11 @@ module.exports = {
                     if (wonMoney > 0) desc += `- ֍ ${wonMoney.toLocaleString()}\n`;
                     if (wonItem) desc += `- 1 ${wonItem.emoji} ${wonItem.name}\n`;
 
-                    finalEmbed = new EmbedBuilder()
-                        .setTitle(`${interaction.user.username}'s Meme Posting Session`)
-                        .setDescription(desc)
-                        .setFooter({ text: 'Meme Lord Status: Rising' })
+                    finalEmbed
+                        .addTextDisplayComponents(
+                            new TextDisplayBuilder().setContent(`# ${interaction.user.username}'s Meme Posting Session\n${desc}`),
+                            new TextDisplayBuilder().setContent('Meme Lord Status: Rising')
+                        )
                         .setColor(0x00FF00);
                     buttonStyle = ButtonStyle.Success;
                 }
@@ -271,9 +277,10 @@ module.exports = {
                     postButton.setDisabled(true).setStyle(buttonStyle)
                 );
 
+                finalEmbed.addActionRowComponents(disabledRow1, disabledRow2, disabledRow3);
+
                 await i.update({
-                    embeds: [finalEmbed],
-                    components: [disabledRow1, disabledRow2, disabledRow3]
+                    components: [finalEmbed]
                 });
 
                 collector.stop('completed');
@@ -282,19 +289,19 @@ module.exports = {
 
         collector.on('end', async (collected, reason) => {
             if (reason === 'time') {
-                const timeoutEmbed = new EmbedBuilder()
-                    .setTitle('Session Expired')
-                    .setDescription('You took too long to post a meme!')
+                const timeoutEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Session Expired\nYou took too long to post a meme!'))
                     .setColor(0xFF0000);
 
                 const disabledRow1 = new ActionRowBuilder().addComponents(platformSelect.setDisabled(true));
                 const disabledRow2 = new ActionRowBuilder().addComponents(typeSelect.setDisabled(true));
                 const disabledRow3 = new ActionRowBuilder().addComponents(postButton.setDisabled(true));
 
+                timeoutEmbed.addActionRowComponents(disabledRow1, disabledRow2, disabledRow3);
+
                 try {
                     await interaction.editReply({
-                        embeds: [timeoutEmbed],
-                        components: [disabledRow1, disabledRow2, disabledRow3]
+                        components: [timeoutEmbed]
                     });
                 } catch (e) {
                     // Ignore

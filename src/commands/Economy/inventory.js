@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
 
@@ -32,11 +32,10 @@ module.exports = {
         refreshInventory();
 
         if (inventory.length === 0) {
-            const embed = new EmbedBuilder()
-                .setTitle('Empty Inventory')
-                .setDescription(`${targetUser.username} has no items in their inventory.`)
-                .setColor(0xFFFF00);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            const embed = new ContainerBuilder()
+                .setColor(0xFFFF00) // Yellow
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Empty Inventory\n${targetUser.username} has no items in their inventory.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
         let currentPage = 0;
@@ -59,11 +58,12 @@ module.exports = {
                 }
             }
 
-            return new EmbedBuilder()
-                .setColor(0x00FF00)
-                .setTitle(`${targetUser.username}'s Inventory`)
-                .setDescription(content || "No items on this page.")
-                .setFooter({ text: `Page ${page + 1} of ${maxPages}` });
+            return new ContainerBuilder()
+                .setColor(0x00FF00) // Green
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# ${targetUser.username}'s Inventory\n${content || "No items on this page."}`),
+                    new TextDisplayBuilder().setContent(`Page ${page + 1} of ${maxPages}`)
+                );
         };
 
         const generateComponents = (page) => {
@@ -89,9 +89,12 @@ module.exports = {
             return [new ActionRowBuilder().addComponents(prevButton, refreshButton, nextButton)];
         };
 
+        const container = generateEmbed(currentPage);
+        container.addActionRowComponents(...generateComponents(currentPage));
+
         const response = await interaction.reply({
-            embeds: [generateEmbed(currentPage)],
-            components: generateComponents(currentPage),
+            components: [container],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -102,11 +105,10 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                const embed = new EmbedBuilder()
-                    .setTitle('Permission Denied')
-                    .setDescription('This is not your inventory session!')
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Permission Denied\nThis is not your inventory session!'))
                     .setColor(0xFF0000);
-                return i.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+                return i.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             if (i.customId === 'inv_prev') {
@@ -123,18 +125,23 @@ module.exports = {
                 }
             }
 
+            const updatedContainer = generateEmbed(currentPage);
+            updatedContainer.addActionRowComponents(...generateComponents(currentPage));
+
             await i.update({
-                embeds: [generateEmbed(currentPage)],
-                components: generateComponents(currentPage)
+                components: [updatedContainer]
             });
         });
 
         collector.on('end', async () => {
+             const finalContainer = generateEmbed(currentPage);
              const disabledRow = new ActionRowBuilder().addComponents(
                 generateComponents(currentPage)[0].components.map(btn => btn.setDisabled(true))
             );
+            finalContainer.addActionRowComponents(disabledRow);
+
             try {
-                await interaction.editReply({ components: [disabledRow] });
+                await interaction.editReply({ components: [finalContainer] });
             } catch (e) {}
         });
     },

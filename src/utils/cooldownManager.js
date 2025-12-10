@@ -1,5 +1,5 @@
 const db = require('./db');
-const { EmbedBuilder } = require('discord.js');
+const { ContainerBuilder, TextDisplayBuilder } = require('discord.js');
 
 // Helper to get time until next occurrence of a specific schedule
 // Timezone: America/New_York (US Eastern Time is commonly used for "US time")
@@ -124,9 +124,10 @@ const setDurationCooldown = (userId, commandName, defaultSeconds, premiumSeconds
 
 const getCooldownEmbed = (commandName, readyAt, defaultSeconds, premiumSeconds) => {
     const readyUnix = Math.floor(readyAt / 1000);
-    return new EmbedBuilder()
-        .setTitle("Easy tiger, let's not rush")
-        .setDescription(`### This command can be used again <t:${readyUnix}:R>\nThe __default__ cooldown is **${defaultSeconds} seconds**\nThe __premium__ cooldown is **${premiumSeconds} seconds**`);
+    return new ContainerBuilder()
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(`# Easy tiger, let's not rush\n### This command can be used again <t:${readyUnix}:R>\nThe __default__ cooldown is **${defaultSeconds} seconds**\nThe __premium__ cooldown is **${premiumSeconds} seconds**`)
+        );
 };
 
 const getScheduleCooldownEmbed = (commandName, readyAt) => {
@@ -148,9 +149,10 @@ const getScheduleCooldownEmbed = (commandName, readyAt) => {
         'monthly': 'monthly coins'
     };
 
-    return new EmbedBuilder()
-        .setTitle(title)
-        .setDescription(`You already got your ${prettyNames[commandName] || commandName}. Try again <t:${readyUnix}:R>.`);
+    return new ContainerBuilder()
+        .addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(`# ${title}\nYou already got your ${prettyNames[commandName] || commandName}. Try again <t:${readyUnix}:R>.`)
+        );
 };
 
 module.exports = {

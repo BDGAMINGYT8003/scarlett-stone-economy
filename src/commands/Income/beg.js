@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const peoples = require('../../config/peoples.json');
@@ -15,8 +15,8 @@ module.exports = {
         const cooldown = checkDurationCooldown(userId, 'beg');
         if (cooldown.onCooldown) {
             return interaction.reply({
-                embeds: [getCooldownEmbed('beg', cooldown.readyAt, 20, 8)],
-                flags: MessageFlags.Ephemeral
+                components: [getCooldownEmbed('beg', cooldown.readyAt, 20, 8)],
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
@@ -42,20 +42,23 @@ module.exports = {
                 message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
             }
 
-            const embed = new EmbedBuilder()
-                .setTitle(person.name)
+            const embed = new ContainerBuilder()
                 .setColor(0xFFD700) // Gold
-                .setDescription(message)
-                .setFooter({ text: 'RARE DROP!' });
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`# ${person.name}\n${message}`),
+                    new TextDisplayBuilder().setContent('RARE DROP!')
+                );
 
-            return interaction.reply({ embeds: [embed] });
+            return interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
         }
 
         // Roll for Success
         const isSuccess = Math.random() * 100 < person.success_chance;
 
-        const embed = new EmbedBuilder()
-            .setTitle(person.name);
+        const embed = new ContainerBuilder();
+
+        let content = `# ${person.name}\n`;
+        let footer = '';
 
         if (isSuccess) {
             const amount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
@@ -64,17 +67,24 @@ module.exports = {
             const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
             const formattedQuote = quote.replace('{amount}', amount.toLocaleString());
 
-            embed.setColor(0x00FF00)
-                .setDescription(formattedQuote)
-                .setFooter({ text: 'They felt bad for you' });
+            content += formattedQuote;
+            footer = 'They felt bad for you';
+
+            embed.setColor(0x00FF00); // Green
         } else {
             const quote = person.fail_quotes[Math.floor(Math.random() * person.fail_quotes.length)];
 
-            embed.setColor(0xFF0000)
-                .setDescription(quote)
-                .setFooter({ text: 'They walked away without even glancing at you' });
+            content += quote;
+            footer = 'They walked away without even glancing at you';
+
+            embed.setColor(0xFF0000); // Red
         }
 
-        await interaction.reply({ embeds: [embed] });
+        embed.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(content),
+            new TextDisplayBuilder().setContent(footer)
+        );
+
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 };

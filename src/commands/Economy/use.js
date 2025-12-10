@@ -1,7 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, SectionBuilder, MessageFlags, Colors } = require('discord.js');
 const db = require('../../utils/db');
 const items = require('../../config/items.json');
-const parseAmount = require('../../utils/numberParser');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,106 +8,92 @@ module.exports = {
         .setDescription('Use an item from your inventory.')
         .addStringOption(option =>
             option.setName('item')
-                .setDescription('Name of the item to use')
+                .setDescription('The item to use')
                 .setRequired(true)
-                .setAutocomplete(true))
-        .addStringOption(option =>
-            option.setName('quantity')
-                .setDescription('Quantity to use (default 1)')
-                .setRequired(false)),
+                .setAutocomplete(true)),
     async autocomplete(interaction) {
+        // Filter to items the user OWNS
+        const userInventory = db.getInventory(interaction.user.id);
         const focusedValue = interaction.options.getFocused().toLowerCase();
-        const userId = interaction.user.id;
 
-        // Get user inventory
-        const userInventory = db.getInventory(userId);
+        // Map inventory items to full item data
+        const ownedItems = userInventory.map(inv => items.find(i => i.id === inv.item_id)).filter(Boolean);
 
-        // Filter items that are usable AND owned by user
-        const ownedUsableItems = items.filter(i => {
-            if (!i.usable) return false;
-            // Check if user has at least 1 of this item
-            const invItem = userInventory.find(inv => inv.item_id === i.id);
-            return invItem && invItem.quantity > 0;
-        });
+        const choices = ownedItems.map(i => i.name);
+        // Remove duplicates if any (though inventory shouldn't have dups)
+        const uniqueChoices = [...new Set(choices)];
 
-        const filtered = ownedUsableItems.filter(i => i.name.toLowerCase().includes(focusedValue));
-
+        const filtered = uniqueChoices.filter(choice => choice.toLowerCase().includes(focusedValue));
         await interaction.respond(
-            filtered.slice(0, 25).map(i => ({ name: i.name, value: i.id }))
+            filtered.slice(0, 25).map(choice => ({ name: choice, value: choice }))
         );
     },
     async execute(interaction) {
-        const itemId = interaction.options.getString('item');
-        const quantityStr = interaction.options.getString('quantity') || '1';
         const userId = interaction.user.id;
-
-        const item = items.find(i => i.id === itemId || i.name.toLowerCase() === itemId.toLowerCase());
+        const itemName = interaction.options.getString('item');
+        const item = items.find(i => i.name === itemName);
 
         if (!item) {
-            const embed = new EmbedBuilder()
-                .setTitle('Item Not Found')
-                .setDescription('Item not found.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent('# Item Not Found\nCould not find that item.'));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
-        if (!item.usable) {
-            const embed = new EmbedBuilder()
-                .setTitle('Unusable Item')
-                .setDescription('This item cannot be used.')
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+        // Check if user owns the item
+        const count = db.getItemCount(userId, item.id);
+        if (count < 1) {
+             const embed = new ContainerBuilder()
+                .setColor(Colors.Red)
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# You don't own this\nYou do not have any **${item.name}** in your inventory.`));
+            return interaction.reply({ components: [embed], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
         }
 
-        const ownedQuantity = db.getItemCount(userId, item.id);
-        const quantity = parseAmount(quantityStr, ownedQuantity);
+        // Logic for item usage
+        let message = '';
+        let success = true;
 
-        if (quantity <= 0) {
-             const embed = new EmbedBuilder()
-                .setTitle('Invalid Quantity')
-                .setDescription('Invalid quantity.')
-                .setColor(0xFF0000);
-             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
-        }
-
-        if (quantity > ownedQuantity) {
-            const embed = new EmbedBuilder()
-                .setTitle('Insufficient Items')
-                .setDescription(`You don't have enough ${item.name}s! You only have **${ownedQuantity.toLocaleString()}**.`)
-                .setColor(0xFF0000);
-            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
-        }
-
-        // Logic for specific items
         if (item.id === 'bank_note') {
-            // Bank Note Logic
-            let totalAdded = 0;
-            for (let i = 0; i < quantity; i++) {
-                totalAdded += Math.floor(Math.random() * (75000 - 50000 + 1)) + 50000;
-            }
-
-            db.removeItem(userId, item.id, quantity);
-            db.increaseBankCapacity(userId, totalAdded);
-
-            const userData = db.getUser(userId);
-
-            const embed = new EmbedBuilder()
-                .setColor(0x00FF00)
-                .setTitle('Bank Space Expanded!')
-                .setDescription(`Used ${quantity} ${item.emoji} **${item.name}**\n\n**Added Bank Space**\n֍ ${totalAdded.toLocaleString()}\n\n**Total Bank Space**\n֍ ${userData.bank_capacity.toLocaleString()}`)
-                .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
-
-            await interaction.reply({ embeds: [embed] });
+            // Bank Note: Increases bank space
+            // Random amount between 5k and 25k (dank memer style varies, let's say 5k-25k)
+            const capacity = Math.floor(Math.random() * (25000 - 5000 + 1)) + 5000;
+            db.addBankCapacity(userId, capacity);
+            db.removeItem(userId, item.id, 1);
+            message = `You used a **Bank Note** and gained **֍ ${capacity.toLocaleString()}** bank space!`;
+        } else if (item.id === 'apple') {
+             db.removeItem(userId, item.id, 1);
+             message = `You ate an apple. It was delicious, but did nothing else.`;
+        } else if (item.id === 'alcohol') {
+             db.removeItem(userId, item.id, 1);
+             message = `You drank some alcohol. You feel dizzy.`;
+             // Maybe add temporary "drunk" status in DB if we had that system
+        } else if (item.id === 'laptop') {
+             message = `You can't "use" a laptop directly. Use \`/postmemes\` instead!`;
+             success = false;
+        } else if (item.id === 'fishing_pole') {
+             message = `You can't "use" a fishing pole directly. It's used automatically in \`/fish\` (if implemented) or use \`/search\` maybe?`;
+             success = false;
+        } else if (item.id === 'shovel') {
+             message = `You can't "use" a shovel directly.`;
+             success = false;
+        } else if (item.id === 'hunting_rifle') {
+             message = `You can't "use" a rifle directly.`;
+             success = false;
         } else {
-            // Generic placeholder for other usable items
-             db.removeItem(userId, item.id, quantity);
-             const embed = new EmbedBuilder()
-                .setColor(0x00FF00)
-                .setTitle(`${item.name} Used`)
-                .setDescription(`You used ${quantity} **${item.name}**. It didn't do much yet...`)
-                .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
-
-             await interaction.reply({ embeds: [embed] });
+            // Generic fallback
+             db.removeItem(userId, item.id, 1);
+             message = `You used **${item.name}**. Nothing interesting happened.`;
         }
+
+        const embed = new ContainerBuilder();
+        if (success) {
+            embed.setColor(0x00FF00); // Green
+            embed.addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Item Used\n${message}`));
+        } else {
+            embed.setColor(0xFFFF00); // Yellow/Orange
+            embed.addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Cannot Use\n${message}`));
+        }
+
+        await interaction.reply({ components: [embed], flags: MessageFlags.IsComponentsV2 });
     },
 };

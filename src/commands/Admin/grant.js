@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, ContainerBuilder, TextDisplayBuilder, SectionBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, Colors } = require('discord.js');
 const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
 const parseNumber = require('../../utils/numberParser.js');
@@ -43,14 +43,14 @@ module.exports = {
 
     async execute(interaction) {
         if (interaction.user.id !== '794482283993235478') {
-            const embed = new EmbedBuilder()
-                .setTitle('Permission Denied')
-                .setDescription('You do not have permission to use this command.')
-                .setColor(0xFF0000)
-                .setFooter({ text: 'Developer Command' });
+            const embed = new ContainerBuilder()
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent('# Permission Denied\nYou do not have permission to use this command.\n\nDeveloper Command')
+                )
+                .setColor(0xFF0000);
             return interaction.reply({
-                embeds: [embed],
-                flags: MessageFlags.Ephemeral
+                components: [embed],
+                flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2
             });
         }
 
@@ -63,9 +63,8 @@ module.exports = {
         if (subcommand === 'money') {
             const amountStr = interaction.options.getString('amount');
             const userData = db.getUser(targetUser.id);
-            const amount = parseNumber(amountStr, userData.balance); // Fallback logic is handled inside parseNumber if balance is 0? Wait, previous code had custom fallback.
+            const amount = parseNumber(amountStr, userData.balance);
 
-            // Re-implement robust parsing
             let finalAmount = amount;
             if (finalAmount <= 0 && amountStr.toLowerCase() !== '0') {
                  const direct = parseFloat(amountStr.replace(/,/g, ''));
@@ -78,18 +77,26 @@ module.exports = {
                 db.addBalance(targetUser.id, finalAmount);
                 const newData = db.getUser(targetUser.id);
 
-                const embed = new EmbedBuilder()
-                    .setTitle('Money Granted')
-                    .setDescription(`Successfully added **֍ ${finalAmount.toLocaleString()}** to ${targetUser}'s inventory.`)
-                    .addFields({ name: 'Total Owned', value: `֍ ${newData.balance.toLocaleString()}` })
-                    .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`# Money Granted\nSuccessfully added **֍ ${finalAmount.toLocaleString()}** to ${targetUser}'s inventory.`)
+                    )
+                    .addSectionComponents(
+                        new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`**Total Owned**\n֍ ${newData.balance.toLocaleString()}`))
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`Developer Command | Today at ${new Date().toLocaleTimeString()}`)
+                    );
 
-                const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Money Granted')
-                    .setDescription(`You have been granted **֍ ${finalAmount.toLocaleString()}**!`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Enjoy!' });
-                try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
+                const notifyEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`# Money Granted\nYou have been granted **֍ ${finalAmount.toLocaleString()}**!`)
+                    )
+                    .addSectionComponents(
+                        new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`**Granted By**\n${interaction.user.tag}`))
+                    )
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('Enjoy!'));
+                try { await targetUser.send({ components: [notifyEmbed], flags: MessageFlags.IsComponentsV2 }); } catch (e) {}
 
                 return embed;
             };
@@ -100,7 +107,8 @@ module.exports = {
             const item = items.find(i => i.name === itemName);
 
             if (!item) {
-                return interaction.reply({ content: 'Item not found.', flags: MessageFlags.Ephemeral });
+                const errorContainer = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Item not found.'));
+                return interaction.reply({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             const currentCount = db.getItemCount(targetUser.id, item.id);
@@ -116,18 +124,26 @@ module.exports = {
                 db.addItem(targetUser.id, item.id, finalAmount);
                 const newCount = db.getItemCount(targetUser.id, item.id);
 
-                const embed = new EmbedBuilder()
-                    .setTitle('Items Granted')
-                    .setDescription(`Successfully added **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}** to ${targetUser}'s inventory.`)
-                    .addFields({ name: 'Total Owned', value: `${newCount.toLocaleString()} ${item.name}` })
-                    .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`# Items Granted\nSuccessfully added **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}** to ${targetUser}'s inventory.`)
+                    )
+                    .addSectionComponents(
+                        new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`**Total Owned**\n${newCount.toLocaleString()} ${item.name}`))
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`Developer Command | Today at ${new Date().toLocaleTimeString()}`)
+                    );
 
-                const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Items Granted')
-                    .setDescription(`You have been granted **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}**!`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Enjoy!' });
-                try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
+                const notifyEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                         new TextDisplayBuilder().setContent(`# Items Granted\nYou have been granted **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}**!`)
+                    )
+                    .addSectionComponents(
+                        new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`**Granted By**\n${interaction.user.tag}`))
+                    )
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('Enjoy!'));
+                try { await targetUser.send({ components: [notifyEmbed], flags: MessageFlags.IsComponentsV2 }); } catch (e) {}
 
                 return embed;
             };
@@ -137,26 +153,31 @@ module.exports = {
             executeAction = async () => {
                 db.setPremium(targetUser.id, true);
 
-                const embed = new EmbedBuilder()
-                    .setTitle('Premium Granted')
-                    .setDescription(`Successfully granted **Premium** status to ${targetUser}.`)
-                    .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
+                const embed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`# Premium Granted\nSuccessfully granted **Premium** status to ${targetUser}.`)
+                    )
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(`Developer Command | Today at ${new Date().toLocaleTimeString()}`)
+                    );
 
-                const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Premium Granted')
-                    .setDescription(`You have been granted **Premium Status**! Enjoy reduced cooldowns and other perks.`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Thank you for your support!' });
-                try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
+                const notifyEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(
+                         new TextDisplayBuilder().setContent(`# Premium Granted\nYou have been granted **Premium Status**! Enjoy reduced cooldowns and other perks.`)
+                    )
+                    .addSectionComponents(
+                        new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`**Granted By**\n${interaction.user.tag}`))
+                    )
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent('Thank you for your support!'));
+                try { await targetUser.send({ components: [notifyEmbed], flags: MessageFlags.IsComponentsV2 }); } catch (e) {}
 
                 return embed;
             };
         }
 
         // Confirmation Interaction
-        const embed = new EmbedBuilder()
-            .setTitle('Confirmation Required')
-            .setDescription(confirmMessage)
+        const embed = new ContainerBuilder()
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Confirmation Required\n${confirmMessage}`))
             .setColor(0xFFFF00);
 
         const row = new ActionRowBuilder().addComponents(
@@ -164,9 +185,11 @@ module.exports = {
             new ButtonBuilder().setCustomId('cancel_grant').setLabel('Cancel').setStyle(ButtonStyle.Danger)
         );
 
+        embed.addActionRowComponents(row);
+
         const response = await interaction.reply({
-            embeds: [embed],
-            components: [row],
+            components: [embed],
+            flags: MessageFlags.IsComponentsV2,
             fetchReply: true
         });
 
@@ -177,19 +200,19 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+                const errorContainer = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent('Not your command.'));
+                return i.reply({ components: [errorContainer], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });
             }
 
             if (i.customId === 'confirm_grant') {
                 const resultEmbed = await executeAction();
                 resultEmbed.setColor(0x00FF00);
-                await i.update({ embeds: [resultEmbed], components: [] });
+                await i.update({ components: [resultEmbed] });
             } else {
-                const cancelEmbed = new EmbedBuilder()
-                    .setTitle('Cancelled')
-                    .setDescription('Grant action cancelled.')
+                const cancelEmbed = new ContainerBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(`# Cancelled\nGrant action cancelled.`))
                     .setColor(0xFF0000);
-                await i.update({ embeds: [cancelEmbed], components: [] });
+                await i.update({ components: [cancelEmbed] });
             }
             collector.stop();
         });
