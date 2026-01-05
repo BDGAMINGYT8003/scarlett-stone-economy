@@ -184,6 +184,7 @@ async function runSlots(interaction, betAmount) {
     // Update DB if win
     if (winnings > 0) {
         db.addBalance(userId, winnings);
+        db.incrementStat(userId, 'slots_wins');
     }
 
     await interaction.editReply({

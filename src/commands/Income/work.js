@@ -84,10 +84,10 @@ module.exports = {
                 const timeString = `${job.cooldown}m`; // job.cooldown is in minutes from JSON
 
                 desc += `${statusEmoji} ${job.emoji} **${job.name}**\n`;
-                desc += `<:ReplyCont:870764844012412938>Shifts Required Per Day: \`${job.daily_req}\`\n`;
-                desc += `<:ReplyCont:870764844012412938>Time Between Shifts : \`${timeString}\`\n`;
-                desc += `<:ReplyCont:870764844012412938>Total Shifts Required To Unlock: \`${job.req_shifts}\`\n`;
-                desc += `<:Reply:870665583593660476>Salary: \`֍ ${job.salary.toLocaleString()} per shift\`\n\n`;
+                desc += `<:ReplyCont:1457839483541127208>Shifts Required Per Day: \`${job.daily_req}\`\n`;
+                desc += `<:ReplyCont:1457839483541127208>Time Between Shifts : \`${timeString}\`\n`;
+                desc += `<:ReplyCont:1457839483541127208>Total Shifts Required To Unlock: \`${job.req_shifts}\`\n`;
+                desc += `<:Reply:1457839486011445391>Salary: \`֍ ${job.salary.toLocaleString()} per shift\`\n\n`;
             });
 
             return new EmbedBuilder()
@@ -456,6 +456,7 @@ module.exports = {
         }
 
         db.addBalance(userId, salary);
+        db.incrementStat(userId, 'work_earnings', salary);
 
         // Set Duration Cooldown
         setDurationCooldown(userId, 'work_shift', defaultSeconds, premiumSeconds);

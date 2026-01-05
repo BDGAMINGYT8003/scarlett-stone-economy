@@ -1,0 +1,194 @@
+[
+  {
+    "id": "2025_badge",
+    "name": "Yet Another Year...",
+    "description": "Earned for using the bot on the last day of 2025.",
+    "emoji": "<:2025badge:1321943822086963300>",
+    "stat_key": "used_2025_last_day",
+    "upkeep": false,
+    "requirements": {
+      "gold": 1
+    }
+  },
+  {
+    "id": "daily_devotee",
+    "name": "Daily Devotee",
+    "description": "Earned for a \"high\" daily streak.",
+    "stat_key": "daily_streak",
+    "upkeep": true,
+    "requirements": {
+      "gold": 420,
+      "platinum": 666
+    },
+    "emojis": {
+      "gold": "<:DailyStreakBadgeGold:1129752107541606443>",
+      "platinum": "<:DailyStreakBadgePlat:1129752104106463323>"
+    }
+  },
+  {
+    "id": "beggar",
+    "name": "Poor Little Beggar",
+    "description": "Earned for successfully begging.",
+    "stat_key": "beg_count",
+    "upkeep": false,
+    "requirements": {
+      "gold": 10000,
+      "platinum": 15000
+    },
+    "emojis": {
+      "gold": "<:BegBadge:1013922394022354964>",
+      "platinum": "<:BegBadgeplatinum:1058392774665306202>"
+    }
+  },
+  {
+    "id": "search_champ",
+    "name": "Hide and Seek Champion",
+    "description": "Earned for successfully searching.",
+    "stat_key": "search_count",
+    "upkeep": false,
+    "requirements": {
+      "gold": 10000,
+      "platinum": 15000
+    },
+    "emojis": {
+      "gold": "<:SearchBadge:1013949885369815162>",
+      "platinum": "<:SearchBadgeplatinum:1057979572039209021>"
+    }
+  },
+  {
+    "id": "crime_lord",
+    "name": "Crime Lord",
+    "description": "Earned for successfully committing a crime.",
+    "stat_key": "crime_count",
+    "upkeep": false,
+    "requirements": {
+      "gold": 10000,
+      "platinum": 15000
+    },
+    "emojis": {
+      "gold": "<:CrimeBadge:910958943839322162>",
+      "platinum": "<:CrimeBadgePlatinum:1060172103141302313>"
+    }
+  },
+  {
+    "id": "meme_connoisseur",
+    "name": "Meme Connoisseur",
+    "description": "Earned for posting trending memes.",
+    "stat_key": "postmemes_count",
+    "upkeep": false,
+    "requirements": {
+      "gold": 2000,
+      "platinum": 3000
+    },
+    "emojis": {
+      "gold": "<:PostMemesBadge:1013942373128089700>",
+      "platinum": "<:PostMemesBadgeplatinum:1059463436431532042>"
+    }
+  },
+  {
+    "id": "business_savvy",
+    "name": "Business Savvy",
+    "description": "Earned for earning coins from /work.",
+    "stat_key": "work_earnings",
+    "upkeep": false,
+    "requirements": {
+      "gold": 20000000,
+      "platinum": 100000000
+    },
+    "emojis": {
+      "gold": "<:WorkBadge:1016005579770175629>",
+      "platinum": "<:WorkBadgePlatinum:1057314267445067856>"
+    }
+  },
+  {
+    "id": "slot_master",
+    "name": "Slot Master",
+    "description": "Earned for winning games of /slots.",
+    "stat_key": "slots_wins",
+    "upkeep": false,
+    "requirements": {
+      "gold": 15000,
+      "platinum": 20000
+    },
+    "emojis": {
+      "gold": "<:SlotsBadge:1015995758182412289>",
+      "platinum": "<:SlotsBadgePlatinum:1056971289669148733>"
+    }
+  },
+  {
+    "id": "always_high",
+    "name": "Always High",
+    "description": "Earned for winning games of /highlow.",
+    "stat_key": "highlow_wins",
+    "upkeep": true,
+    "requirements": {
+      "gold": 12500,
+      "platinum": 20000
+    },
+    "emojis": {
+      "gold": "<:HighLowBadge:1013928920812367942>",
+      "platinum": "<:HighLowBadgeplatinum:1057979569002516530>"
+    }
+  },
+  {
+    "id": "rob_badge",
+    "name": "Rob Them Blind",
+    "description": "Earned for successfully robbing X coins.",
+    "stat_key": "rob_coins",
+    "upkeep": false,
+    "requirements": {
+      "gold": 50000000000,
+      "platinum": 200000000000
+    },
+    "emojis": {
+      "gold": "<:RobBadge:1008097237668216862>",
+      "platinum": "<:RobBadgeplatinum:1058392776905072660>"
+    }
+  },
+  {
+    "id": "slippery_snake",
+    "name": "Slippery Snake",
+    "description": "Earned for winning games of /snakeeyes.",
+    "stat_key": "snakeeyes_wins",
+    "upkeep": false,
+    "requirements": {
+      "gold": 5000,
+      "platinum": 10000
+    },
+    "emojis": {
+      "gold": "<a:SnakeEyesBadge:1015946571864625193>",
+      "platinum": "<:snakeeyesbadgeplatinum:1057677927531151420>"
+    }
+  },
+  {
+    "id": "goldzilla",
+    "name": "Goldzilla",
+    "description": "Earned for having a net worth of X.",
+    "stat_key": "net_worth",
+    "is_computed": true,
+    "upkeep": true,
+    "requirements": {
+      "gold": 100000000000,
+      "platinum": 300000000000
+    },
+    "emojis": {
+      "gold": "<:NetWorthBadgeGold:1106115270197645322>",
+      "platinum": "<:NetWorthBadgePlatinum:1106115527904071710>"
+    }
+  },
+  {
+    "id": "p2w_player",
+    "name": "P2W Player",
+    "description": "Earned for being a supporter for X consecutive months.",
+    "stat_key": "patreon_months",
+    "upkeep": false,
+    "requirements": {
+      "gold": 3,
+      "platinum": 12
+    },
+    "emojis": {
+      "gold": "<:PatreonBadge:908013896814714881>",
+      "platinum": "<:PatreonBadgePlatinum:1060582731588841502>"
+    }
+  }
+]

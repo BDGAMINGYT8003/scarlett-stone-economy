@@ -280,6 +280,11 @@ module.exports = {
 
                 setDurationCooldown(userId, 'postmemes', cooldownTime, premiumCooldownTime);
 
+                // Increment Stats
+                if (outcome.type !== 'dead' && outcome.type !== 'fail') {
+                    db.incrementStat(userId, 'postmemes_count');
+                }
+
                 // Disable all
                 const disabledRow1 = new ActionRowBuilder().addComponents(
                     platformSelect.setDisabled(true)

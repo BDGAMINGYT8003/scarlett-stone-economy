@@ -80,6 +80,7 @@ async function runSnakeEyes(interaction, betAmount) {
 
     if (winnings > 0) {
         db.addBalance(userId, winnings);
+        db.incrementStat(userId, 'snakeeyes_wins');
     }
 
     // Refresh user data for final balance display

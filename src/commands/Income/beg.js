@@ -67,6 +67,7 @@ module.exports = {
             const totalAmount = baseAmount + bonusAmount;
 
             db.addBalance(userId, totalAmount);
+            db.incrementStat(userId, 'beg_count');
 
             const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
             const formattedQuote = quote.replace('{amount}', totalAmount.toLocaleString());

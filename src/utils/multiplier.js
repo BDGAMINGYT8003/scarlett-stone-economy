@@ -1,6 +1,7 @@
 const db = require('./db');
 const items = require('../config/items.json');
 const jobs = require('../config/jobs.json');
+const badgesConfig = require('../config/badges.json');
 
 /**
  * Calculates the user's total multiplier and returns a breakdown.
@@ -24,8 +25,6 @@ function getMultipliers(userId) {
     }
 
     // 2. Promotions (Prestige Proxy)
-    // The prompt mentions "Prestige 6" -> +30%. So 5% per level.
-    // We use 'promotions' column as a proxy for Prestige/Promotion level.
     if (user.promotions > 0) {
         const amount = user.promotions * 5;
         breakdown.push({ name: `Prestige ${user.promotions}`, amount });
@@ -33,13 +32,7 @@ function getMultipliers(userId) {
     }
 
     // 3. Level Up Rewards (Shifts Proxy)
-    // Prompt: "+6% Level Up Rewards".
-    // We can use total_shifts_completed as "Level".
-    // Let's say 1 level per 10 shifts? Or just 1% per 20 shifts?
-    // Let's go with 0.1% per shift to reward grinding.
     if (user.total_shifts_completed > 0) {
-        // Cap at some reasonable amount if needed, or let it scale.
-        // For 6%, that would be 60 shifts.
         const amount = Math.floor(user.total_shifts_completed * 0.1);
         if (amount > 0) {
             breakdown.push({ name: 'Level Up Rewards', amount });
@@ -49,7 +42,7 @@ function getMultipliers(userId) {
 
     // 4. Daily Streak
     if (user.daily_streak > 0) {
-        const amount = Math.min(user.daily_streak, 100); // 1% per day, cap at 100%
+        const amount = Math.min(user.daily_streak, 100);
         breakdown.push({ name: `${user.daily_streak} Day Streak`, amount });
         total += amount;
     }
@@ -58,37 +51,50 @@ function getMultipliers(userId) {
     if (user.job_id) {
         const job = jobs.find(j => j.id === user.job_id);
         if (job) {
-            // Use specific multiplier from config, default to 1% if missing
             const amount = job.multiplier || 1;
             breakdown.push({ name: `Working as ${job.name}`, amount });
             total += amount;
         }
     }
 
-    // 6. Badges (Mock based on net worth?)
-    // Prompt: "9 Badges -> +135%". 15% per badge.
-    // We don't have badges. Let's create pseudo-badges based on net worth milestones.
-    // 1M, 5M, 10M, 50M, 100M, 500M, 1B...
+    // 6. Badges (Real System)
     const netWorth = db.calculateNetWorth(userId);
-    let badgeCount = 0;
-    if (netWorth >= 1000000) badgeCount++;
-    if (netWorth >= 5000000) badgeCount++;
-    if (netWorth >= 10000000) badgeCount++;
-    if (netWorth >= 50000000) badgeCount++;
-    if (netWorth >= 100000000) badgeCount++;
-    if (netWorth >= 500000000) badgeCount++;
-    if (netWorth >= 1000000000) badgeCount++;
+    let earnedBadges = 0;
+    let badgeMultiplier = 0;
 
-    if (badgeCount > 0) {
-        const amount = badgeCount * 15;
-        breakdown.push({ name: `${badgeCount} Badges`, amount });
-        total += amount;
+    badgesConfig.forEach(badge => {
+        let currentValue = 0;
+        if (badge.id === '2025_badge') {
+            currentValue = user.used_2025_last_day ? 1 : 0;
+        } else if (badge.is_computed && badge.stat_key === 'net_worth') {
+            currentValue = netWorth;
+        } else {
+            currentValue = user[badge.stat_key] || 0;
+        }
+
+        if (badge.id === '2025_badge') {
+             // 2025 badge has no platinum/gold distinction in config, but requirements says 'gold: 1'.
+             if (currentValue >= 1) {
+                 earnedBadges++;
+                 badgeMultiplier += 5; // Assuming normal badge value
+             }
+        } else {
+            if (currentValue >= badge.requirements.platinum) {
+                earnedBadges++;
+                badgeMultiplier += 10;
+            } else if (currentValue >= badge.requirements.gold) {
+                earnedBadges++;
+                badgeMultiplier += 5;
+            }
+        }
+    });
+
+    if (earnedBadges > 0) {
+        breakdown.push({ name: `${earnedBadges} Badges`, amount: badgeMultiplier });
+        total += badgeMultiplier;
     }
 
     // 7. Inventory Items (Tips)
-    // Check for specific items that might give multiplier
-    // "Fidget Spinner" was referenced in archive but not in items.json currently.
-    // Let's use "Diamond" as a multiplier item (+2% per diamond, max 20%)
     const diamond = items.find(i => i.id === 'diamond');
     if (diamond) {
         const count = db.getItemCount(userId, 'diamond');
@@ -99,7 +105,6 @@ function getMultipliers(userId) {
         }
     }
 
-    // "Beggars Bowl" -> +5% multiplier (it's Rare)
     const bowl = items.find(i => i.id === 'beggars_bowl');
     if (bowl) {
         const count = db.getItemCount(userId, 'beggars_bowl');

@@ -18,18 +18,32 @@ db.prepare(`
         total_shifts_completed INTEGER DEFAULT 0,
         last_shift_timestamp INTEGER DEFAULT 0,
         promotions INTEGER DEFAULT 0,
-        is_premium INTEGER DEFAULT 0
+        is_premium INTEGER DEFAULT 0,
+        beg_count INTEGER DEFAULT 0,
+        search_count INTEGER DEFAULT 0,
+        crime_count INTEGER DEFAULT 0,
+        postmemes_count INTEGER DEFAULT 0,
+        work_earnings INTEGER DEFAULT 0,
+        slots_wins INTEGER DEFAULT 0,
+        highlow_wins INTEGER DEFAULT 0,
+        snakeeyes_wins INTEGER DEFAULT 0,
+        rob_coins INTEGER DEFAULT 0,
+        patreon_months INTEGER DEFAULT 0,
+        used_2025_last_day INTEGER DEFAULT 0
     )
 `).run();
 
 // Migrations for existing DB
-try { db.prepare('ALTER TABLE users ADD COLUMN daily_streak INTEGER DEFAULT 0').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN job_id TEXT DEFAULT NULL').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN shifts_completed_today INTEGER DEFAULT 0').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN total_shifts_completed INTEGER DEFAULT 0').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN last_shift_timestamp INTEGER DEFAULT 0').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN promotions INTEGER DEFAULT 0').run(); } catch (e) {}
-try { db.prepare('ALTER TABLE users ADD COLUMN is_premium INTEGER DEFAULT 0').run(); } catch (e) {}
+const columns = [
+    'daily_streak', 'job_id', 'shifts_completed_today', 'total_shifts_completed',
+    'last_shift_timestamp', 'promotions', 'is_premium', 'beg_count', 'search_count',
+    'crime_count', 'postmemes_count', 'work_earnings', 'slots_wins', 'highlow_wins',
+    'snakeeyes_wins', 'rob_coins', 'patreon_months', 'used_2025_last_day'
+];
+
+columns.forEach(col => {
+    try { db.prepare(`ALTER TABLE users ADD COLUMN ${col} INTEGER DEFAULT 0`).run(); } catch (e) {}
+});
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -86,6 +100,28 @@ const increaseBankCapacity = (userId, amount) => {
     getUser(userId);
     db.prepare('UPDATE users SET bank_capacity = bank_capacity + ? WHERE id = ?').run(amount, userId);
 };
+
+// Stat Increment Methods
+const incrementStat = (userId, stat, amount = 1) => {
+    getUser(userId);
+    // Validate stat column to prevent SQL injection or errors
+    const validStats = [
+        'beg_count', 'search_count', 'crime_count', 'postmemes_count',
+        'work_earnings', 'slots_wins', 'highlow_wins', 'snakeeyes_wins',
+        'rob_coins', 'patreon_months', 'used_2025_last_day'
+    ];
+    if (validStats.includes(stat)) {
+        db.prepare(`UPDATE users SET ${stat} = ${stat} + ? WHERE id = ?`).run(amount, userId);
+    }
+};
+
+const setStat = (userId, stat, value) => {
+    getUser(userId);
+    const validStats = ['used_2025_last_day', 'patreon_months'];
+    if (validStats.includes(stat)) {
+        db.prepare(`UPDATE users SET ${stat} = ? WHERE id = ?`).run(value, userId);
+    }
+}
 
 // Reward Methods
 const setLastClaimed = (userId, type, timestamp) => {
@@ -183,6 +219,8 @@ module.exports = {
     addBank,
     removeBank,
     increaseBankCapacity,
+    incrementStat,
+    setStat,
     setLastClaimed,
     setStreak,
     setJob,

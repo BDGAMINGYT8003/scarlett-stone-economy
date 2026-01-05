@@ -74,6 +74,7 @@ module.exports = {
                     // Jackpot Win
                     reward = Math.floor(Math.random() * (150000 - 100000 + 1)) + 100000;
                     db.addBalance(userId, reward);
+                    db.incrementStat(userId, 'highlow_wins');
 
                     resultEmbed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}'s JACKPOT HIGH-LOW GAME!`)
@@ -84,6 +85,7 @@ module.exports = {
                     // Normal Win
                     reward = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
                     db.addBalance(userId, reward);
+                    db.incrementStat(userId, 'highlow_wins');
 
                     resultEmbed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}'s winning High-Low Game`)

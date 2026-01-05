@@ -156,6 +156,11 @@ module.exports = {
             // Set Cooldown on successful interaction
             setDurationCooldown(userId, 'crime', 25, 10);
 
+            // Increment Stats
+            if (isSpecial || amount > 0) {
+                 db.incrementStat(userId, 'crime_count');
+            }
+
             // Update UI
             const updatedButtons = buttons.map(btn => {
                 const isSelected = btn.data.custom_id === i.customId;
