@@ -18,7 +18,8 @@ const categories = {
         { name: '/snakeeyes', description: 'Roll the dice for a chance to win big!' },
         { name: '/highlow', description: 'Guess if the secret number is higher or lower!' },
         { name: '/postmemes', description: 'Post a meme to earn money (requires a Laptop).' },
-        { name: '/work', description: 'Work shifts to earn money and unlock better jobs.' }
+        { name: '/work', description: 'Work shifts to earn money and unlock better jobs.' },
+        { name: '/multipliers', description: 'Check your current coin multipliers.' }
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' }

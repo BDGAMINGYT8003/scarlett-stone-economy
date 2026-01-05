@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
+const { getMultipliers } = require('../../utils/multiplier');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
@@ -86,9 +87,11 @@ module.exports = {
 
             let isSpecial = false;
             let amount = 0;
+            let bonusAmount = 0; // Store bonus separately
             let fine = 0;
             let message = "";
             let item = null;
+            let multiTotal = 0;
 
             // Check for Special Outcome First
             if (crime.special_outcome && Math.random() * 100 < crime.special_outcome.chance) {
@@ -115,7 +118,14 @@ module.exports = {
                     const outcomes = crime.outcomes.success;
                     message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
-                    amount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
+                    const baseAmount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
+
+                    // Multiplier
+                    const multipliers = getMultipliers(userId);
+                    multiTotal = multipliers.total;
+                    bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
+                    amount = baseAmount + bonusAmount;
+
                     db.addBalance(userId, amount);
                     message = message.replace('{amount}', amount.toLocaleString());
                 } else {
@@ -167,7 +177,13 @@ module.exports = {
                 resultEmbed.setFooter({ text: 'RARE DROP!' });
             } else if (amount > 0) {
                 resultEmbed.setColor(0x00FF00);
-                resultEmbed.setFooter({ text: 'Crime pays!' });
+
+                if (multiTotal > 0) {
+                     const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                     resultEmbed.setFooter({ text: `Multi Bonus: +${multiTotal}% (+ ֍ ${bonusAmount.toLocaleString()}) | Today at ${timeString}` });
+                } else {
+                    resultEmbed.setFooter({ text: 'Crime pays!' });
+                }
             } else {
                 resultEmbed.setColor(0xFF0000);
                 resultEmbed.setFooter({ text: 'Busted!' });

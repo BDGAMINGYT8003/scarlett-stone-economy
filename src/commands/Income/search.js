@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
+const { getMultipliers } = require('../../utils/multiplier');
 const locations = require('../../config/locations.json');
 const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
@@ -74,8 +75,10 @@ module.exports = {
 
             let isSpecial = false;
             let amount = 0;
+            let bonusAmount = 0;
             let message = "";
             let item = null;
+            let multiTotal = 0;
 
             // Check for Special Outcome First
             if (location.special_outcome && Math.random() * 100 < location.special_outcome.chance) {
@@ -103,7 +106,13 @@ module.exports = {
                 message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
                 if (isSuccess) {
-                    amount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
+                    const baseAmount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
+
+                    const multipliers = getMultipliers(userId);
+                    multiTotal = multipliers.total;
+                    bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
+                    amount = baseAmount + bonusAmount;
+
                     db.addBalance(userId, amount);
                     message = message.replace('{amount}', amount.toLocaleString());
                 }
@@ -133,7 +142,13 @@ module.exports = {
                 resultEmbed.setFooter({ text: 'RARE DROP!' });
             } else if (amount > 0) {
                 resultEmbed.setColor(0x00FF00);
-                resultEmbed.setFooter({ text: 'Lucky you!' });
+
+                if (multiTotal > 0) {
+                     const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                     resultEmbed.setFooter({ text: `Multi Bonus: +${multiTotal}% (+ ֍ ${bonusAmount.toLocaleString()}) | Today at ${timeString}` });
+                } else {
+                    resultEmbed.setFooter({ text: 'Lucky you!' });
+                }
             } else {
                 resultEmbed.setColor(0xFF0000);
                 resultEmbed.setFooter({ text: 'Better luck next time.' });

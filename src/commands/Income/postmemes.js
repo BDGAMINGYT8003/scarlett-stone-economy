@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
+const { getMultipliers } = require('../../utils/multiplier');
 const items = require('../../config/items.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -230,6 +231,11 @@ module.exports = {
                     // 30% chance for item if available in outcome pool
                     const isItem = (outcome.items && outcome.items.length > 0 && Math.random() < 0.3);
 
+                    let bonusMoney = 0;
+
+                    // Fetch Multipliers ONCE
+                    const { total: multiTotal } = getMultipliers(userId);
+
                     if (isItem) {
                         const itemId = outcome.items[Math.floor(Math.random() * outcome.items.length)];
                         const itemObj = items.find(it => it.id === itemId);
@@ -238,11 +244,19 @@ module.exports = {
                             db.addItem(userId, itemObj.id, 1);
                         } else {
                             // Fallback if item not found
-                            wonMoney = Math.floor(Math.random() * (outcome.max - outcome.min + 1)) + outcome.min;
+                            const baseMoney = Math.floor(Math.random() * (outcome.max - outcome.min + 1)) + outcome.min;
+
+                            bonusMoney = Math.floor(baseMoney * (multiTotal / 100));
+                            wonMoney = baseMoney + bonusMoney;
+
                             db.addBalance(userId, wonMoney);
                         }
                     } else {
-                        wonMoney = Math.floor(Math.random() * (outcome.max - outcome.min + 1)) + outcome.min;
+                        const baseMoney = Math.floor(Math.random() * (outcome.max - outcome.min + 1)) + outcome.min;
+
+                        bonusMoney = Math.floor(baseMoney * (multiTotal / 100));
+                        wonMoney = baseMoney + bonusMoney;
+
                         db.addBalance(userId, wonMoney);
                     }
 
@@ -253,8 +267,14 @@ module.exports = {
                     finalEmbed = new EmbedBuilder()
                         .setTitle(`${interaction.user.username}'s Meme Posting Session`)
                         .setDescription(desc)
-                        .setFooter({ text: 'Meme Lord Status: Rising' })
                         .setColor(0x00FF00);
+
+                    if (wonMoney > 0 && multiTotal > 0) {
+                        const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        finalEmbed.setFooter({ text: `Multi Bonus: +${multiTotal}% (+ ֍ ${bonusMoney.toLocaleString()}) | Today at ${timeString}` });
+                    } else {
+                        finalEmbed.setFooter({ text: 'Meme Lord Status: Rising' });
+                    }
                     buttonStyle = ButtonStyle.Success;
                 }
 

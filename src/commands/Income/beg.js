@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
+const { getMultipliers } = require('../../utils/multiplier');
 const peoples = require('../../config/peoples.json');
 const items = require('../../config/items.json');
 
@@ -58,15 +59,27 @@ module.exports = {
             .setTitle(person.name);
 
         if (isSuccess) {
-            const amount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
-            db.addBalance(userId, amount);
+            const baseAmount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
+
+            // Calculate Multiplier
+            const { total: multiTotal } = getMultipliers(userId);
+            const bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
+            const totalAmount = baseAmount + bonusAmount;
+
+            db.addBalance(userId, totalAmount);
 
             const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
-            const formattedQuote = quote.replace('{amount}', amount.toLocaleString());
+            const formattedQuote = quote.replace('{amount}', totalAmount.toLocaleString());
 
             embed.setColor(0x00FF00)
-                .setDescription(formattedQuote)
-                .setFooter({ text: 'They felt bad for you' });
+                .setDescription(formattedQuote);
+
+            if (multiTotal > 0) {
+                const timeString = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                embed.setFooter({ text: `Multi Bonus: +${multiTotal}% (+ ֍ ${bonusAmount.toLocaleString()}) | Today at ${timeString}` });
+            } else {
+                embed.setFooter({ text: 'They felt bad for you' });
+            }
         } else {
             const quote = person.fail_quotes[Math.floor(Math.random() * person.fail_quotes.length)];
 
