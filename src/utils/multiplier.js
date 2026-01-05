@@ -58,7 +58,8 @@ function getMultipliers(userId) {
     if (user.job_id) {
         const job = jobs.find(j => j.id === user.job_id);
         if (job) {
-            const amount = 10;
+            // Use specific multiplier from config, default to 1% if missing
+            const amount = job.multiplier || 1;
             breakdown.push({ name: `Working as ${job.name}`, amount });
             total += amount;
         }

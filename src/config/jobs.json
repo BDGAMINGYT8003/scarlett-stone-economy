@@ -6,7 +6,8 @@
     "req_shifts": 0,
     "cooldown": 40,
     "salary": 85000,
-    "daily_req": 0
+    "daily_req": 0,
+    "multiplier": 1
   },
   {
     "id": "babysitter",
@@ -15,7 +16,8 @@
     "req_shifts": 0,
     "cooldown": 40,
     "salary": 90000,
-    "daily_req": 0
+    "daily_req": 0,
+    "multiplier": 2
   },
   {
     "id": "fast_food_worker",
@@ -24,7 +26,8 @@
     "req_shifts": 0,
     "cooldown": 43,
     "salary": 100000,
-    "daily_req": 1
+    "daily_req": 1,
+    "multiplier": 3
   },
   {
     "id": "house_sitter",
@@ -33,7 +36,8 @@
     "req_shifts": 0,
     "cooldown": 43,
     "salary": 110000,
-    "daily_req": 1
+    "daily_req": 1,
+    "multiplier": 4
   },
   {
     "id": "dog_walker",
@@ -42,7 +46,8 @@
     "req_shifts": 20,
     "cooldown": 46,
     "salary": 115000,
-    "daily_req": 2
+    "daily_req": 2,
+    "multiplier": 5
   },
   {
     "id": "tutor",
@@ -51,7 +56,8 @@
     "req_shifts": 20,
     "cooldown": 46,
     "salary": 125000,
-    "daily_req": 2
+    "daily_req": 2,
+    "multiplier": 6
   },
   {
     "id": "twitch_streamer",
@@ -60,7 +66,8 @@
     "req_shifts": 30,
     "cooldown": 49,
     "salary": 130000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 7
   },
   {
     "id": "youtuber",
@@ -69,7 +76,8 @@
     "req_shifts": 30,
     "cooldown": 49,
     "salary": 140000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 8
   },
   {
     "id": "professional_gamer",
@@ -78,7 +86,8 @@
     "req_shifts": 30,
     "cooldown": 49,
     "salary": 150000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 9
   },
   {
     "id": "influencer",
@@ -87,7 +96,8 @@
     "req_shifts": 30,
     "cooldown": 49,
     "salary": 175000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 10
   },
   {
     "id": "developer",
@@ -96,16 +106,18 @@
     "req_shifts": 40,
     "cooldown": 49,
     "salary": 175000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 11
   },
   {
     "id": "teacher",
-    "name": "Teacher",
+    "name": "Professor",
     "emoji": "🍎",
     "req_shifts": 50,
     "cooldown": 49,
     "salary": 180000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 12
   },
   {
     "id": "nurse",
@@ -114,7 +126,8 @@
     "req_shifts": 60,
     "cooldown": 49,
     "salary": 190000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 13
   },
   {
     "id": "doctor",
@@ -123,7 +136,8 @@
     "req_shifts": 80,
     "cooldown": 49,
     "salary": 200000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 14
   },
   {
     "id": "musician",
@@ -132,7 +146,8 @@
     "req_shifts": 85,
     "cooldown": 49,
     "salary": 205000,
-    "daily_req": 3
+    "daily_req": 3,
+    "multiplier": 15
   },
   {
     "id": "actor",
@@ -141,7 +156,8 @@
     "req_shifts": 100,
     "cooldown": 52,
     "salary": 210000,
-    "daily_req": 4
+    "daily_req": 4,
+    "multiplier": 16
   },
   {
     "id": "scientist",
@@ -150,7 +166,8 @@
     "req_shifts": 120,
     "cooldown": 52,
     "salary": 215000,
-    "daily_req": 4
+    "daily_req": 4,
+    "multiplier": 17
   },
   {
     "id": "astronaut",
@@ -159,7 +176,8 @@
     "req_shifts": 150,
     "cooldown": 52,
     "salary": 220000,
-    "daily_req": 4
+    "daily_req": 4,
+    "multiplier": 18
   },
   {
     "id": "president",
@@ -168,7 +186,8 @@
     "req_shifts": 175,
     "cooldown": 55,
     "salary": 225000,
-    "daily_req": 5
+    "daily_req": 5,
+    "multiplier": 19
   },
   {
     "id": "god",
@@ -177,6 +196,7 @@
     "req_shifts": 185,
     "cooldown": 55,
     "salary": 230000,
-    "daily_req": 5
+    "daily_req": 5,
+    "multiplier": 20
   }
 ]
