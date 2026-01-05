@@ -29,7 +29,8 @@ db.prepare(`
         snakeeyes_wins INTEGER DEFAULT 0,
         rob_coins INTEGER DEFAULT 0,
         patreon_months INTEGER DEFAULT 0,
-        used_2025_last_day INTEGER DEFAULT 0
+        used_2025_last_day INTEGER DEFAULT 0,
+        unlocked_badges TEXT DEFAULT '[]'
     )
 `).run();
 
@@ -44,6 +45,9 @@ const columns = [
 columns.forEach(col => {
     try { db.prepare(`ALTER TABLE users ADD COLUMN ${col} INTEGER DEFAULT 0`).run(); } catch (e) {}
 });
+
+// Separate migration for text column
+try { db.prepare(`ALTER TABLE users ADD COLUMN unlocked_badges TEXT DEFAULT '[]'`).run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -122,6 +126,20 @@ const setStat = (userId, stat, value) => {
         db.prepare(`UPDATE users SET ${stat} = ? WHERE id = ?`).run(value, userId);
     }
 }
+
+const getUnlockedBadges = (userId) => {
+    const user = getUser(userId);
+    try {
+        return JSON.parse(user.unlocked_badges || '[]');
+    } catch (e) {
+        return [];
+    }
+};
+
+const setUnlockedBadges = (userId, badges) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET unlocked_badges = ? WHERE id = ?').run(JSON.stringify(badges), userId);
+};
 
 // Reward Methods
 const setLastClaimed = (userId, type, timestamp) => {
@@ -221,6 +239,8 @@ module.exports = {
     increaseBankCapacity,
     incrementStat,
     setStat,
+    getUnlockedBadges,
+    setUnlockedBadges,
     setLastClaimed,
     setStreak,
     setJob,

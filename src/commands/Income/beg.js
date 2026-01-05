@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js'
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const { getMultipliers } = require('../../utils/multiplier');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const peoples = require('../../config/peoples.json');
 const items = require('../../config/items.json');
 
@@ -68,6 +69,7 @@ module.exports = {
 
             db.addBalance(userId, totalAmount);
             db.incrementStat(userId, 'beg_count');
+            await checkAndUnlockBadges(userId, interaction);
 
             const quote = person.success_quotes[Math.floor(Math.random() * person.success_quotes.length)];
             const formattedQuote = quote.replace('{amount}', totalAmount.toLocaleString());

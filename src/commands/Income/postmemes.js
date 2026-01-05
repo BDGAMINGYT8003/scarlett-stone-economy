@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { getMultipliers } = require('../../utils/multiplier');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const items = require('../../config/items.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -283,6 +284,7 @@ module.exports = {
                 // Increment Stats
                 if (outcome.type !== 'dead' && outcome.type !== 'fail') {
                     db.incrementStat(userId, 'postmemes_count');
+                    await checkAndUnlockBadges(userId, i);
                 }
 
                 // Disable all

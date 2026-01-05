@@ -1,6 +1,7 @@
 const { Events } = require('discord.js');
 const { log } = require('../utils/logger');
 const db = require('../utils/db');
+const { checkAndUnlockBadges } = require('../utils/badgeManager');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -13,6 +14,7 @@ module.exports = {
                 const user = db.getUser(interaction.user.id);
                 if (!user.used_2025_last_day) {
                     db.setStat(interaction.user.id, 'used_2025_last_day', 1);
+                    await checkAndUnlockBadges(interaction.user.id, interaction);
                 }
             }
         }

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { getMultipliers } = require('../../utils/multiplier');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
@@ -159,6 +160,7 @@ module.exports = {
             // Increment Stats
             if (isSpecial || amount > 0) {
                  db.incrementStat(userId, 'crime_count');
+                 await checkAndUnlockBadges(userId, interaction);
             }
 
             // Update UI

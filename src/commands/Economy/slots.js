@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser');
 
 const SYMBOLS = [
@@ -185,6 +186,7 @@ async function runSlots(interaction, betAmount) {
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.incrementStat(userId, 'slots_wins');
+        await checkAndUnlockBadges(userId, interaction);
     }
 
     await interaction.editReply({
