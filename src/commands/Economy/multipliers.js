@@ -23,7 +23,6 @@ module.exports = {
                 description += "No active multipliers.";
             } else {
                 currentItems.forEach(item => {
-                    // Example format: ` +135% ` 9 Badges
                     const amountStr = `+${item.amount}%`;
                     const paddedAmount = amountStr.padStart(5, ' ');
                     description += `\` ${paddedAmount} \` ${item.name}\n`;
@@ -77,16 +76,59 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your session!', flags: MessageFlags.Ephemeral });
+            if (i.customId === 'multi_help') {
+                 if (i.user.id !== interaction.user.id) {
+                     const errorEmbed = new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('This is not your session.')
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Run the command yourself!' });
+                     return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                 }
+
+                const helpEmbed = new EmbedBuilder()
+                    .setTitle('Multiplier Sources')
+                    .setDescription('Multipliers boost your earnings from commands like `/beg`, `/search`, and `/crime`. Here is how you can stack them:')
+                    .addFields(
+                        {
+                            name: '💼 Jobs',
+                            value: 'Earn **1% - 20%** based on your job role.\nHigh-tier jobs provide higher multipliers.',
+                            inline: false
+                        },
+                        {
+                            name: '📛 Badges',
+                            value: 'Each badge grants **+15%**.\nCollect all badges for massive bonuses!',
+                            inline: false
+                        },
+                        {
+                            name: '🌟 Prestige',
+                            value: 'Each Prestige level adds **+5%**.\nReset your progress to gain permanent multipliers.',
+                            inline: false
+                        },
+                        {
+                            name: '📈 Level',
+                            value: 'Gain **+1%** for every level you advance.\nJust keep playing to level up!',
+                            inline: false
+                        },
+                        {
+                            name: '💎 Premium',
+                            value: 'Premium members get a flat **+50%** bonus.\nSupport the bot to earn more!',
+                            inline: false
+                        }
+                    )
+                    .setColor(0xF1C40F) // Gold/Yellow color
+                    .setFooter({ text: 'Stack these to maximize your income!' });
+
+                return i.reply({ embeds: [helpEmbed], flags: MessageFlags.Ephemeral });
             }
 
-            if (i.customId === 'multi_help') {
-                const helpEmbed = new EmbedBuilder()
-                    .setTitle('Multiplier System')
-                    .setDescription('Multipliers increase the amount of coins you get from commands like `/beg`, `/search`, and `/crime`.\n\n**Sources:**\n- **Badges:** +15% per badge\n- **Prestige:** +5% per prestige level\n- **Level:** +1% per level\n- **Premium:** +50% bonus')
-                    .setColor(0x00FF00);
-                return i.reply({ embeds: [helpEmbed], flags: MessageFlags.Ephemeral });
+            if (i.user.id !== interaction.user.id) {
+                const errorEmbed = new EmbedBuilder()
+                    .setTitle('Error')
+                    .setDescription('This is not your session.')
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'Run the command yourself!' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'multi_prev') {

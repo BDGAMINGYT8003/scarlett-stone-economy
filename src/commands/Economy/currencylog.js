@@ -13,10 +13,10 @@ module.exports = {
         .setDescription('See a complete log of all currency going in or out of your inventory.'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        const logs = db.getCurrencyLogs(userId); // Returns max 100
+        let logs = db.getCurrencyLogs(userId); // Returns max 500 (updated in db.js)
 
         let currentPage = 0;
-        const maxPages = Math.ceil(logs.length / ITEMS_PER_PAGE) || 1;
+        let maxPages = Math.ceil(logs.length / ITEMS_PER_PAGE) || 1;
 
         const generateEmbed = () => {
             const start = currentPage * ITEMS_PER_PAGE;
@@ -32,9 +32,9 @@ module.exports = {
                     const timestampUnix = Math.floor(log.timestamp / 1000);
                     const amountStr = log.amount >= 0 ? `⏣ ${log.amount.toLocaleString()}` : `- ⏣ ${Math.abs(log.amount).toLocaleString()}`;
 
-                    desc += `**Command: ${log.type}**\n`;
+                    desc += `**Type: ${log.type}**\n`;
                     desc += `${REPLY_CONT} <t:${timestampUnix}:R>\n`;
-                    desc += `${REPLY} ${amountStr} in pocket\n\n`;
+                    desc += `${REPLY} ${amountStr}\n\n`;
                 });
             }
 
@@ -68,15 +68,20 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your log!', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder()
+                    .setTitle('Error')
+                    .setDescription('This is not your log interaction.')
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'Run the command yourself!' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'prev_page') currentPage--;
             if (i.customId === 'next_page') currentPage++;
             if (i.customId === 'refresh_logs') {
-                // Refresh data logic? We fetched logs once. Ideally fetch again.
-                // But for pagination, local array is fine unless real-time updates needed.
-                // User asked for "refresh emoji".
+                logs = db.getCurrencyLogs(userId);
+                maxPages = Math.ceil(logs.length / ITEMS_PER_PAGE) || 1;
+                currentPage = 0; // Reset to start to see new logs
             }
 
             await i.update({
