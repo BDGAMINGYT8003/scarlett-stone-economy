@@ -114,6 +114,35 @@ db.prepare(`
     )
 `).run();
 
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS friends (
+        user_id_1 TEXT,
+        user_id_2 TEXT,
+        created_at INTEGER DEFAULT 0,
+        PRIMARY KEY (user_id_1, user_id_2)
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS friend_removals (
+        user_id_1 TEXT,
+        user_id_2 TEXT,
+        removed_at INTEGER DEFAULT 0,
+        PRIMARY KEY (user_id_1, user_id_2)
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS currency_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT,
+        type TEXT,
+        amount INTEGER,
+        details TEXT,
+        timestamp INTEGER DEFAULT 0
+    )
+`).run();
+
 // User Methods
 const getUser = (userId) => {
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
@@ -403,6 +432,69 @@ const calculateNetWorth = (userId) => {
     return (user.balance ?? 0) + (user.bank ?? 0) + invValue;
 };
 
+// Friend Methods
+const getFriends = (userId) => {
+    return db.prepare('SELECT * FROM friends WHERE user_id_1 = ? OR user_id_2 = ?').all(userId, userId);
+};
+
+const areFriends = (userId1, userId2) => {
+    const [u1, u2] = [userId1, userId2].sort();
+    return !!db.prepare('SELECT 1 FROM friends WHERE user_id_1 = ? AND user_id_2 = ?').get(u1, u2);
+};
+
+const addFriend = (userId1, userId2) => {
+    const [u1, u2] = [userId1, userId2].sort();
+    const existing = areFriends(u1, u2);
+    if (!existing) {
+        db.prepare('INSERT INTO friends (user_id_1, user_id_2, created_at) VALUES (?, ?, ?)').run(u1, u2, Date.now());
+        // Remove from removals if exists
+        db.prepare('DELETE FROM friend_removals WHERE user_id_1 = ? AND user_id_2 = ?').run(u1, u2);
+        return true;
+    }
+    return false;
+};
+
+const removeFriend = (userId1, userId2) => {
+    const [u1, u2] = [userId1, userId2].sort();
+    const existing = areFriends(u1, u2);
+    if (existing) {
+        db.prepare('DELETE FROM friends WHERE user_id_1 = ? AND user_id_2 = ?').run(u1, u2);
+        db.prepare('INSERT OR REPLACE INTO friend_removals (user_id_1, user_id_2, removed_at) VALUES (?, ?, ?)').run(u1, u2, Date.now());
+        return true;
+    }
+    return false;
+};
+
+const getFriendCooldown = (userId1, userId2) => {
+    const [u1, u2] = [userId1, userId2].sort();
+    const removal = db.prepare('SELECT removed_at FROM friend_removals WHERE user_id_1 = ? AND user_id_2 = ?').get(u1, u2);
+    if (removal) {
+        // Check if 24 hours passed
+        if (Date.now() - removal.removed_at < 24 * 60 * 60 * 1000) {
+            return removal.removed_at + (24 * 60 * 60 * 1000);
+        }
+    }
+    return 0;
+};
+
+// Currency Log Methods
+const logTransaction = (userId, type, details) => {
+    // details should be object, stored as string
+    const amount = details.amount || 0;
+    db.prepare('INSERT INTO currency_logs (user_id, type, amount, details, timestamp) VALUES (?, ?, ?, ?, ?)').run(userId, type, amount, JSON.stringify(details), Date.now());
+
+    // Maintain limit of 500
+    const count = db.prepare('SELECT COUNT(*) as count FROM currency_logs WHERE user_id = ?').get(userId).count;
+    if (count > 500) {
+        // Delete oldest
+        db.prepare('DELETE FROM currency_logs WHERE id IN (SELECT id FROM currency_logs WHERE user_id = ? ORDER BY timestamp ASC LIMIT ?)').run(userId, count - 500);
+    }
+};
+
+const getLogs = (userId) => {
+    return db.prepare('SELECT * FROM currency_logs WHERE user_id = ? ORDER BY timestamp DESC LIMIT 500').all(userId);
+};
+
 module.exports = {
     getUser,
     isPremium,
@@ -441,5 +533,12 @@ module.exports = {
     setAchievement,
     getTitles,
     addTitle,
-    setTitle
+    setTitle,
+    getFriends,
+    areFriends,
+    addFriend,
+    removeFriend,
+    getFriendCooldown,
+    logTransaction,
+    getLogs
 };
