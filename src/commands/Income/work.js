@@ -451,6 +451,25 @@ module.exports = {
 
     async finishShift(interaction, success, job, userData, defaultSeconds, premiumSeconds) {
         const userId = interaction.user.id;
+
+        // Lazy Reset: Check if starting a new Work Day (6 AM UTC Window)
+        const now = Date.now();
+        const lastShift = userData.last_shift_timestamp || 0;
+
+        const date = new Date();
+        date.setUTCHours(6, 0, 0, 0); // Today 6 AM UTC
+        let anchor = date.getTime();
+
+        // If now is before 6 AM today, the anchor is yesterday 6 AM
+        if (now < anchor) {
+            anchor -= 24 * 60 * 60 * 1000;
+        }
+
+        // If last shift was BEFORE the current anchor, reset daily stats
+        if (lastShift < anchor) {
+            db.resetDailyShifts(userId);
+        }
+
         let salary = job.salary;
 
         if (!success) {
@@ -465,8 +484,8 @@ module.exports = {
         // Set Duration Cooldown
         setDurationCooldown(userId, 'work_shift', defaultSeconds, premiumSeconds);
 
-        // Update Job Stats
-        db.addShift(userId, Date.now());
+        // Update Job Stats (This increments shifts_completed_today)
+        db.addShift(userId, now);
 
         // Check Promotions
         // "Working 10+ shifts in a single day grants 'Promotion Progress'"
