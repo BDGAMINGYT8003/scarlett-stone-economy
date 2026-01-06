@@ -37,6 +37,8 @@ module.exports = {
 
             const xpBar = getProgressBar(xp, xpNeeded, 5);
 
+            const favoriteCommand = db.getFavoriteCommand(userId);
+
             const totalItems = inventory.reduce((acc, i) => acc + i.quantity, 0);
             const uniqueItems = inventory.length;
             const invWorth = netWorth - (user.balance + user.bank); // Approx
@@ -48,7 +50,7 @@ module.exports = {
                     { name: 'Level', value: `Level: \`${level}\`\nExperience: \`${xp}/${xpNeeded}\`\n${xpBar}`, inline: false },
                     { name: 'Coins', value: `Wallet: \`֍ ${formatNumber(user.balance)}\`\nBank: \`֍ ${formatNumber(user.bank)}\`\nNet: \`֍ ${formatNumber(netWorth)}\``, inline: false },
                     { name: 'Items', value: `Unique: \`${uniqueItems}\`\nTotal: \`${formatNumber(totalItems)}\`\nWorth: \`֍ ${formatNumber(invWorth)}\``, inline: false },
-                    { name: 'Commands', value: `Total: \`${formatNumber(commandsRan)}\``, inline: false }
+                    { name: 'Commands', value: `Total: \`${formatNumber(commandsRan)}\`\nFavorite: \`${favoriteCommand}\``, inline: false }
                 )
                 .setThumbnail(targetUser.displayAvatarURL())
                 .setColor(0x0099FF);

@@ -68,6 +68,7 @@ module.exports = {
 
         // Increment Commands Run Stat
         db.incrementStat(interaction.user.id, 'commands_ran');
+        db.incrementCommandUsage(interaction.user.id, interaction.commandName);
         await checkAndUnlockAchievements(interaction.user.id, interaction);
 
         const command = interaction.client.commands.get(interaction.commandName);

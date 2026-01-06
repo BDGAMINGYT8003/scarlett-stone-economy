@@ -96,6 +96,24 @@ db.prepare(`
     )
 `).run();
 
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS user_job_stats (
+        user_id TEXT,
+        job_id TEXT,
+        stars INTEGER DEFAULT 0,
+        PRIMARY KEY (user_id, job_id)
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS command_usage (
+        user_id TEXT,
+        command_name TEXT,
+        count INTEGER DEFAULT 0,
+        PRIMARY KEY (user_id, command_name)
+    )
+`).run();
+
 // User Methods
 const getUser = (userId) => {
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
@@ -313,6 +331,32 @@ const getTotalWorkStars = (userId) => {
     }
 };
 
+const getAllUserJobStars = (userId) => {
+    try {
+        return db.prepare('SELECT * FROM user_job_stats WHERE user_id = ?').all(userId);
+    } catch (e) {
+        return [];
+    }
+};
+
+const incrementCommandUsage = (userId, commandName) => {
+    const existing = db.prepare('SELECT count FROM command_usage WHERE user_id = ? AND command_name = ?').get(userId, commandName);
+    if (existing) {
+        db.prepare('UPDATE command_usage SET count = count + 1 WHERE user_id = ? AND command_name = ?').run(userId, commandName);
+    } else {
+        db.prepare('INSERT INTO command_usage (user_id, command_name, count) VALUES (?, ?, 1)').run(userId, commandName);
+    }
+};
+
+const getFavoriteCommand = (userId) => {
+    try {
+        const result = db.prepare('SELECT command_name, count FROM command_usage WHERE user_id = ? ORDER BY count DESC LIMIT 1').get(userId);
+        return result ? result.command_name : 'None';
+    } catch (e) {
+        return 'None';
+    }
+};
+
 // Inventory Methods
 const addItem = (userId, itemId, quantity) => {
     const current = db.prepare('SELECT quantity FROM inventory WHERE user_id = ? AND item_id = ?').get(userId, itemId);
@@ -385,6 +429,9 @@ module.exports = {
     resetDailyShifts,
     getAllUsersWithJobs,
     getTotalWorkStars,
+    getAllUserJobStars,
+    incrementCommandUsage,
+    getFavoriteCommand,
     addItem,
     removeItem,
     getInventory,

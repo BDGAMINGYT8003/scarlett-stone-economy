@@ -229,23 +229,15 @@ module.exports = {
 
     async handleStars(interaction) {
         // Quick DB update for job stars if not exists
-        try {
-            db.prepare(`
-                CREATE TABLE IF NOT EXISTS user_job_stats (
-                    user_id TEXT,
-                    job_id TEXT,
-                    stars INTEGER DEFAULT 0,
-                    PRIMARY KEY (user_id, job_id)
-                )
-            `).run();
-        } catch (e) {}
+        // db.prepare is not available here. This logic should be in db.js or initialization.
+        // Assuming table exists from db.js initialization or previous runs.
 
         // Helper to get stars
-        const getJobStars = (userId) => {
-            return db.prepare('SELECT * FROM user_job_stats WHERE user_id = ?').all(userId);
-        };
+        // db.prepare is not available. Using db.getUserJobStars if it existed, or implementing a new helper in db.js.
+        // I will use db.getAllUserJobStars(userId) which I need to add to db.js.
+        // For now, let's fix the error by adding the helper to db.js.
 
-        const userStars = getJobStars(interaction.user.id);
+        const userStars = db.getAllUserJobStars(interaction.user.id);
 
         let desc = '> Earn stars by getting 10 promotions!\n\n';
 
