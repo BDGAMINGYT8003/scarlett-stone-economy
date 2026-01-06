@@ -68,9 +68,8 @@ module.exports = {
         if (subcommand === 'money') {
             const amountStr = interaction.options.getString('amount');
             const userData = db.getUser(targetUser.id);
-            const amount = parseNumber(amountStr, userData.balance); // Fallback logic is handled inside parseNumber if balance is 0? Wait, previous code had custom fallback.
+            const amount = parseNumber(amountStr, userData.balance);
 
-            // Re-implement robust parsing
             let finalAmount = amount;
             if (finalAmount <= 0 && amountStr.toLowerCase() !== '0') {
                  const direct = parseFloat(amountStr.replace(/,/g, ''));
@@ -107,7 +106,8 @@ module.exports = {
             const item = items.find(i => i.name === itemName);
 
             if (!item) {
-                return interaction.reply({ content: 'Item not found.', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Item not found.").setColor(0xFF0000).setFooter({ text: 'Check spelling' });
+                return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             const currentCount = db.getItemCount(targetUser.id, item.id);
@@ -145,7 +145,8 @@ module.exports = {
             if (durationStr) {
                 durationMs = parseDuration(durationStr);
                 if (!durationMs) {
-                    return interaction.reply({ content: 'Invalid duration format.', flags: MessageFlags.Ephemeral });
+                    const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Invalid duration format.").setColor(0xFF0000).setFooter({ text: 'Try again' });
+                    return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
                 }
             }
 
@@ -199,7 +200,8 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command.").setColor(0xFF0000).setFooter({ text: 'Go away' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'confirm_grant') {

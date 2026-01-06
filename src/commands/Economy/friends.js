@@ -87,12 +87,24 @@ module.exports = {
         const targetUser = interaction.options.getUser('user');
         const userId = interaction.user.id;
 
-        if (targetUser.id === userId) return interaction.reply({ content: "You can't add yourself!", flags: MessageFlags.Ephemeral });
-        if (targetUser.bot) return interaction.reply({ content: "You can't add bots!", flags: MessageFlags.Ephemeral });
-        if (db.isFriend(userId, targetUser.id)) return interaction.reply({ content: "You are already friends!", flags: MessageFlags.Ephemeral });
+        if (targetUser.id === userId) {
+            const errorEmbed = new EmbedBuilder().setTitle('Oh?').setDescription("You can't add yourself!").setColor(0xFF0000).setFooter({ text: 'Nice try' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
+        if (targetUser.bot) {
+            const errorEmbed = new EmbedBuilder().setTitle('Beep Boop').setDescription("You can't add bots!").setColor(0xFF0000).setFooter({ text: 'They don\'t have feelings' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
+        if (db.isFriend(userId, targetUser.id)) {
+            const errorEmbed = new EmbedBuilder().setTitle('Already Friends').setDescription("You are already friends!").setColor(0xFF0000).setFooter({ text: 'Check your list' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
 
         const friends = db.getFriends(userId);
-        if (friends.length >= 10) return interaction.reply({ content: "You have reached the maximum of 10 friends!", flags: MessageFlags.Ephemeral });
+        if (friends.length >= 10) {
+            const errorEmbed = new EmbedBuilder().setTitle('Limit Reached').setDescription("You have reached the maximum of 10 friends!").setColor(0xFF0000).setFooter({ text: 'Time to prune the list?' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
 
         // Phase 1: Initiator Confirmation
         const embed1 = new EmbedBuilder()
@@ -118,7 +130,10 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== userId) return i.reply({ content: 'Not your command!', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== userId) {
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
 
             if (i.customId === 'cancel_add') {
                 const strikeEmbed = new EmbedBuilder(embed1.toJSON());
@@ -144,7 +159,7 @@ module.exports = {
                     new ButtonBuilder().setCustomId('target_cancel').setLabel('Cancel').setStyle(ButtonStyle.Danger)
                 );
 
-                await i.update({ embeds: [embed1, embed2], components: [row2] }); // Keep embed1? "previous embed will stay".
+                await i.update({ embeds: [embed1, embed2], components: [row2] });
 
                 // New collector for target
                 const targetCollector = response.createMessageComponentCollector({
@@ -153,7 +168,10 @@ module.exports = {
                 });
 
                 targetCollector.on('collect', async ti => {
-                    if (ti.user.id !== targetUser.id) return ti.reply({ content: 'Not for you!', flags: MessageFlags.Ephemeral });
+                    if (ti.user.id !== targetUser.id) {
+                         const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not for you!").setColor(0xFF0000).setFooter({ text: 'Wait your turn' });
+                        return ti.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+                    }
 
                     if (ti.customId === 'target_cancel') {
                         const strikeEmbed = new EmbedBuilder(embed2.toJSON());
@@ -206,7 +224,8 @@ module.exports = {
         const userId = interaction.user.id;
 
         if (!db.isFriend(userId, targetUser.id)) {
-            return interaction.reply({ content: "You are not friends with this user.", flags: MessageFlags.Ephemeral });
+            const errorEmbed = new EmbedBuilder().setTitle('Stranger Danger').setDescription("You are not friends with this user.").setColor(0xFF0000).setFooter({ text: 'Maybe add them first?' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
         const embed = new EmbedBuilder()
@@ -228,7 +247,10 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== userId) return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== userId) {
+                 const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command.").setColor(0xFF0000).setFooter({ text: 'Go away' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
 
             if (i.customId === 'confirm_remove') {
                 db.removeFriend(userId, targetUser.id);
@@ -300,7 +322,10 @@ module.exports = {
         });
 
         collector.on('collect', async i => {
-            if (i.user.id !== interaction.user.id) return i.reply({ content: 'Not your command!', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== interaction.user.id) {
+                 const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
 
             if (i.customId === 'prev_page') {
                 currentPage--;
@@ -318,9 +343,8 @@ module.exports = {
     },
 
     async handleInspect(interaction) {
-        // Not detailed in prompt requirement beyond "Inspect a friendship's stats".
-        // Placeholder implementation
-        interaction.reply({ content: 'Friendship inspection not implemented yet.', flags: MessageFlags.Ephemeral });
+        const errorEmbed = new EmbedBuilder().setTitle('Not Implemented').setDescription("Friendship inspection not implemented yet.").setColor(0xFFA500).setFooter({ text: 'Coming soon' });
+        interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
     },
 
     async handleShareCoins(interaction) {
@@ -330,19 +354,21 @@ module.exports = {
         const userId = interaction.user.id;
 
         if (!db.isFriend(userId, targetUser.id)) {
-            return interaction.reply({ content: "You can only share coins with friends.", flags: MessageFlags.Ephemeral });
+            const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("You can only share coins with friends.").setColor(0xFF0000).setFooter({ text: 'Make some friends first' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
         const userData = db.getUser(userId);
         const amount = parseNumber(amountStr, userData.balance);
 
         if (amount <= 0 || amount > userData.balance) {
-            return interaction.reply({ content: "Invalid amount or insufficient funds.", flags: MessageFlags.Ephemeral });
+             const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Invalid amount or insufficient funds.").setColor(0xFF0000).setFooter({ text: 'Math is hard' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
         const embed = new EmbedBuilder()
             .setTitle('Confirm Share')
-            .setDescription(`Are you sure you want to send **⏣ ${amount.toLocaleString()}** to ${targetUser}?`)
+            .setDescription(`Are you sure you want to send **֍ ${amount.toLocaleString()}** to ${targetUser}?`)
             .setColor(0xFFFF00);
 
         const row = new ActionRowBuilder().addComponents(
@@ -355,7 +381,10 @@ module.exports = {
         const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
 
         collector.on('collect', async i => {
-            if (i.user.id !== userId) return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== userId) {
+                 const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command.").setColor(0xFF0000).setFooter({ text: 'Go away' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
 
             if (i.customId === 'confirm_share') {
                 db.removeBalance(userId, amount);
@@ -368,15 +397,15 @@ module.exports = {
                 // Achievement Check
                 if (amount >= 100000000) {
                      db.incrementStat(userId, 'shared_coins', amount);
-                     await checkAndUnlockAchievements(userId, i); // Use interaction i
+                     await checkAndUnlockAchievements(userId, i);
                 } else {
-                     db.incrementStat(userId, 'shared_coins', amount); // Increment anyway for cumulative tracking if needed
+                     db.incrementStat(userId, 'shared_coins', amount);
                 }
 
                 // DM Target
                 const dmEmbed = new EmbedBuilder()
                     .setTitle('You have been given coins!')
-                    .setDescription(`Your friend ${interaction.user} shared **⏣ ${amount.toLocaleString()}** with you! Check your \`/balance\` and enjoy!\n\n> **Message:** \`${message}\``)
+                    .setDescription(`Your friend ${interaction.user} shared **֍ ${amount.toLocaleString()}** with you! Check your \`/balance\` and enjoy!\n\n> **Message:** \`${message}\``)
                     .setFooter({ text: 'Dank Memer' })
                     .setColor(0x00FF00);
 
@@ -384,18 +413,18 @@ module.exports = {
 
                 const successEmbed = new EmbedBuilder()
                     .setTitle('Coins Shared')
-                    .setDescription(`Sent **⏣ ${amount.toLocaleString()}** to ${targetUser}.`)
+                    .setDescription(`Sent **֍ ${amount.toLocaleString()}** to ${targetUser}.`)
                     .setColor(0x00FF00);
                 await i.update({ embeds: [successEmbed], components: [] });
             } else {
-                await i.update({ content: 'Cancelled', embeds: [], components: [] });
+                const cancelEmbed = new EmbedBuilder().setTitle('Cancelled').setDescription('Cancelled').setColor(0xFF0000);
+                await i.update({ embeds: [cancelEmbed], components: [] });
             }
             collector.stop();
         });
     },
 
     async handleShareItems(interaction) {
-        // Similar logic for items
         const targetUser = interaction.options.getUser('user');
         const itemName = interaction.options.getString('item');
         const quantityStr = interaction.options.getString('quantity');
@@ -403,16 +432,23 @@ module.exports = {
         const userId = interaction.user.id;
 
         if (!db.isFriend(userId, targetUser.id)) {
-            return interaction.reply({ content: "You can only share items with friends.", flags: MessageFlags.Ephemeral });
+             const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("You can only share items with friends.").setColor(0xFF0000).setFooter({ text: 'Make some friends first' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
         }
 
         const item = items.find(i => i.name === itemName);
-        if (!item) return interaction.reply({ content: "Item not found.", flags: MessageFlags.Ephemeral });
+        if (!item) {
+             const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Item not found.").setColor(0xFF0000).setFooter({ text: 'Check your spelling' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
 
         const count = db.getItemCount(userId, item.id);
         const quantity = parseNumber(quantityStr, count);
 
-        if (quantity <= 0 || quantity > count) return interaction.reply({ content: "Invalid quantity.", flags: MessageFlags.Ephemeral });
+        if (quantity <= 0 || quantity > count) {
+             const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Invalid quantity.").setColor(0xFF0000).setFooter({ text: 'Math is hard' });
+            return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+        }
 
          const embed = new EmbedBuilder()
             .setTitle('Confirm Share')
@@ -428,7 +464,10 @@ module.exports = {
         const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
 
         collector.on('collect', async i => {
-            if (i.user.id !== userId) return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+            if (i.user.id !== userId) {
+                 const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command.").setColor(0xFF0000).setFooter({ text: 'Go away' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
 
             if (i.customId === 'confirm_share') {
                 db.removeItem(userId, item.id, quantity);
@@ -449,7 +488,8 @@ module.exports = {
                     .setColor(0x00FF00);
                 await i.update({ embeds: [successEmbed], components: [] });
             } else {
-                await i.update({ content: 'Cancelled', embeds: [], components: [] });
+                 const cancelEmbed = new EmbedBuilder().setTitle('Cancelled').setDescription('Cancelled').setColor(0xFF0000);
+                await i.update({ embeds: [cancelEmbed], components: [] });
             }
             collector.stop();
         });

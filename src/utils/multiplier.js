@@ -4,7 +4,7 @@ const jobsConfig = require('../config/jobs.json');
 
 const calculateMultiplier = (userId) => {
     const user = db.getUser(userId);
-    const unlockedBadges = db.getUnlockedBadges(userId);
+    const unlockedBadges = db.getUnlockedBadges(userId); // Returns array of strings like "badge_id:gold" or "badge_id:platinum"
 
     let total = 0;
     const breakdown = [];
@@ -24,14 +24,40 @@ const calculateMultiplier = (userId) => {
 
     // Badges
     if (unlockedBadges.length > 0) {
-        const badgeCount = unlockedBadges.length;
-        const badgeMulti = badgeCount * 15;
-        total += badgeMulti;
-        breakdown.push({
-            name: `${badgeCount} Badges`,
-            amount: badgeMulti,
-            prefix: '+'
+        let badgeMulti = 0;
+        let goldCount = 0;
+        let platCount = 0;
+
+        unlockedBadges.forEach(badgeString => {
+            const [id, tier] = badgeString.split(':');
+
+            // Logic: Platinum replaces Gold.
+            // The database storage (from badgeManager.js) seems to store EITHER gold OR platinum for a specific badge ID, not both.
+            // "qualifiedBadgesList.push(`${badge.id}:platinum`);" OR "...gold".
+            // So we can just sum them up based on the tier tag.
+
+            if (tier === 'platinum') {
+                badgeMulti += 10;
+                platCount++;
+            } else {
+                // Default to gold if just "id" or "gold"
+                // 2025 badge stores as "2025_badge:gold" in manager logic
+                badgeMulti += 5;
+                goldCount++;
+            }
         });
+
+        if (badgeMulti > 0) {
+            total += badgeMulti;
+            // Grouping for display? Or just "X Badges"?
+            // Request said "9 Badges +135%" (old example).
+            // New logic might vary. Let's just say "X Badges".
+            breakdown.push({
+                name: `${unlockedBadges.length} Badges`,
+                amount: badgeMulti,
+                prefix: '+'
+            });
+        }
     }
 
     // Prestige

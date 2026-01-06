@@ -37,7 +37,12 @@ module.exports = {
         if (durationStr) {
             durationMs = parseDuration(durationStr);
             if (!durationMs) {
-                return interaction.reply({ content: 'Invalid duration format.', flags: MessageFlags.Ephemeral });
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Invalid Format')
+                        .setDescription('That duration format is invalid.')
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Try again' });
+                    return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
         }
 
@@ -67,7 +72,12 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('Not your command.')
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Back off' });
+                    return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'confirm_godmode') {

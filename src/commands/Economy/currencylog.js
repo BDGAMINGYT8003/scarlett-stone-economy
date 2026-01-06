@@ -30,7 +30,7 @@ module.exports = {
             } else {
                 currentLogs.forEach(log => {
                     const timestampUnix = Math.floor(log.timestamp / 1000);
-                    const amountStr = log.amount >= 0 ? `⏣ ${log.amount.toLocaleString()}` : `- ⏣ ${Math.abs(log.amount).toLocaleString()}`;
+                    const amountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
 
                     desc += `**Type: ${log.type}**\n`;
                     desc += `${REPLY_CONT} <t:${timestampUnix}:R>\n`;

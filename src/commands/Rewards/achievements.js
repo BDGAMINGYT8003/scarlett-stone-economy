@@ -95,7 +95,8 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your session!', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your session!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'prev_page') currentPage--;

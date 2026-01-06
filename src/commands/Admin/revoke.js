@@ -104,7 +104,8 @@ module.exports = {
             const item = items.find(i => i.name === itemName);
 
             if (!item) {
-                return interaction.reply({ content: 'Item not found.', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Item not found.").setColor(0xFF0000).setFooter({ text: 'Check spelling' });
+                return interaction.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             const currentCount = db.getItemCount(targetUser.id, item.id);
@@ -183,7 +184,8 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your command.").setColor(0xFF0000).setFooter({ text: 'Go away' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'confirm_revoke') {

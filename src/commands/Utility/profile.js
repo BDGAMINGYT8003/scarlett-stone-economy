@@ -60,14 +60,6 @@ module.exports = {
 
         const generateWorkEmbed = () => {
             const user = db.getUser(userId);
-            // I need fail stats but I don't track them specifically yet?
-            // I have `work_earnings`, `shifts_completed_today`, `total_shifts_completed`.
-            // I don't have separate fail/success counts tracked in `incrementStat`.
-            // `work.js` increments `work_earnings` on success (full salary) or failure (half salary).
-            // It tracks `total_shifts_completed` via `addShift`.
-            // I can't distinguish success/fail perfectly from stats I have now.
-            // I will show what I have.
-
             const stars = db.getTotalWorkStars(userId);
 
             return new EmbedBuilder()
@@ -81,29 +73,7 @@ module.exports = {
 
             // Slots
             const slotsWon = user.slots_won_amount || 0;
-            const slotsLost = user.slots_lost_amount || 0; // Tracks bet amount on loss? Or net?
-            // In slots.js: if win -> increment won_amount. else -> increment lost_amount (bet).
-            // Net = won - lost? No, winnings include bet usually?
-            // If I bet 100, win 200 (2x). Profit 100.
-            // `slots_won_amount` tracks `winnings`. `slots_lost_amount` tracks `bet` on loss.
-            // Net = slots_won_amount - (slots_played * avg_bet)? No.
-            // Net Profit = (Total Won) - (Total Bet).
-            // But I don't track Total Bet directly.
-            // I track `slots_lost_amount` (bets that lost).
-            // And `slots_won_amount` (payouts).
-            // Bets that won are NOT tracked in `lost_amount`.
-            // So Total Bet = `slots_lost_amount` + (Bets that won).
-            // I don't know Bets that won amount.
-            // So exact Net is hard.
-            // But I can display Won Payout vs Lost Bets.
-            // Net displayed = Won - Lost. This is inaccurate if 'Won' means 'Payout'.
-            // If I bet 100, win 0. Lost 100.
-            // If I bet 100, win 200. Won 200.
-            // My Net = 200 - 100 = 100.
-            // But I am missing the '100' cost of the winning bet.
-            // So stats will look inflated.
-            // For now, display raw tracked values.
-
+            const slotsLost = user.slots_lost_amount || 0;
             const slotsNet = slotsWon - slotsLost;
             const slotsPlayed = user.slots_played || 0;
             const slotsWins = user.slots_wins || 0;
@@ -185,7 +155,6 @@ module.exports = {
             const user = db.getUser(userId);
             let desc = '';
 
-            // Premium is the only 'active' thing we track with duration
             if (user.premium_expires_at > Date.now()) {
                 const expiresUnix = Math.floor(user.premium_expires_at / 1000);
                 desc += `**Premium Status**: Expires <t:${expiresUnix}:R>\n`;
@@ -229,7 +198,12 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your profile view!', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder()
+                    .setTitle('Error')
+                    .setDescription('Not your profile view!')
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'Check your own profile' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             const val = i.values[0];

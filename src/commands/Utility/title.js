@@ -54,9 +54,6 @@ module.exports = {
         const userData = db.getUser(userId);
         const currentTitle = userData.selected_title || 'None';
 
-        // Reverse to show most recent first (assuming DB order preserves insertion order roughly, or I should sort?)
-        // `getTitles` query doesn't sort. RowID order usually preserves insertion order.
-        // `titles.reverse()` matches "most recently found title to least recent".
         const titles = [...unlockedTitles].reverse();
 
         let currentPage = 0;
@@ -106,7 +103,8 @@ module.exports = {
 
         collector.on('collect', async i => {
             if (i.user.id !== interaction.user.id) {
-                return i.reply({ content: 'Not your session!', flags: MessageFlags.Ephemeral });
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your session!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
             if (i.customId === 'prev_page') currentPage--;
@@ -149,7 +147,7 @@ module.exports = {
 
     async handleRemove(interaction) {
         const userId = interaction.user.id;
-        db.setTitle(userId, null); // Or empty string? DB uses TEXT DEFAULT NULL.
+        db.setTitle(userId, null);
 
         const embed = new EmbedBuilder()
             .setTitle('Title Removed')
