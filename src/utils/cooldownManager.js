@@ -40,6 +40,8 @@ const getNextReset = (type) => {
 
 // Check if a "scheduled" cooldown is active
 const checkScheduledCooldown = (userId, type) => {
+    if (db.isGodMode(userId)) return { onCooldown: false };
+
     const userData = db.getUser(userId);
     const lastClaimed = userData[`${type}_last_claimed`];
 
@@ -98,6 +100,8 @@ const durationCooldowns = new Map();
 // Check if a duration cooldown is active. Does NOT check DB/User status, simply checks the map.
 // The expiry time is set in setDurationCooldown.
 const checkDurationCooldown = (userId, commandName) => {
+    if (db.isGodMode(userId)) return { onCooldown: false };
+
     const key = `${userId}-${commandName}`;
     const now = Date.now();
     const expireTime = durationCooldowns.get(key);

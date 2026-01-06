@@ -130,6 +130,13 @@ module.exports = {
         };
 
         const generateCooldownsEmbed = () => {
+            if (db.isGodMode(userId)) {
+                return new EmbedBuilder()
+                    .setTitle(`${targetUser.username}'s Cooldowns`)
+                    .setDescription('**GOD MODE ACTIVE**\nNo cooldowns apply.')
+                    .setColor(0xFFD700);
+            }
+
             const cooldowns = getAllCooldowns(userId);
             let desc = '';
 

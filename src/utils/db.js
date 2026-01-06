@@ -43,7 +43,8 @@ db.prepare(`
         slots_played INTEGER DEFAULT 0,
         snakeeyes_won_amount INTEGER DEFAULT 0,
         snakeeyes_lost_amount INTEGER DEFAULT 0,
-        snakeeyes_played INTEGER DEFAULT 0
+        snakeeyes_played INTEGER DEFAULT 0,
+        god_mode_expires_at INTEGER DEFAULT 0
     )
 `).run();
 
@@ -55,7 +56,8 @@ const columns = [
     'snakeeyes_wins', 'rob_coins', 'patreon_months', 'used_2025_last_day',
     'premium_expires_at', 'selected_title', 'commands_ran', 'items_used', 'shared_coins',
     'plants_harvested', 'slots_won_amount', 'slots_lost_amount', 'slots_played',
-    'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played'
+    'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played',
+    'god_mode_expires_at'
 ];
 
 columns.forEach(col => {
@@ -134,6 +136,34 @@ const addPremiumDuration = (userId, ms, durationText) => {
 const getExpiredPremiumUsers = () => {
     const now = Date.now();
     return db.prepare('SELECT * FROM users WHERE premium_expires_at > 0 AND premium_expires_at < ?').all(now);
+};
+
+// God Mode Methods
+const setGodMode = (userId, durationMs) => {
+    getUser(userId);
+    // If durationMs is 0 or null, we treat as permanent (conceptually), but storing 0 might imply "not active" in expiration logic.
+    // So for permanent, we can store a very large number or -1.
+    // Let's stick to "omitted = permanent".
+    // If permanent, set to MAX_INTEGER (or similar).
+    // SQLite MAX INTEGER: 9223372036854775807.
+    // JS Date max: 8640000000000000.
+
+    let expiresAt = -1; // Permanent
+    if (durationMs) {
+        expiresAt = Date.now() + durationMs;
+    }
+
+    db.prepare('UPDATE users SET god_mode_expires_at = ? WHERE id = ?').run(expiresAt, userId);
+};
+
+const isGodMode = (userId) => {
+    const user = getUser(userId);
+    if (!user.god_mode_expires_at) return false; // 0 or null
+
+    if (user.god_mode_expires_at === -1) return true; // Permanent
+    if (user.god_mode_expires_at > Date.now()) return true; // Active
+
+    return false;
 };
 
 // Economy Methods
@@ -335,6 +365,8 @@ module.exports = {
     setPremium,
     addPremiumDuration,
     getExpiredPremiumUsers,
+    setGodMode,
+    isGodMode,
     addBalance,
     removeBalance,
     addBank,

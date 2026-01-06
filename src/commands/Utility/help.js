@@ -29,7 +29,8 @@ const categories = {
     ],
     Admin: [
         { name: '/grant', description: 'Grants money or items to a user (Developer Only).' },
-        { name: '/revoke', description: 'Revokes money, items, or premium from a user (Developer Only).' }
+        { name: '/revoke', description: 'Revokes money, items, or premium from a user (Developer Only).' },
+        { name: '/godmode', description: 'Grants God Mode (No Cooldowns) to a user (Developer Only).' }
     ]
 };
 
