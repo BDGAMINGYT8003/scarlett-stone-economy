@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
-const { getMultipliers } = require('../../utils/multiplier');
+const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const locations = require('../../config/locations.json');
 const items = require('../../config/items.json');
@@ -109,7 +109,7 @@ module.exports = {
                 if (isSuccess) {
                     const baseAmount = Math.floor(Math.random() * (location.max_coins - location.min_coins + 1)) + location.min_coins;
 
-                    const multipliers = getMultipliers(userId);
+                    const multipliers = calculateMultiplier(userId);
                     multiTotal = multipliers.total;
                     bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
                     amount = baseAmount + bonusAmount;
@@ -117,6 +117,10 @@ module.exports = {
                     db.addBalance(userId, amount);
                     message = message.replace('{amount}', amount.toLocaleString());
                 }
+            }
+
+            if (amount > 0) {
+                db.logTransaction(userId, 'search', { amount: amount });
             }
 
             // Set Cooldown on successful interaction

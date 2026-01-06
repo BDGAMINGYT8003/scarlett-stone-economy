@@ -35,6 +35,7 @@ module.exports = {
 
         db.removeBank(userId, amount);
         db.addBalance(userId, amount);
+        db.logTransaction(userId, 'withdraw', { amount: amount });
 
         // Fetch updated data for the embed
         const updatedUser = db.getUser(userId);

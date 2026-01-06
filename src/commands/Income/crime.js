@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
-const { getMultipliers } = require('../../utils/multiplier');
+const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
@@ -122,12 +122,13 @@ module.exports = {
                     const baseAmount = Math.floor(Math.random() * (crime.max_coins - crime.min_coins + 1)) + crime.min_coins;
 
                     // Multiplier
-                    const multipliers = getMultipliers(userId);
+                    const multipliers = calculateMultiplier(userId);
                     multiTotal = multipliers.total;
                     bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
                     amount = baseAmount + bonusAmount;
 
                     db.addBalance(userId, amount);
+                    db.logTransaction(userId, 'crime', { amount: amount });
                     message = message.replace('{amount}', amount.toLocaleString());
                 } else {
                     // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
@@ -146,6 +147,7 @@ module.exports = {
                         fine = Math.min(potentialFine, currentBalance);
 
                         db.removeBalance(userId, fine);
+                        db.logTransaction(userId, 'crime', { amount: -fine });
                         message = message.replace('{fine}', fine.toLocaleString());
                     } else {
                         const outcomes = crime.outcomes.fail_safe;

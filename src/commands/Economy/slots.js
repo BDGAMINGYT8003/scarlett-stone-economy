@@ -84,6 +84,7 @@ async function runSlots(interaction, betAmount) {
 
     // Deduct Bet Immediately
     db.removeBalance(userId, betAmount);
+    db.logTransaction(userId, 'slots', { amount: -betAmount });
 
     // Defer update or reply to ensure we have the message to edit
     let message;
@@ -186,6 +187,7 @@ async function runSlots(interaction, betAmount) {
     // Update DB if win
     if (winnings > 0) {
         db.addBalance(userId, winnings);
+        db.logTransaction(userId, 'slots', { amount: winnings });
         db.incrementStat(userId, 'slots_wins');
         db.incrementStat(userId, 'slots_won_amount', winnings);
     } else {

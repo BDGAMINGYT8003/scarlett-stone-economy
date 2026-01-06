@@ -20,7 +20,9 @@ const categories = {
         { name: '/postmemes', description: 'Post a meme to earn money (requires a Laptop).' },
         { name: '/work', description: 'Work shifts to earn money and unlock better jobs.' },
         { name: '/multipliers', description: 'Check your current coin multipliers.' },
-        { name: '/achievements', description: 'View your achievements progress.' }
+        { name: '/achievements', description: 'View your achievements progress.' },
+        { name: '/friends', description: 'Manage your friends list and share resources.' },
+        { name: '/currencylog', description: 'View your currency transaction history.' }
     ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' },

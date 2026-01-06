@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, PermissionFlagsBits } = require('discord.js');
 const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
@@ -31,7 +31,8 @@ module.exports = {
                 .setName('premium')
                 .setDescription('Revoke premium status from a user.')
                 .addUserOption(option =>
-                    option.setName('user').setDescription('The user to revoke from').setRequired(true))),
+                    option.setName('user').setDescription('The user to revoke from').setRequired(true)))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused().toLowerCase();
@@ -43,12 +44,12 @@ module.exports = {
     },
 
     async execute(interaction) {
-        if (interaction.user.id !== '794482283993235478') {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator) && interaction.user.id !== '794482283993235478') {
             const embed = new EmbedBuilder()
                 .setTitle('Permission Denied')
                 .setDescription('You do not have permission to use this command.')
                 .setColor(0xFF0000)
-                .setFooter({ text: 'Developer Command' });
+                .setFooter({ text: 'Admin Command' });
             return interaction.reply({
                 embeds: [embed],
                 flags: MessageFlags.Ephemeral
@@ -76,6 +77,7 @@ module.exports = {
             confirmMessage = `Are you sure you want to revoke **֍ ${finalAmount.toLocaleString()}** from ${targetUser}?`;
             executeAction = async () => {
                 db.removeBalance(targetUser.id, finalAmount);
+                db.logTransaction(targetUser.id, 'revoke money', { amount: -finalAmount });
                 await checkAndUnlockBadges(targetUser.id, interaction);
                 const newData = db.getUser(targetUser.id);
 

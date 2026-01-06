@@ -40,6 +40,7 @@ async function checkAndUnlockAchievements(userId, interaction) {
             if (achievement.rewards) {
                 if (achievement.rewards.coins) {
                     db.addBalance(userId, achievement.rewards.coins);
+                    db.logTransaction(userId, 'achievement', { amount: achievement.rewards.coins });
                 }
                 if (achievement.rewards.items) {
                     achievement.rewards.items.forEach(item => {

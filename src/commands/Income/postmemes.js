@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
-const { getMultipliers } = require('../../utils/multiplier');
+const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const items = require('../../config/items.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
@@ -235,7 +235,7 @@ module.exports = {
                     let bonusMoney = 0;
 
                     // Fetch Multipliers ONCE
-                    const { total: multiTotal } = getMultipliers(userId);
+                    const { total: multiTotal } = calculateMultiplier(userId);
 
                     if (isItem) {
                         const itemId = outcome.items[Math.floor(Math.random() * outcome.items.length)];
@@ -260,6 +260,8 @@ module.exports = {
 
                         db.addBalance(userId, wonMoney);
                     }
+
+                    db.logTransaction(userId, 'postmemes', { amount: wonMoney, items: wonItem ? [wonItem.name] : [] });
 
                     let desc = `${getRandomPhrase('success', selectedPlatform, selectedType)}\n\n**You Received:**\n`;
                     if (wonMoney > 0) desc += `- ֍ ${wonMoney.toLocaleString()}\n`;

@@ -91,9 +91,13 @@ async function checkAndUnlockBadges(userId, interaction) {
         // Helper to get user
         if (!discordUser) {
             try {
-                discordUser = interaction.user || await interaction.client.users.fetch(userId);
+                if (interaction.user && interaction.user.id === userId) {
+                    discordUser = interaction.user;
+                } else {
+                    discordUser = await interaction.client.users.fetch(userId);
+                }
             } catch (e) {
-                console.error(`Failed to fetch user ${userId} for badge notification`);
+                console.error(`Failed to fetch user ${userId} for badge notification`, e);
                 return;
             }
         }

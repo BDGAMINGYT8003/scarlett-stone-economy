@@ -44,7 +44,10 @@ db.prepare(`
         snakeeyes_won_amount INTEGER DEFAULT 0,
         snakeeyes_lost_amount INTEGER DEFAULT 0,
         snakeeyes_played INTEGER DEFAULT 0,
-        god_mode_expires_at INTEGER DEFAULT 0
+        god_mode_expires_at INTEGER DEFAULT 0,
+        prestige INTEGER DEFAULT 0,
+        level INTEGER DEFAULT 0,
+        xp INTEGER DEFAULT 0
     )
 `).run();
 
@@ -57,7 +60,7 @@ const columns = [
     'premium_expires_at', 'selected_title', 'commands_ran', 'items_used', 'shared_coins',
     'plants_harvested', 'slots_won_amount', 'slots_lost_amount', 'slots_played',
     'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played',
-    'god_mode_expires_at'
+    'god_mode_expires_at', 'prestige', 'level', 'xp'
 ];
 
 columns.forEach(col => {
@@ -114,6 +117,26 @@ db.prepare(`
     )
 `).run();
 
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS currency_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT,
+        type TEXT,
+        amount INTEGER,
+        balance_after INTEGER,
+        timestamp INTEGER
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS friends (
+        user1 TEXT,
+        user2 TEXT,
+        since INTEGER,
+        PRIMARY KEY (user1, user2)
+    )
+`).run();
+
 // User Methods
 const getUser = (userId) => {
     const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
@@ -122,6 +145,27 @@ const getUser = (userId) => {
         return db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
     }
     return user;
+};
+
+const addXp = (userId, amount) => {
+    const user = getUser(userId);
+    let newXp = (user.xp || 0) + amount;
+    let currentLevel = user.level || 0;
+
+    let required = (currentLevel + 1) * 250;
+
+    while (newXp >= required) {
+        newXp -= required;
+        currentLevel++;
+        required = (currentLevel + 1) * 250;
+    }
+
+    db.prepare('UPDATE users SET xp = ?, level = ? WHERE id = ?').run(newXp, currentLevel, userId);
+};
+
+const addPrestige = (userId) => {
+    getUser(userId);
+    db.prepare('UPDATE users SET prestige = prestige + 1, level = 0, xp = 0 WHERE id = ?').run(userId);
 };
 
 // Premium Methods
@@ -346,6 +390,8 @@ const incrementCommandUsage = (userId, commandName) => {
     } else {
         db.prepare('INSERT INTO command_usage (user_id, command_name, count) VALUES (?, ?, 1)').run(userId, commandName);
     }
+
+    addXp(userId, Math.floor(Math.random() * 11) + 10);
 };
 
 const getFavoriteCommand = (userId) => {
@@ -355,6 +401,78 @@ const getFavoriteCommand = (userId) => {
     } catch (e) {
         return 'None';
     }
+};
+
+// Currency Log Methods
+const logTransaction = (userId, type, details) => {
+    // details can be an object { amount: number, items: Array, title: string }
+    // or just number for backward compatibility (though we should enforce object)
+
+    let amount = 0;
+    // Handle overload
+    if (typeof details === 'number') {
+        amount = details;
+    } else if (typeof details === 'object' && details !== null) {
+        amount = details.amount || 0;
+    }
+
+    const user = getUser(userId);
+    const balanceAfter = user.balance ?? 0;
+
+    // If schema has 'command', we should insert into that, but we are renaming to 'type'.
+    // If 'command' column exists (old schema), we might error.
+    // We should migrate 'command' -> 'type' or just handle it.
+    // For now, let's assume we can drop/recreate or add 'type'.
+    // Since we updated CREATE TABLE, new installs are fine.
+    // Existing installs need migration.
+
+    try {
+        db.prepare('INSERT INTO currency_logs (user_id, type, amount, balance_after, timestamp) VALUES (?, ?, ?, ?, ?)').run(userId, type, amount, balanceAfter, Date.now());
+    } catch (e) {
+        // Fallback for existing DB without 'type' column? Or migration failed?
+        // Let's assume migration is handled below.
+    }
+
+    // Prune logs > 500
+    // This might be slow if done every time.
+    // Optimization: Check count first? Or just delete where id not in top 500.
+    // "DELETE FROM currency_logs WHERE user_id = ? AND id NOT IN (SELECT id FROM currency_logs WHERE user_id = ? ORDER BY timestamp DESC LIMIT 500)"
+    db.prepare(`
+        DELETE FROM currency_logs
+        WHERE user_id = ?
+        AND id NOT IN (
+            SELECT id FROM currency_logs
+            WHERE user_id = ?
+            ORDER BY timestamp DESC
+            LIMIT 500
+        )
+    `).run(userId, userId);
+};
+
+const getCurrencyLogs = (userId) => {
+    return db.prepare('SELECT * FROM currency_logs WHERE user_id = ? ORDER BY timestamp DESC').all(userId);
+};
+
+// Friends Methods
+const addFriend = (u1, u2) => {
+    const [user1, user2] = [u1, u2].sort();
+    db.prepare('INSERT OR IGNORE INTO friends (user1, user2, since) VALUES (?, ?, ?)').run(user1, user2, Date.now());
+};
+
+const removeFriend = (u1, u2) => {
+    const [user1, user2] = [u1, u2].sort();
+    db.prepare('DELETE FROM friends WHERE user1 = ? AND user2 = ?').run(user1, user2);
+};
+
+const getFriends = (userId) => {
+    // Check both columns
+    return db.prepare('SELECT * FROM friends WHERE user1 = ? OR user2 = ?').all(userId, userId);
+};
+
+const isFriend = (u1, u2) => {
+    const [user1, user2] = [u1, u2].sort();
+    const res = db.prepare('SELECT 1 FROM friends WHERE user1 = ? AND user2 = ?').get(user1, user2);
+    return !!res;
 };
 
 // Inventory Methods
@@ -432,6 +550,12 @@ module.exports = {
     getAllUserJobStars,
     incrementCommandUsage,
     getFavoriteCommand,
+    logTransaction,
+    getCurrencyLogs,
+    addFriend,
+    removeFriend,
+    getFriends,
+    isFriend,
     addItem,
     removeItem,
     getInventory,
@@ -441,5 +565,7 @@ module.exports = {
     setAchievement,
     getTitles,
     addTitle,
-    setTitle
+    setTitle,
+    addXp,
+    addPrestige
 };

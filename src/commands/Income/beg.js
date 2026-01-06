@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
-const { getMultipliers } = require('../../utils/multiplier');
+const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const peoples = require('../../config/peoples.json');
 const items = require('../../config/items.json');
@@ -63,11 +63,12 @@ module.exports = {
             const baseAmount = Math.floor(Math.random() * 1901) + 100; // 100 to 2000
 
             // Calculate Multiplier
-            const { total: multiTotal } = getMultipliers(userId);
+            const { total: multiTotal } = calculateMultiplier(userId);
             const bonusAmount = Math.floor(baseAmount * (multiTotal / 100));
             const totalAmount = baseAmount + bonusAmount;
 
             db.addBalance(userId, totalAmount);
+            db.logTransaction(userId, 'beg', { amount: totalAmount });
             db.incrementStat(userId, 'beg_count');
             await checkAndUnlockBadges(userId, interaction);
 

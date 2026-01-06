@@ -469,6 +469,7 @@ module.exports = {
         }
 
         db.addBalance(userId, salary);
+        db.logTransaction(userId, 'work', { amount: salary });
         db.incrementStat(userId, 'work_earnings', salary);
         await checkAndUnlockBadges(userId, interaction);
         await checkAndUnlockAchievements(userId, interaction);

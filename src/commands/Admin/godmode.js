@@ -1,11 +1,11 @@
-const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, PermissionFlagsBits } = require('discord.js');
 const db = require('../../utils/db.js');
 const { parseDuration } = require('../../utils/timeParser.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('godmode')
-        .setDescription('Grant God Mode (No Cooldowns) to a user. Developer Only.')
+        .setDescription('Grant God Mode (No Cooldowns) to a user. Admin Only.')
         .addUserOption(option =>
             option.setName('user')
                 .setDescription('The user to grant God Mode to')
@@ -13,16 +13,17 @@ module.exports = {
         .addStringOption(option =>
             option.setName('duration')
                 .setDescription('Duration (e.g. 1h, 2d). Leave empty for permanent.')
-                .setRequired(false)),
+                .setRequired(false))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async execute(interaction) {
         // Permissions Check
-        if (interaction.user.id !== '794482283993235478') {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator) && interaction.user.id !== '794482283993235478') {
             const embed = new EmbedBuilder()
                 .setTitle('Permission Denied')
                 .setDescription('You do not have permission to use this command.')
                 .setColor(0xFF0000)
-                .setFooter({ text: 'Developer Command' });
+                .setFooter({ text: 'Admin Command' });
             return interaction.reply({
                 embeds: [embed],
                 flags: MessageFlags.Ephemeral

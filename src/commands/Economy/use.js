@@ -100,6 +100,25 @@ module.exports = {
                 .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
 
             await interaction.reply({ embeds: [embed] });
+        } else if (item.id === 'adventure_ticket' || item.id === 'pizza') {
+             // Example lootbox style items that give coins
+             // For now just random coins
+             let totalCoins = 0;
+             for (let i = 0; i < quantity; i++) {
+                 totalCoins += Math.floor(Math.random() * 5000) + 1000;
+             }
+
+             db.removeItem(userId, item.id, quantity);
+             db.addBalance(userId, totalCoins);
+             db.logTransaction(userId, 'item_use', { amount: totalCoins, title: `Used ${item.name}` });
+
+             const embed = new EmbedBuilder()
+                .setColor(0x00FF00)
+                .setTitle(`${item.name} Used`)
+                .setDescription(`You used ${quantity} **${item.name}** and found **֍ ${totalCoins.toLocaleString()}**!`)
+                .setFooter({ text: `${(ownedQuantity - quantity).toLocaleString()} ${item.name.toLowerCase()}s left` });
+
+             await interaction.reply({ embeds: [embed] });
         } else {
             // Generic placeholder for other usable items
              db.removeItem(userId, item.id, quantity);

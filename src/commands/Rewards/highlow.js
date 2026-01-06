@@ -75,6 +75,7 @@ module.exports = {
                     // Jackpot Win
                     reward = Math.floor(Math.random() * (150000 - 100000 + 1)) + 100000;
                     db.addBalance(userId, reward);
+                    db.logTransaction(userId, 'highlow', { amount: reward });
                     db.incrementStat(userId, 'highlow_wins');
                     await checkAndUnlockBadges(userId, i);
 
@@ -87,6 +88,7 @@ module.exports = {
                     // Normal Win
                     reward = Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
                     db.addBalance(userId, reward);
+                    db.logTransaction(userId, 'highlow', { amount: reward });
                     db.incrementStat(userId, 'highlow_wins');
                     await checkAndUnlockBadges(userId, i);
 

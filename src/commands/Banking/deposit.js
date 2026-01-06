@@ -45,6 +45,7 @@ module.exports = {
 
         db.removeBalance(userId, amount);
         db.addBank(userId, amount);
+        db.logTransaction(userId, 'deposit', { amount: -amount });
 
         const updatedUser = db.getUser(userId);
 

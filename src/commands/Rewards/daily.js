@@ -58,6 +58,7 @@ module.exports = {
         const totalAmount = baseReward + streakBonus;
 
         db.addBalance(userId, totalAmount);
+        db.logTransaction(userId, 'daily', { amount: totalAmount });
         db.setLastClaimed(userId, 'daily', now);
         db.setStreak(userId, newStreak);
         await checkAndUnlockBadges(userId, interaction);

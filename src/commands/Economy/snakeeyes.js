@@ -40,6 +40,7 @@ async function runSnakeEyes(interaction, betAmount) {
 
     // Deduct Bet
     db.removeBalance(userId, betAmount);
+    db.logTransaction(userId, 'snakeeyes', { amount: -betAmount });
 
     let message;
     if (interaction.isButton() || interaction.isModalSubmit()) {
@@ -82,6 +83,7 @@ async function runSnakeEyes(interaction, betAmount) {
 
     if (winnings > 0) {
         db.addBalance(userId, winnings);
+        db.logTransaction(userId, 'snakeeyes', { amount: winnings });
         db.incrementStat(userId, 'snakeeyes_wins');
         db.incrementStat(userId, 'snakeeyes_won_amount', winnings);
     } else {
