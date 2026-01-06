@@ -1,7 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { getAllCooldowns } = require('../../utils/cooldownManager');
+const { getProgressBar } = require('../../utils/progressBar');
 const badgesConfig = require('../../config/badges.json');
+
+// Emoji Constants
+const REPLY = '<:Reply:1457839486011445391>';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,10 +34,8 @@ module.exports = {
             const level = Math.floor(commandsRan / 75);
             const xp = commandsRan % 75;
             const xpNeeded = 75; // simplified
-            // XP Bar logic? Using progress bar emojis?
-            // reuse logic or custom.
-            // The prompt shows custom bar for XP.
-            // I'll stick to text for now or simple bar.
+
+            const xpBar = getProgressBar(xp, xpNeeded, 5);
 
             const totalItems = inventory.reduce((acc, i) => acc + i.quantity, 0);
             const uniqueItems = inventory.length;
@@ -43,7 +45,7 @@ module.exports = {
                 .setTitle(targetUser.username)
                 .setDescription(`${badgeEmojis.join(' ')}\n**Country:** 🏳️ Unknown`)
                 .addFields(
-                    { name: 'Level', value: `Level: \`${level}\`\nExperience: \`${xp}/${xpNeeded}\``, inline: false },
+                    { name: 'Level', value: `Level: \`${level}\`\nExperience: \`${xp}/${xpNeeded}\`\n${xpBar}`, inline: false },
                     { name: 'Coins', value: `Wallet: \`֍ ${formatNumber(user.balance)}\`\nBank: \`֍ ${formatNumber(user.bank)}\`\nNet: \`֍ ${formatNumber(netWorth)}\``, inline: false },
                     { name: 'Items', value: `Unique: \`${uniqueItems}\`\nTotal: \`${formatNumber(totalItems)}\`\nWorth: \`֍ ${formatNumber(invWorth)}\``, inline: false },
                     { name: 'Commands', value: `Total: \`${formatNumber(commandsRan)}\``, inline: false }
