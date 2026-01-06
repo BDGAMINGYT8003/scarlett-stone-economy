@@ -4,6 +4,7 @@ const { log } = require('./utils/logger');
 const commandHandler = require('./handlers/commandHandler');
 const eventHandler = require('./handlers/eventHandler');
 const { startCron } = require('./utils/cron');
+const { startPremiumScheduler } = require('./utils/premiumScheduler');
 
 const client = new Client({
     intents: [
@@ -32,6 +33,7 @@ eventHandler(client);
 
         // Start Cron Jobs
         startCron();
+        startPremiumScheduler(client);
 
     } catch (error) {
         log(error.message, 'error');

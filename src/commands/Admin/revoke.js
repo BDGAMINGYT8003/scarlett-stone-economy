@@ -2,38 +2,35 @@ const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, Butto
 const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
 const parseNumber = require('../../utils/numberParser.js');
-const { parseDuration } = require('../../utils/timeParser.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('grant')
-        .setDescription('Developer tool to grant resources.')
+        .setName('revoke')
+        .setDescription('Developer tool to revoke resources.')
         .addSubcommand(subcommand =>
             subcommand
                 .setName('money')
-                .setDescription('Grant money to a user.')
+                .setDescription('Revoke money from a user.')
                 .addUserOption(option =>
-                    option.setName('user').setDescription('The user to grant to').setRequired(true))
+                    option.setName('user').setDescription('The user to revoke from').setRequired(true))
                 .addStringOption(option =>
-                    option.setName('amount').setDescription('Amount to grant').setRequired(true)))
+                    option.setName('amount').setDescription('Amount to revoke').setRequired(true)))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('items')
-                .setDescription('Grant items to a user.')
+                .setDescription('Revoke items from a user.')
                 .addUserOption(option =>
-                    option.setName('user').setDescription('The user to grant to').setRequired(true))
+                    option.setName('user').setDescription('The user to revoke from').setRequired(true))
                 .addStringOption(option =>
-                    option.setName('item').setDescription('Item to grant').setRequired(true).setAutocomplete(true))
+                    option.setName('item').setDescription('Item to revoke').setRequired(true).setAutocomplete(true))
                 .addStringOption(option =>
-                    option.setName('amount').setDescription('Amount to grant').setRequired(true)))
+                    option.setName('amount').setDescription('Amount to revoke').setRequired(true)))
         .addSubcommand(subcommand =>
             subcommand
                 .setName('premium')
-                .setDescription('Grant premium status to a user.')
+                .setDescription('Revoke premium status from a user.')
                 .addUserOption(option =>
-                    option.setName('user').setDescription('The user to grant to').setRequired(true))
-                .addStringOption(option =>
-                    option.setName('duration').setDescription('Duration (e.g. 7d, 1mo). Leave empty for permanent.').setRequired(false))),
+                    option.setName('user').setDescription('The user to revoke from').setRequired(true))),
 
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused().toLowerCase();
@@ -66,9 +63,8 @@ module.exports = {
         if (subcommand === 'money') {
             const amountStr = interaction.options.getString('amount');
             const userData = db.getUser(targetUser.id);
-            const amount = parseNumber(amountStr, userData.balance); // Fallback logic is handled inside parseNumber if balance is 0? Wait, previous code had custom fallback.
+            const amount = parseNumber(amountStr, userData.balance);
 
-            // Re-implement robust parsing
             let finalAmount = amount;
             if (finalAmount <= 0 && amountStr.toLowerCase() !== '0') {
                  const direct = parseFloat(amountStr.replace(/,/g, ''));
@@ -76,22 +72,23 @@ module.exports = {
             }
             if (finalAmount < 0) finalAmount = 0;
 
-            confirmMessage = `Are you sure you want to grant **֍ ${finalAmount.toLocaleString()}** to ${targetUser}?`;
+            confirmMessage = `Are you sure you want to revoke **֍ ${finalAmount.toLocaleString()}** from ${targetUser}?`;
             executeAction = async () => {
-                db.addBalance(targetUser.id, finalAmount);
+                db.removeBalance(targetUser.id, finalAmount);
                 const newData = db.getUser(targetUser.id);
 
                 const embed = new EmbedBuilder()
-                    .setTitle('Money Granted')
-                    .setDescription(`Successfully added **֍ ${finalAmount.toLocaleString()}** to ${targetUser}'s inventory.`)
-                    .addFields({ name: 'Total Owned', value: `֍ ${newData.balance.toLocaleString()}` })
+                    .setTitle('Money Revoked')
+                    .setDescription(`Successfully removed **֍ ${finalAmount.toLocaleString()}** from ${targetUser}'s inventory.`)
+                    .addFields({ name: 'Remaining Balance', value: `֍ ${(newData.balance ?? 0).toLocaleString()}` })
                     .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Money Granted')
-                    .setDescription(`You have been granted **֍ ${finalAmount.toLocaleString()}**!`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Enjoy!' });
+                    .setTitle('Money Revoked')
+                    .setDescription(`**֍ ${finalAmount.toLocaleString()}** has been removed from your account.`)
+                    .addFields({ name: 'Revoked By', value: interaction.user.tag })
+                    .setFooter({ text: 'Contact support if this is a mistake.' })
+                    .setColor(0xFF0000);
                 try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
 
                 return embed;
@@ -114,57 +111,44 @@ module.exports = {
             }
             if (finalAmount < 0) finalAmount = 0;
 
-            confirmMessage = `Are you sure you want to grant **${finalAmount.toLocaleString()} ${item.emoji} ${item.name}** to ${targetUser}?`;
+            confirmMessage = `Are you sure you want to revoke **${finalAmount.toLocaleString()} ${item.emoji} ${item.name}** from ${targetUser}?`;
             executeAction = async () => {
-                db.addItem(targetUser.id, item.id, finalAmount);
+                db.removeItem(targetUser.id, item.id, finalAmount);
                 const newCount = db.getItemCount(targetUser.id, item.id);
 
                 const embed = new EmbedBuilder()
-                    .setTitle('Items Granted')
-                    .setDescription(`Successfully added **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}** to ${targetUser}'s inventory.`)
-                    .addFields({ name: 'Total Owned', value: `${newCount.toLocaleString()} ${item.name}` })
+                    .setTitle('Items Revoked')
+                    .setDescription(`Successfully removed **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}** from ${targetUser}'s inventory.`)
+                    .addFields({ name: 'Remaining', value: `${newCount.toLocaleString()} ${item.name}` })
                     .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Items Granted')
-                    .setDescription(`You have been granted **${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}**!`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Enjoy!' });
+                    .setTitle('Items Revoked')
+                    .setDescription(`**${finalAmount.toLocaleString()}** ${item.emoji} **${item.name}** has been removed from your inventory.`)
+                    .addFields({ name: 'Revoked By', value: interaction.user.tag })
+                    .setFooter({ text: 'Contact support if this is a mistake.' })
+                    .setColor(0xFF0000);
                 try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
 
                 return embed;
             };
 
         } else if (subcommand === 'premium') {
-            const durationStr = interaction.options.getString('duration');
-            let durationMs = null;
-            if (durationStr) {
-                durationMs = parseDuration(durationStr);
-                if (!durationMs) {
-                    return interaction.reply({ content: 'Invalid duration format.', flags: MessageFlags.Ephemeral });
-                }
-            }
-
-            const durationText = durationMs ? durationStr : 'Permanent';
-            confirmMessage = `Are you sure you want to grant **Premium Status** (${durationText}) to ${targetUser}?`;
-
+            confirmMessage = `Are you sure you want to completely remove **Premium Status** from ${targetUser}?`;
             executeAction = async () => {
-                if (durationMs) {
-                    db.addPremiumDuration(targetUser.id, durationMs, durationStr);
-                } else {
-                    db.setPremium(targetUser.id, true);
-                }
+                db.setPremium(targetUser.id, false);
 
                 const embed = new EmbedBuilder()
-                    .setTitle('Premium Granted')
-                    .setDescription(`Successfully granted **Premium** status (${durationText}) to ${targetUser}.`)
+                    .setTitle('Premium Revoked')
+                    .setDescription(`Successfully removed **Premium** status from ${targetUser}.`)
                     .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 const notifyEmbed = new EmbedBuilder()
-                    .setTitle('Premium Granted')
-                    .setDescription(`You have been granted **Premium Status** for **${durationText}**! Enjoy reduced cooldowns and other perks.`)
-                    .addFields({ name: 'Granted By', value: interaction.user.tag })
-                    .setFooter({ text: 'Thank you for your support!' });
+                    .setTitle('Premium Revoked')
+                    .setDescription(`Your **Premium Status** has been revoked by an administrator.`)
+                    .addFields({ name: 'Revoked By', value: interaction.user.tag })
+                    .setFooter({ text: 'Contact support if this is a mistake.' })
+                    .setColor(0xFF0000);
                 try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
 
                 return embed;
@@ -175,11 +159,11 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setTitle('Confirmation Required')
             .setDescription(confirmMessage)
-            .setColor(0xFFFF00);
+            .setColor(0xFF0000); // Red for revoke
 
         const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setCustomId('confirm_grant').setLabel('Confirm').setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId('cancel_grant').setLabel('Cancel').setStyle(ButtonStyle.Danger)
+            new ButtonBuilder().setCustomId('confirm_revoke').setLabel('Confirm').setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId('cancel_revoke').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
         );
 
         const response = await interaction.reply({
@@ -198,15 +182,15 @@ module.exports = {
                 return i.reply({ content: 'Not your command.', flags: MessageFlags.Ephemeral });
             }
 
-            if (i.customId === 'confirm_grant') {
+            if (i.customId === 'confirm_revoke') {
                 const resultEmbed = await executeAction();
-                resultEmbed.setColor(0x00FF00);
+                resultEmbed.setColor(0xFF0000);
                 await i.update({ embeds: [resultEmbed], components: [] });
             } else {
                 const cancelEmbed = new EmbedBuilder()
                     .setTitle('Cancelled')
-                    .setDescription('Grant action cancelled.')
-                    .setColor(0xFF0000);
+                    .setDescription('Revoke action cancelled.')
+                    .setColor(0x00FF00);
                 await i.update({ embeds: [cancelEmbed], components: [] });
             }
             collector.stop();

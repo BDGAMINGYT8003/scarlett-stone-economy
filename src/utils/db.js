@@ -30,7 +30,9 @@ db.prepare(`
         rob_coins INTEGER DEFAULT 0,
         patreon_months INTEGER DEFAULT 0,
         used_2025_last_day INTEGER DEFAULT 0,
-        unlocked_badges TEXT DEFAULT '[]'
+        unlocked_badges TEXT DEFAULT '[]',
+        premium_expires_at INTEGER DEFAULT 0,
+        premium_duration_text TEXT DEFAULT NULL
     )
 `).run();
 
@@ -39,15 +41,17 @@ const columns = [
     'daily_streak', 'job_id', 'shifts_completed_today', 'total_shifts_completed',
     'last_shift_timestamp', 'promotions', 'is_premium', 'beg_count', 'search_count',
     'crime_count', 'postmemes_count', 'work_earnings', 'slots_wins', 'highlow_wins',
-    'snakeeyes_wins', 'rob_coins', 'patreon_months', 'used_2025_last_day'
+    'snakeeyes_wins', 'rob_coins', 'patreon_months', 'used_2025_last_day',
+    'premium_expires_at'
 ];
 
 columns.forEach(col => {
     try { db.prepare(`ALTER TABLE users ADD COLUMN ${col} INTEGER DEFAULT 0`).run(); } catch (e) {}
 });
 
-// Separate migration for text column
+// Separate migration for text columns
 try { db.prepare(`ALTER TABLE users ADD COLUMN unlocked_badges TEXT DEFAULT '[]'`).run(); } catch (e) {}
+try { db.prepare(`ALTER TABLE users ADD COLUMN premium_duration_text TEXT DEFAULT NULL`).run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -71,12 +75,34 @@ const getUser = (userId) => {
 // Premium Methods
 const isPremium = (userId) => {
     const user = getUser(userId);
-    return !!user.is_premium;
+    if (user.is_premium) return true;
+    if (user.premium_expires_at > Date.now()) return true;
+    return false;
 };
 
 const setPremium = (userId, status) => {
     getUser(userId);
-    db.prepare('UPDATE users SET is_premium = ? WHERE id = ?').run(status ? 1 : 0, userId);
+    // If setting to false, clear everything. If true, set flag.
+    if (!status) {
+        db.prepare('UPDATE users SET is_premium = 0, premium_expires_at = 0, premium_duration_text = NULL WHERE id = ?').run(userId);
+    } else {
+        db.prepare('UPDATE users SET is_premium = 1 WHERE id = ?').run(userId);
+    }
+};
+
+const addPremiumDuration = (userId, ms, durationText) => {
+    const user = getUser(userId);
+    let currentExpiry = user.premium_expires_at || Date.now();
+    if (currentExpiry < Date.now()) currentExpiry = Date.now();
+
+    const newExpiry = currentExpiry + ms;
+
+    db.prepare('UPDATE users SET premium_expires_at = ?, premium_duration_text = ? WHERE id = ?').run(newExpiry, durationText, userId);
+};
+
+const getExpiredPremiumUsers = () => {
+    const now = Date.now();
+    return db.prepare('SELECT * FROM users WHERE premium_expires_at > 0 AND premium_expires_at < ?').all(now);
 };
 
 // Economy Methods
@@ -232,6 +258,8 @@ module.exports = {
     getUser,
     isPremium,
     setPremium,
+    addPremiumDuration,
+    getExpiredPremiumUsers,
     addBalance,
     removeBalance,
     addBank,

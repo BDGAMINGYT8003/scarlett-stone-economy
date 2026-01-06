@@ -25,7 +25,8 @@ const categories = {
         { name: '/help', description: 'Get help using the bot’s commands.' }
     ],
     Admin: [
-        { name: '/grant', description: 'Grants money or items to a user (Developer Only).' }
+        { name: '/grant', description: 'Grants money or items to a user (Developer Only).' },
+        { name: '/revoke', description: 'Revokes money, items, or premium from a user (Developer Only).' }
     ]
 };
 
