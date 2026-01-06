@@ -7,18 +7,32 @@ const ITEMS_PER_PAGE = 5;
 const REPLY = '<:Reply:1457839486011445391>';
 const REPLY_CONT = '<:ReplyCont:1457839483541127208>';
 
+// Navigation Emojis
+const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
+const NEXT_EMOJI = '<:SingleArrowRight:1458212847157903565>';
+const REFRESH_EMOJI = '<:Refresh:1458212851637420224>';
+const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
+const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('currencylog')
         .setDescription('See a complete log of all currency going in or out of your inventory.'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        let logs = db.getCurrencyLogs(userId); // Returns max 500 (updated in db.js)
 
+        // Dynamic fetch function
+        const fetchLogs = () => db.getCurrencyLogs(userId);
+
+        // Initial Fetch
+        let logs = fetchLogs();
         let currentPage = 0;
-        let maxPages = Math.ceil(logs.length / ITEMS_PER_PAGE) || 1;
+
+        // Helper to recalculate max pages based on current data
+        const getMaxPages = () => Math.max(1, Math.ceil(logs.length / ITEMS_PER_PAGE));
 
         const generateEmbed = () => {
+            const maxPages = getMaxPages();
             const start = currentPage * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             const currentLogs = logs.slice(start, end);
@@ -30,11 +44,14 @@ module.exports = {
             } else {
                 currentLogs.forEach(log => {
                     const timestampUnix = Math.floor(log.timestamp / 1000);
-                    const amountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
+                    const amountStr = log.amount >= 0 ? `⏣ ${log.amount.toLocaleString()}` : `- ⏣ ${Math.abs(log.amount).toLocaleString()}`; // Prompt says use ֍ but previous file used ⏣ in code but prompted to replace globally?
+                    // Wait, I replaced all ⏣ with ֍ globally in previous step.
+                    // I should use ֍ here.
+                    const finalAmountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
 
                     desc += `**Type: ${log.type}**\n`;
                     desc += `${REPLY_CONT} <t:${timestampUnix}:R>\n`;
-                    desc += `${REPLY} ${amountStr}\n\n`;
+                    desc += `${REPLY} ${finalAmountStr}\n\n`;
                 });
             }
 
@@ -46,11 +63,15 @@ module.exports = {
         };
 
         const getComponents = () => {
+            const maxPages = getMaxPages();
+
             return [
                 new ActionRowBuilder().addComponents(
-                    new ButtonBuilder().setCustomId('prev_page').setLabel('Previous').setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
-                    new ButtonBuilder().setCustomId('refresh_logs').setEmoji('🔄').setStyle(ButtonStyle.Success),
-                    new ButtonBuilder().setCustomId('next_page').setLabel('Next').setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1)
+                    new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('refresh_logs').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
+                    new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
+                    new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1)
                 )
             ];
         };
@@ -76,12 +97,22 @@ module.exports = {
                 return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
-            if (i.customId === 'prev_page') currentPage--;
-            if (i.customId === 'next_page') currentPage++;
-            if (i.customId === 'refresh_logs') {
-                logs = db.getCurrencyLogs(userId);
-                maxPages = Math.ceil(logs.length / ITEMS_PER_PAGE) || 1;
-                currentPage = 0; // Reset to start to see new logs
+            // CRITICAL LOGIC FIX: Always fetch fresh data on navigation
+            logs = fetchLogs();
+            const maxPages = getMaxPages();
+
+            if (i.customId === 'first_page') {
+                currentPage = 0;
+            } else if (i.customId === 'prev_page') {
+                currentPage = Math.max(0, currentPage - 1);
+            } else if (i.customId === 'next_page') {
+                currentPage = Math.min(maxPages - 1, currentPage + 1);
+            } else if (i.customId === 'last_page') {
+                currentPage = maxPages - 1;
+            } else if (i.customId === 'refresh_logs') {
+                // Already fetched above
+                // Ensure page is still valid
+                if (currentPage >= maxPages) currentPage = maxPages - 1;
             }
 
             await i.update({

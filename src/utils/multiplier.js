@@ -24,36 +24,31 @@ const calculateMultiplier = (userId) => {
 
     // Badges
     if (unlockedBadges.length > 0) {
-        let badgeMulti = 0;
-        let goldCount = 0;
-        let platCount = 0;
+        const badgeMap = new Map();
 
+        // Group by Badge ID and find highest tier
         unlockedBadges.forEach(badgeString => {
             const [id, tier] = badgeString.split(':');
+            const currentTierVal = tier === 'platinum' ? 2 : 1;
 
-            // Logic: Platinum replaces Gold.
-            // The database storage (from badgeManager.js) seems to store EITHER gold OR platinum for a specific badge ID, not both.
-            // "qualifiedBadgesList.push(`${badge.id}:platinum`);" OR "...gold".
-            // So we can just sum them up based on the tier tag.
-
-            if (tier === 'platinum') {
-                badgeMulti += 10;
-                platCount++;
-            } else {
-                // Default to gold if just "id" or "gold"
-                // 2025 badge stores as "2025_badge:gold" in manager logic
-                badgeMulti += 5;
-                goldCount++;
+            if (!badgeMap.has(id) || currentTierVal > badgeMap.get(id)) {
+                badgeMap.set(id, currentTierVal);
             }
+        });
+
+        let badgeMulti = 0;
+        let count = 0;
+
+        badgeMap.forEach((tierVal) => {
+            if (tierVal === 2) badgeMulti += 10; // Platinum
+            else badgeMulti += 5; // Gold
+            count++;
         });
 
         if (badgeMulti > 0) {
             total += badgeMulti;
-            // Grouping for display? Or just "X Badges"?
-            // Request said "9 Badges +135%" (old example).
-            // New logic might vary. Let's just say "X Badges".
             breakdown.push({
-                name: `${unlockedBadges.length} Badges`,
+                name: `${count} Badges`,
                 amount: badgeMulti,
                 prefix: '+'
             });

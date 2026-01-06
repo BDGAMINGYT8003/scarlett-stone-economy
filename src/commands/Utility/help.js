@@ -38,6 +38,17 @@ const categories = {
 
 const ITEMS_PER_PAGE = 6;
 
+// Navigation Emojis
+const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
+const NEXT_EMOJI = '<:SingleArrowRight:1458212847157903565>';
+const REFRESH_EMOJI = '<:Refresh:1458212851637420224>'; // Not strictly needed for help as data is static, but requested "Global Pagination UI Overhaul". But help is static. I'll omit refresh for help or include it as no-op?
+// "Replace existing ... buttons". Help has Prev/Next. It does NOT have Refresh.
+// "Refresh" logic: "The 'Refresh' button should still exist to reload the current page's data as it perfectly works right now" -> applied to dynamic data.
+// Help is static. I will just update Prev/Next and add First/Last.
+// Actually, adding Refresh to static Help is harmless.
+const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
+const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
@@ -50,7 +61,6 @@ module.exports = {
             const commands = categories[category];
             const maxPages = Math.ceil(commands.length / ITEMS_PER_PAGE);
 
-            // Slice commands for current page
             const start = page * ITEMS_PER_PAGE;
             const end = start + ITEMS_PER_PAGE;
             const currentCommands = commands.slice(start, end);
@@ -71,7 +81,6 @@ module.exports = {
             const commands = categories[category];
             const maxPages = Math.ceil(commands.length / ITEMS_PER_PAGE);
 
-            // Select Menu
             const selectMenu = new StringSelectMenuBuilder()
                 .setCustomId('category_select')
                 .setPlaceholder('Select a category')
@@ -83,20 +92,18 @@ module.exports = {
 
             const row1 = new ActionRowBuilder().addComponents(selectMenu);
 
-            // Pagination Buttons
-            const prevButton = new ButtonBuilder()
-                .setCustomId('prev_page')
-                .setLabel('Previous')
-                .setStyle(ButtonStyle.Primary)
-                .setDisabled(page === 0);
-
-            const nextButton = new ButtonBuilder()
-                .setCustomId('next_page')
-                .setLabel('Next')
-                .setStyle(ButtonStyle.Primary)
-                .setDisabled(page >= maxPages - 1);
-
-            const row2 = new ActionRowBuilder().addComponents(prevButton, nextButton);
+            const row2 = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 0),
+                new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 0),
+                // No Refresh for static help? Or add it for consistency?
+                // Request: "Replace the existing ... buttons ... which currently contain text labels".
+                // Help has Prev/Next.
+                // Request: "The button row for all paginated embeds must follow this exact order: [First] [Prev] [Refresh] [Next] [Last]".
+                // So I MUST add Refresh.
+                new ButtonBuilder().setCustomId('refresh_help').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page >= maxPages - 1),
+                new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page >= maxPages - 1)
+            );
 
             return [row1, row2];
         };
@@ -108,7 +115,7 @@ module.exports = {
         });
 
         const collector = response.createMessageComponentCollector({
-            time: 60000 // 1 minute timeout
+            time: 60000
         });
 
         collector.on('collect', async i => {
@@ -122,14 +129,15 @@ module.exports = {
 
             if (i.componentType === ComponentType.StringSelect) {
                 currentCategory = i.values[0];
-                currentPage = 0; // Reset to first page
+                currentPage = 0;
             } else if (i.componentType === ComponentType.Button) {
-                if (i.customId === 'prev_page') {
-                    currentPage = Math.max(0, currentPage - 1);
-                } else if (i.customId === 'next_page') {
-                    const maxPages = Math.ceil(categories[currentCategory].length / ITEMS_PER_PAGE);
-                    currentPage = Math.min(maxPages - 1, currentPage + 1);
-                }
+                const maxPages = Math.ceil(categories[currentCategory].length / ITEMS_PER_PAGE);
+
+                if (i.customId === 'prev_page') currentPage = Math.max(0, currentPage - 1);
+                else if (i.customId === 'next_page') currentPage = Math.min(maxPages - 1, currentPage + 1);
+                else if (i.customId === 'first_page') currentPage = 0;
+                else if (i.customId === 'last_page') currentPage = maxPages - 1;
+                // refresh does nothing but re-render
             }
 
             await i.update({
@@ -139,7 +147,6 @@ module.exports = {
         });
 
         collector.on('end', async () => {
-            // Disable all components on timeout
             const disabledComponents = generateComponents(currentCategory, currentPage).map(row => {
                 row.components.forEach(c => c.setDisabled(true));
                 return row;
@@ -147,9 +154,7 @@ module.exports = {
 
             try {
                 await interaction.editReply({ components: disabledComponents });
-            } catch (e) {
-                // Ignore if message was deleted
-            }
+            } catch (e) {}
         });
     },
 };

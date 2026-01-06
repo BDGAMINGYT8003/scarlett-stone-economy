@@ -9,6 +9,13 @@ const ITEMS_PER_PAGE = 5;
 const REPLY = '<:Reply:1457839486011445391>';
 const REPLY_CONT = '<:ReplyCont:1457839483541127208>';
 
+// Navigation Emojis
+const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
+const NEXT_EMOJI = '<:SingleArrowRight:1458212847157903565>';
+const REFRESH_EMOJI = '<:Refresh:1458212851637420224>';
+const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
+const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('achievements')
@@ -74,12 +81,15 @@ module.exports = {
         };
 
         const getComponents = () => {
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('prev_page').setLabel('Previous').setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
-                new ButtonBuilder().setCustomId('refresh_achievements').setLabel('🔄').setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId('next_page').setLabel('Next').setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1)
-            );
-            return [row];
+            return [
+                new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('refresh_achievements').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
+                    new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
+                    new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1)
+                )
+            ];
         };
 
         const response = await interaction.reply({
@@ -99,8 +109,10 @@ module.exports = {
                 return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
-            if (i.customId === 'prev_page') currentPage--;
-            if (i.customId === 'next_page') currentPage++;
+            if (i.customId === 'prev_page') currentPage = Math.max(0, currentPage - 1);
+            if (i.customId === 'next_page') currentPage = Math.min(maxPages - 1, currentPage + 1);
+            if (i.customId === 'first_page') currentPage = 0;
+            if (i.customId === 'last_page') currentPage = maxPages - 1;
             if (i.customId === 'refresh_achievements') {
                 // Just update
             }

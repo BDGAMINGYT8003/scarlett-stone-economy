@@ -9,6 +9,13 @@ const ITEMS_PER_PAGE = 5;
 const REPLY = '<:Reply:1457839486011445391>';
 const REPLY_CONT = '<:ReplyCont:1457839483541127208>';
 
+// Navigation Emojis
+const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
+const NEXT_EMOJI = '<:SingleArrowRight:1458212847157903565>';
+const REFRESH_EMOJI = '<:Refresh:1458212851637420224>';
+const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
+const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('badges')
@@ -24,12 +31,8 @@ module.exports = {
 
     async execute(interaction) {
         const subcommand = interaction.options.getSubcommand();
-
-        if (subcommand === 'list') {
-            await this.handleList(interaction);
-        } else if (subcommand === 'manage') {
-            await this.handleManage(interaction);
-        }
+        if (subcommand === 'list') await this.handleList(interaction);
+        else if (subcommand === 'manage') await this.handleManage(interaction);
     },
 
     async handleList(interaction) {
@@ -49,11 +52,10 @@ module.exports = {
 
             currentBadges.forEach(badge => {
                 let currentValue = 0;
-                let maxValue = badge.requirements.gold; // Default target is Gold
+                let maxValue = badge.requirements.gold;
                 let isPlatinum = false;
                 let isGold = false;
 
-                // Determine Current Value
                 if (badge.id === '2025_badge') {
                     currentValue = userData.used_2025_last_day ? 1 : 0;
                 } else if (badge.is_computed && badge.stat_key === 'net_worth') {
@@ -62,19 +64,17 @@ module.exports = {
                     currentValue = userData[badge.stat_key] || 0;
                 }
 
-                // Check Status
                 if (currentValue >= badge.requirements.platinum) {
                     isPlatinum = true;
                     isGold = true;
                     maxValue = badge.requirements.platinum;
                 } else if (currentValue >= badge.requirements.gold) {
                     isGold = true;
-                    maxValue = badge.requirements.platinum; // Aiming for plat
+                    maxValue = badge.requirements.platinum;
                 }
 
-                // Special Case for 2025 Badge
                 if (badge.id === '2025_badge') {
-                    const statusEmoji = isGold ? badge.emoji : badge.emoji; // Same emoji? Config has one.
+                    const statusEmoji = isGold ? badge.emoji : badge.emoji;
                     const percentage = isGold ? 100 : 0;
                     const bar = getProgressBar(currentValue, 1, 5);
 
@@ -83,30 +83,17 @@ module.exports = {
                     return;
                 }
 
-                // Normal Badges
                 const goldEmoji = badge.emojis.gold;
                 const platEmoji = badge.emojis.platinum;
-
-                // Show Gold Progress
                 const goldTarget = badge.requirements.gold;
                 const goldPct = Math.min(Math.floor((currentValue / goldTarget) * 100), 100);
                 const goldBar = getProgressBar(currentValue, goldTarget, 5);
-
-                desc += `**${badge.name}**${badge.upkeep ? ' [(Upkeep Required)]' : ''}\n-# ${badge.description}\n`;
-
-                // Line 1: Gold Status
-                // If we have Gold, showing progress to Gold is kinda redundant visually but requested format shows two lines usually?
-                // The prompt example shows two lines for "Daily Devotee": Gold line and Plat line.
-                // It shows 0% 1/420 for Gold line, and 0% 1/666 for Plat line.
-                // So we always show both lines.
-
-                desc += `${REPLY_CONT} ${goldEmoji} ${goldBar} \` ${goldPct}% \` \` ${formatNumber(currentValue)} / ${formatNumber(goldTarget)} \`\n`;
-
-                // Line 2: Platinum Status
                 const platTarget = badge.requirements.platinum;
                 const platPct = Math.min(Math.floor((currentValue / platTarget) * 100), 100);
                 const platBar = getProgressBar(currentValue, platTarget, 5);
 
+                desc += `**${badge.name}**${badge.upkeep ? ' [(Upkeep Required)]' : ''}\n-# ${badge.description}\n`;
+                desc += `${REPLY_CONT} ${goldEmoji} ${goldBar} \` ${goldPct}% \` \` ${formatNumber(currentValue)} / ${formatNumber(goldTarget)} \`\n`;
                 desc += `${REPLY} ${platEmoji} ${platBar} \` ${platPct}% \` \` ${formatNumber(currentValue)} / ${formatNumber(platTarget)} \`\n\n`;
             });
 
@@ -118,13 +105,16 @@ module.exports = {
         };
 
         const getComponents = () => {
-            const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('prev_page').setLabel('Previous').setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
-                new ButtonBuilder().setCustomId('refresh_badges').setLabel('Refresh').setStyle(ButtonStyle.Success).setEmoji('🔄'),
-                new ButtonBuilder().setCustomId('next_page').setLabel('Next').setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
-                new ButtonBuilder().setCustomId('help_badges').setLabel('❓').setStyle(ButtonStyle.Secondary)
-            );
-            return [row];
+            return [
+                new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                    new ButtonBuilder().setCustomId('refresh_badges').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
+                    new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
+                    new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
+                    new ButtonBuilder().setCustomId('help_badges').setLabel('❓').setStyle(ButtonStyle.Secondary)
+                )
+            ];
         };
 
         const response = await interaction.reply({
@@ -144,8 +134,10 @@ module.exports = {
                 return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
             }
 
-            if (i.customId === 'prev_page') currentPage--;
-            if (i.customId === 'next_page') currentPage++;
+            if (i.customId === 'prev_page') currentPage = Math.max(0, currentPage - 1);
+            if (i.customId === 'next_page') currentPage = Math.min(maxPages - 1, currentPage + 1);
+            if (i.customId === 'first_page') currentPage = 0;
+            if (i.customId === 'last_page') currentPage = maxPages - 1;
             if (i.customId === 'refresh_badges') {
                 // Just re-render
             }
@@ -165,6 +157,7 @@ module.exports = {
     },
 
     async handleManage(interaction) {
+        // ... (Keep existing implementation)
         const userId = interaction.user.id;
         const userData = db.getUser(userId);
         const netWorth = db.calculateNetWorth(userId);
