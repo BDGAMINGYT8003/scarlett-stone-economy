@@ -186,8 +186,10 @@ async function runSlots(interaction, betAmount) {
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.incrementStat(userId, 'slots_wins');
-        await checkAndUnlockBadges(userId, interaction);
     }
+
+    // Check Badges (Bet deduction or Win)
+    await checkAndUnlockBadges(userId, interaction);
 
     await interaction.editReply({
         embeds: [getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier)],

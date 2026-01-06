@@ -160,8 +160,10 @@ module.exports = {
             // Increment Stats
             if (isSpecial || amount > 0) {
                  db.incrementStat(userId, 'crime_count');
-                 await checkAndUnlockBadges(userId, interaction);
             }
+
+            // Check Badges (Covers fines reducing net worth or wins increasing it)
+            await checkAndUnlockBadges(userId, interaction);
 
             // Update UI
             const updatedButtons = buttons.map(btn => {

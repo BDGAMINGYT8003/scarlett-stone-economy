@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser.js');
 
 module.exports = {
@@ -75,6 +76,7 @@ module.exports = {
             confirmMessage = `Are you sure you want to revoke **֍ ${finalAmount.toLocaleString()}** from ${targetUser}?`;
             executeAction = async () => {
                 db.removeBalance(targetUser.id, finalAmount);
+                await checkAndUnlockBadges(targetUser.id, interaction);
                 const newData = db.getUser(targetUser.id);
 
                 const embed = new EmbedBuilder()

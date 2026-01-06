@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const db = require('../../utils/db');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const { checkScheduledCooldown, getScheduleCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
@@ -59,6 +60,7 @@ module.exports = {
         db.addBalance(userId, totalAmount);
         db.setLastClaimed(userId, 'daily', now);
         db.setStreak(userId, newStreak);
+        await checkAndUnlockBadges(userId, interaction);
 
         // Timestamps
         const nextDailyTimestamp = Math.floor((now + MS_IN_DAY) / 1000);

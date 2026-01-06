@@ -82,8 +82,10 @@ async function runSnakeEyes(interaction, betAmount) {
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.incrementStat(userId, 'snakeeyes_wins');
-        await checkAndUnlockBadges(userId, interaction);
     }
+
+    // Check Badges (Bet deduction or Win)
+    await checkAndUnlockBadges(userId, interaction);
 
     // Refresh user data for final balance display
     const newBalance = (db.getUser(userId).balance ?? 0);

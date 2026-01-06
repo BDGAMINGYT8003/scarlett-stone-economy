@@ -12,12 +12,17 @@ async function checkAndUnlockBadges(userId, interaction) {
     const netWorth = db.calculateNetWorth(userId);
 
     // Get currently stored badges
-    const storedBadges = new Set(db.getUnlockedBadges(userId));
-    const qualifiedBadges = new Set();
-    const newUnlocks = [];
-    const lostBadges = [];
+    const storedBadgesList = db.getUnlockedBadges(userId);
+    const storedMap = new Map();
+    storedBadgesList.forEach(k => {
+        const [id, tier] = k.split(':');
+        storedMap.set(id, tier);
+    });
 
     // Calculate currently qualified badges
+    const qualifiedMap = new Map();
+    const qualifiedBadgesList = [];
+
     badgesConfig.forEach(badge => {
         let currentValue = 0;
 
@@ -31,56 +36,32 @@ async function checkAndUnlockBadges(userId, interaction) {
         }
 
         // Check Requirements
-        // 2025 Badge
         if (badge.id === '2025_badge') {
             if (currentValue >= 1) {
-                qualifiedBadges.add(`${badge.id}:gold`); // Treating as gold/standard
+                qualifiedMap.set(badge.id, 'gold');
+                qualifiedBadgesList.push(`${badge.id}:gold`);
             }
             return;
         }
 
-        // Standard Badges
         if (currentValue >= badge.requirements.platinum) {
-            qualifiedBadges.add(`${badge.id}:platinum`);
+            qualifiedMap.set(badge.id, 'platinum');
+            qualifiedBadgesList.push(`${badge.id}:platinum`);
         } else if (currentValue >= badge.requirements.gold) {
-            qualifiedBadges.add(`${badge.id}:gold`);
+            qualifiedMap.set(badge.id, 'gold');
+            qualifiedBadgesList.push(`${badge.id}:gold`);
         }
     });
 
-    // Determine New Unlocks
-    qualifiedBadges.forEach(badgeKey => {
-        if (!storedBadges.has(badgeKey)) {
-            newUnlocks.push(badgeKey);
-        }
-    });
-
-    // Determine Lost Badges (Upkeep)
-    storedBadges.forEach(badgeKey => {
-        if (!qualifiedBadges.has(badgeKey)) {
-            // Check if user has a better version (e.g., lost Gold but gained Platinum, or vice versa if handled differently)
-            // But here "qualified" contains the BEST single version.
-            // If I had Platinum, and now I have Gold.
-            // "qualified" has Gold. "stored" has Platinum.
-            // "new" has Gold. "lost" has Platinum.
-            // This is correct. Notification will say "New Badge: Gold" and "Lost Badge: Platinum"?
-            // Wait, if I downgrade, "New Badge: Gold" might be weird if I treat it as 'unlocked'.
-            // But technically I *did* lose the Platinum status.
-
-            // However, typically you only notify LOSS if you lose the badge entirely or drop a tier?
-            // The prompt says "If a badge is lost... mention that the associated coin multiplier has been removed."
-            // If I drop Platinum -> Gold, I lose 10% but gain 5%.
-
-            lostBadges.push(badgeKey);
-        }
-    });
-
-    // Update DB if changes
+    // Update DB if changes (save qualified list)
+    // Compare arrays sorted or sets to avoid DB thrashing?
+    const storedSet = new Set(storedBadgesList);
+    const qualifiedSet = new Set(qualifiedBadgesList);
     let changed = false;
-    if (storedBadges.size !== qualifiedBadges.size) changed = true;
+    if (storedSet.size !== qualifiedSet.size) changed = true;
     else {
-        // If sizes equal, check content
-        for (const b of qualifiedBadges) {
-            if (!storedBadges.has(b)) {
+        for (const b of qualifiedSet) {
+            if (!storedSet.has(b)) {
                 changed = true;
                 break;
             }
@@ -88,73 +69,92 @@ async function checkAndUnlockBadges(userId, interaction) {
     }
 
     if (changed) {
-        db.setUnlockedBadges(userId, Array.from(qualifiedBadges));
+        db.setUnlockedBadges(userId, qualifiedBadgesList);
     }
 
-    // Send Notifications
-    if (newUnlocks.length > 0 || lostBadges.length > 0) {
+    // Determine Notifications
+    const tierValue = { undefined: 0, 'gold': 1, 'platinum': 2 };
+    const allIds = new Set([...storedMap.keys(), ...qualifiedMap.keys()]);
+    let discordUser = null;
+
+    for (const id of allIds) {
+        const oldTier = storedMap.get(id);
+        const newTier = qualifiedMap.get(id);
+        const oldVal = tierValue[oldTier];
+        const newVal = tierValue[newTier];
+
+        const badgeConfig = badgesConfig.find(b => b.id === id);
+        if (!badgeConfig) continue;
+
+        if (newVal === oldVal) continue; // No change
+
+        // Helper to get user
+        if (!discordUser) {
+            try {
+                discordUser = interaction.user || await interaction.client.users.fetch(userId);
+            } catch (e) {
+                console.error(`Failed to fetch user ${userId} for badge notification`);
+                return;
+            }
+        }
+
+        let name = badgeConfig.name;
+        let emoji = badgeConfig.emoji;
+        if (badgeConfig.emojis) {
+            // Use emoji for the tier being discussed
+            // If unlock/upgrade, use newTier emoji
+            // If loss, use oldTier emoji
+            // If downgrade, use oldTier (Platinum) or newTier (Gold)? Context dependent.
+            emoji = badgeConfig.emojis[newTier || oldTier];
+        }
+
         try {
-            const discordUser = interaction.user || await interaction.client.users.fetch(userId);
-
-            // Unlocks
-            for (const badgeKey of newUnlocks) {
-                const [badgeId, tier] = badgeKey.split(':');
-                const badgeConfig = badgesConfig.find(b => b.id === badgeId);
-
-                if (!badgeConfig) continue;
-
-                let emoji = badgeConfig.emoji;
-                let name = badgeConfig.name;
-
-                if (badgeConfig.emojis) {
-                    emoji = badgeConfig.emojis[tier];
-                }
-
-                // If this is a "downgrade unlock" (e.g. gained Gold because lost Platinum),
-                // we might want to suppress "New Badge" if we are also sending "Lost Badge" for the same ID.
-                // But let's follow the prompt strictly: "If a badge is lost... send notification".
-                // "New badge unlocked" -> "New Badge Unlocked".
-                // If I downgrade, I theoretically unlocked Gold again.
-                // I will allow both notifications as it explains the state change fully.
+            if (newVal > oldVal) {
+                // Scenario 1 & 3: Unlock or Regain or Upgrade
+                // Use newTier emoji
+                if (badgeConfig.emojis) emoji = badgeConfig.emojis[newTier];
 
                 const embed = new EmbedBuilder()
                     .setTitle(`${emoji} New Badge Unlocked`)
                     .setDescription(`> **${name}** - ${badgeConfig.description}`)
-                    .setColor(tier === 'platinum' ? 0xE5E4E2 : 0xFFD700)
+                    .setColor(newTier === 'platinum' ? 0xE5E4E2 : 0xFFD700)
                     .setFooter({ text: 'Dank Memer' });
 
-                await discordUser.send({ embeds: [embed] }).catch(() => {});
-            }
+                await discordUser.send({ embeds: [embed] });
 
-            // Losses
-            for (const badgeKey of lostBadges) {
-                const [badgeId, tier] = badgeKey.split(':');
-                const badgeConfig = badgesConfig.find(b => b.id === badgeId);
+            } else if (newVal < oldVal) {
+                // Loss or Downgrade
+                if (newVal === 0) {
+                    // Scenario 2: Complete Removal
+                    // Use oldTier emoji
+                    if (badgeConfig.emojis) emoji = badgeConfig.emojis[oldTier];
 
-                if (!badgeConfig) continue;
+                    const embed = new EmbedBuilder()
+                        .setTitle('Easy come, easy go...')
+                        .setDescription(`> **${name}** ${emoji}\n> You failed to maintain the requirements for this badge.\n> The associated coin multiplier has been removed.`)
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Better luck next time' });
 
-                let emoji = badgeConfig.emoji;
-                let name = badgeConfig.name;
+                    await discordUser.send({ embeds: [embed] });
 
-                if (badgeConfig.emojis) {
-                    emoji = badgeConfig.emojis[tier];
+                } else if (oldVal === 2 && newVal === 1) {
+                    // Scenario 4: Downgrade (Plat -> Gold)
+                    // Use Platinum emoji for "lost" context or Gold for "remaining"?
+                    // User says: "explicitly mention that the Platinum badge was removed but they still possess the Gold version."
+                    const platEmoji = badgeConfig.emojis.platinum;
+                    const goldEmoji = badgeConfig.emojis.gold;
+
+                    const embed = new EmbedBuilder()
+                        .setTitle('Badge Downgraded')
+                        .setDescription(`> **${name}**\n> You've lost the **Platinum** tier ${platEmoji} due to failing requirements, but you still kept the **Gold** tier ${goldEmoji}.\n> \n> **Note:** Your coin multiplier for this badge has dropped from **+10%** to **+5%**.`)
+                        .setColor(0xFFA500) // Orange?
+                        .setFooter({ text: 'Step it up!' });
+
+                    await discordUser.send({ embeds: [embed] });
                 }
-
-                // Check if we gained a different tier of the same badge
-                // If we did, maybe phrase it as a "Downgrade"?
-                // But prompt asks for "Badge Lost".
-
-                const embed = new EmbedBuilder()
-                    .setTitle('Easy come, easy go...')
-                    .setDescription(`> **${name}** ${emoji}\n> You failed to maintain the requirements for this badge.\n> The associated coin multiplier has been removed.`)
-                    .setColor(0xFF0000)
-                    .setFooter({ text: 'Better luck next time' });
-
-                await discordUser.send({ embeds: [embed] }).catch(() => {});
             }
-
         } catch (e) {
-            console.error(`Failed to send badge notification to ${userId}:`, e);
+            // Cannot DM user?
         }
     }
 }

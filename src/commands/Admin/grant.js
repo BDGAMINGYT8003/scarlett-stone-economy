@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, MessageFlags, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
+const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser.js');
 const { parseDuration } = require('../../utils/timeParser.js');
 
@@ -79,6 +80,7 @@ module.exports = {
             confirmMessage = `Are you sure you want to grant **֍ ${finalAmount.toLocaleString()}** to ${targetUser}?`;
             executeAction = async () => {
                 db.addBalance(targetUser.id, finalAmount);
+                await checkAndUnlockBadges(targetUser.id, interaction);
                 const newData = db.getUser(targetUser.id);
 
                 const embed = new EmbedBuilder()
