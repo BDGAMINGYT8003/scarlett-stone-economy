@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
 const parseNumber = require('../../utils/numberParser');
 
 const SYMBOLS = [
@@ -186,10 +187,16 @@ async function runSlots(interaction, betAmount) {
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.incrementStat(userId, 'slots_wins');
+        db.incrementStat(userId, 'slots_won_amount', winnings);
+    } else {
+        db.incrementStat(userId, 'slots_lost_amount', betAmount); // Technically net loss is betAmount
     }
+
+    db.incrementStat(userId, 'slots_played');
 
     // Check Badges (Bet deduction or Win)
     await checkAndUnlockBadges(userId, interaction);
+    await checkAndUnlockAchievements(userId, interaction);
 
     await interaction.editReply({
         embeds: [getEmbed(finalRow1, finalRow2, finalRow3, true, multiplier)],

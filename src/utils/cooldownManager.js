@@ -129,6 +129,31 @@ const getCooldownEmbed = (commandName, readyAt, defaultSeconds, premiumSeconds) 
         .setDescription(`### This command can be used again <t:${readyUnix}:R>\nThe __default__ cooldown is **${defaultSeconds} seconds**\nThe __premium__ cooldown is **${premiumSeconds} seconds**`);
 };
 
+const getAllCooldowns = (userId) => {
+    const active = [];
+    const now = Date.now();
+
+    // Duration Cooldowns
+    for (const [key, expireTime] of durationCooldowns.entries()) {
+        if (key.startsWith(`${userId}-`)) {
+            if (now < expireTime) {
+                const command = key.split('-')[1];
+                active.push({ command, readyAt: expireTime });
+            }
+        }
+    }
+
+    // Schedule Cooldowns (Daily, Weekly, Monthly)
+    ['daily', 'weekly', 'monthly'].forEach(type => {
+        const check = checkScheduledCooldown(userId, type);
+        if (check.onCooldown) {
+            active.push({ command: type, readyAt: check.readyAt });
+        }
+    });
+
+    return active;
+};
+
 const getScheduleCooldownEmbed = (commandName, readyAt) => {
     const readyUnix = Math.floor(readyAt / 1000);
     // Title flavor text based on bot theme (Economy/Fun)
@@ -158,5 +183,6 @@ module.exports = {
     checkDurationCooldown,
     setDurationCooldown,
     getCooldownEmbed,
-    getScheduleCooldownEmbed
+    getScheduleCooldownEmbed,
+    getAllCooldowns
 };

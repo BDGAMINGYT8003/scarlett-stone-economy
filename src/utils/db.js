@@ -32,7 +32,18 @@ db.prepare(`
         used_2025_last_day INTEGER DEFAULT 0,
         unlocked_badges TEXT DEFAULT '[]',
         premium_expires_at INTEGER DEFAULT 0,
-        premium_duration_text TEXT DEFAULT NULL
+        premium_duration_text TEXT DEFAULT NULL,
+        selected_title TEXT DEFAULT NULL,
+        commands_ran INTEGER DEFAULT 0,
+        items_used INTEGER DEFAULT 0,
+        shared_coins INTEGER DEFAULT 0,
+        plants_harvested INTEGER DEFAULT 0,
+        slots_won_amount INTEGER DEFAULT 0,
+        slots_lost_amount INTEGER DEFAULT 0,
+        slots_played INTEGER DEFAULT 0,
+        snakeeyes_won_amount INTEGER DEFAULT 0,
+        snakeeyes_lost_amount INTEGER DEFAULT 0,
+        snakeeyes_played INTEGER DEFAULT 0
     )
 `).run();
 
@@ -42,7 +53,9 @@ const columns = [
     'last_shift_timestamp', 'promotions', 'is_premium', 'beg_count', 'search_count',
     'crime_count', 'postmemes_count', 'work_earnings', 'slots_wins', 'highlow_wins',
     'snakeeyes_wins', 'rob_coins', 'patreon_months', 'used_2025_last_day',
-    'premium_expires_at'
+    'premium_expires_at', 'selected_title', 'commands_ran', 'items_used', 'shared_coins',
+    'plants_harvested', 'slots_won_amount', 'slots_lost_amount', 'slots_played',
+    'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played'
 ];
 
 columns.forEach(col => {
@@ -52,6 +65,7 @@ columns.forEach(col => {
 // Separate migration for text columns
 try { db.prepare(`ALTER TABLE users ADD COLUMN unlocked_badges TEXT DEFAULT '[]'`).run(); } catch (e) {}
 try { db.prepare(`ALTER TABLE users ADD COLUMN premium_duration_text TEXT DEFAULT NULL`).run(); } catch (e) {}
+try { db.prepare(`ALTER TABLE users ADD COLUMN selected_title TEXT DEFAULT NULL`).run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS inventory (
@@ -59,6 +73,24 @@ db.prepare(`
         item_id TEXT,
         quantity INTEGER DEFAULT 0,
         PRIMARY KEY (user_id, item_id)
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS unlocked_titles (
+        user_id TEXT,
+        title_id TEXT,
+        PRIMARY KEY (user_id, title_id)
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS achievements (
+        user_id TEXT,
+        achievement_id TEXT,
+        completed INTEGER DEFAULT 0,
+        progress INTEGER DEFAULT 0,
+        PRIMARY KEY (user_id, achievement_id)
     )
 `).run();
 
@@ -82,7 +114,6 @@ const isPremium = (userId) => {
 
 const setPremium = (userId, status) => {
     getUser(userId);
-    // If setting to false, clear everything. If true, set flag.
     if (!status) {
         db.prepare('UPDATE users SET is_premium = 0, premium_expires_at = 0, premium_duration_text = NULL WHERE id = ?').run(userId);
     } else {
@@ -134,11 +165,14 @@ const increaseBankCapacity = (userId, amount) => {
 // Stat Increment Methods
 const incrementStat = (userId, stat, amount = 1) => {
     getUser(userId);
-    // Validate stat column to prevent SQL injection or errors
+    // Allow extended stats
     const validStats = [
         'beg_count', 'search_count', 'crime_count', 'postmemes_count',
         'work_earnings', 'slots_wins', 'highlow_wins', 'snakeeyes_wins',
-        'rob_coins', 'patreon_months', 'used_2025_last_day'
+        'rob_coins', 'patreon_months', 'used_2025_last_day',
+        'commands_ran', 'items_used', 'shared_coins', 'plants_harvested',
+        'slots_won_amount', 'slots_lost_amount', 'slots_played',
+        'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played'
     ];
     if (validStats.includes(stat)) {
         db.prepare(`UPDATE users SET ${stat} = ${stat} + ? WHERE id = ?`).run(amount, userId);
@@ -147,11 +181,43 @@ const incrementStat = (userId, stat, amount = 1) => {
 
 const setStat = (userId, stat, value) => {
     getUser(userId);
-    const validStats = ['used_2025_last_day', 'patreon_months'];
+    const validStats = ['used_2025_last_day', 'patreon_months', 'selected_title'];
     if (validStats.includes(stat)) {
         db.prepare(`UPDATE users SET ${stat} = ? WHERE id = ?`).run(value, userId);
     }
 }
+
+// Achievement Methods
+const getAchievements = (userId) => {
+    return db.prepare('SELECT * FROM achievements WHERE user_id = ?').all(userId);
+};
+
+const setAchievement = (userId, achievementId, completed, progress) => {
+    const existing = db.prepare('SELECT * FROM achievements WHERE user_id = ? AND achievement_id = ?').get(userId, achievementId);
+    if (existing) {
+        db.prepare('UPDATE achievements SET completed = ?, progress = ? WHERE user_id = ? AND achievement_id = ?').run(completed ? 1 : 0, progress, userId, achievementId);
+    } else {
+        db.prepare('INSERT INTO achievements (user_id, achievement_id, completed, progress) VALUES (?, ?, ?, ?)').run(userId, achievementId, completed ? 1 : 0, progress);
+    }
+};
+
+// Title Methods
+const getTitles = (userId) => {
+    const titles = db.prepare('SELECT title_id FROM unlocked_titles WHERE user_id = ?').all(userId);
+    return titles.map(t => t.title_id);
+};
+
+const addTitle = (userId, titleId) => {
+    const existing = db.prepare('SELECT * FROM unlocked_titles WHERE user_id = ? AND title_id = ?').get(userId, titleId);
+    if (!existing) {
+        db.prepare('INSERT INTO unlocked_titles (user_id, title_id) VALUES (?, ?)').run(userId, titleId);
+    }
+};
+
+const setTitle = (userId, titleId) => {
+    // Verify ownership first logic should be in command/manager, but DB just updates
+    setStat(userId, 'selected_title', titleId);
+};
 
 const getUnlockedBadges = (userId) => {
     const user = getUser(userId);
@@ -206,6 +272,15 @@ const resetDailyShifts = (userId) => {
 
 const getAllUsersWithJobs = () => {
     return db.prepare('SELECT * FROM users WHERE job_id IS NOT NULL').all();
+};
+
+const getTotalWorkStars = (userId) => {
+    try {
+        const result = db.prepare('SELECT SUM(stars) as total FROM user_job_stats WHERE user_id = ?').get(userId);
+        return result ? result.total || 0 : 0;
+    } catch (e) {
+        return 0;
+    }
 };
 
 // Inventory Methods
@@ -277,9 +352,15 @@ module.exports = {
     addPromotion,
     resetDailyShifts,
     getAllUsersWithJobs,
+    getTotalWorkStars,
     addItem,
     removeItem,
     getInventory,
     getItemCount,
-    calculateNetWorth
+    calculateNetWorth,
+    getAchievements,
+    setAchievement,
+    getTitles,
+    addTitle,
+    setTitle
 };

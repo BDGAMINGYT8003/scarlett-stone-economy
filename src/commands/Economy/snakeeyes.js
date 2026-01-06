@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
 const parseNumber = require('../../utils/numberParser');
 
 const MIN_BET = 5000;
@@ -82,10 +83,16 @@ async function runSnakeEyes(interaction, betAmount) {
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.incrementStat(userId, 'snakeeyes_wins');
+        db.incrementStat(userId, 'snakeeyes_won_amount', winnings);
+    } else {
+        db.incrementStat(userId, 'snakeeyes_lost_amount', betAmount);
     }
+
+    db.incrementStat(userId, 'snakeeyes_played');
 
     // Check Badges (Bet deduction or Win)
     await checkAndUnlockBadges(userId, interaction);
+    await checkAndUnlockAchievements(userId, interaction);
 
     // Refresh user data for final balance display
     const newBalance = (db.getUser(userId).balance ?? 0);

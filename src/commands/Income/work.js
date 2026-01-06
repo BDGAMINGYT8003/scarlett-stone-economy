@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
 const jobs = require('../../config/jobs.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -459,6 +460,7 @@ module.exports = {
         db.addBalance(userId, salary);
         db.incrementStat(userId, 'work_earnings', salary);
         await checkAndUnlockBadges(userId, interaction);
+        await checkAndUnlockAchievements(userId, interaction);
 
         // Set Duration Cooldown
         setDurationCooldown(userId, 'work_shift', defaultSeconds, premiumSeconds);

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
+const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
 const items = require('../../config/items.json');
 const parseAmount = require('../../utils/numberParser');
 
@@ -110,5 +111,9 @@ module.exports = {
 
              await interaction.reply({ embeds: [embed] });
         }
+
+        // Track stats and check achievements
+        db.incrementStat(userId, 'items_used', quantity);
+        await checkAndUnlockAchievements(userId, interaction);
     },
 };

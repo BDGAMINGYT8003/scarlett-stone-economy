@@ -2,6 +2,7 @@ const { Events } = require('discord.js');
 const { log } = require('../utils/logger');
 const db = require('../utils/db');
 const { checkAndUnlockBadges } = require('../utils/badgeManager');
+const { checkAndUnlockAchievements } = require('../utils/achievementManager');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -64,6 +65,10 @@ module.exports = {
 
         // Handle Slash Commands
         if (!interaction.isChatInputCommand()) return;
+
+        // Increment Commands Run Stat
+        db.incrementStat(interaction.user.id, 'commands_ran');
+        await checkAndUnlockAchievements(interaction.user.id, interaction);
 
         const command = interaction.client.commands.get(interaction.commandName);
 
