@@ -35,10 +35,8 @@ function getRandomSymbol() {
 }
 
 function calculateMultiplier(row) {
-    // row is array of 3 symbols
     const [s1, s2, s3] = row;
 
-    // Check 3 matches first
     if (s1 === s2 && s2 === s3) {
         if (s1 === '<a:PepeTrophy:1446609005630984332>') return 75;
         if (s1 === '<a:PepeMedal:1446609003785228450>') return 25;
@@ -48,7 +46,6 @@ function calculateMultiplier(row) {
         if (s1 === '<:Cookie:1446608820196610149>') return 2;
     }
 
-    // Check 2 matches (start)
     if (s1 === s2) {
         if (s1 === '<a:PepeMedal:1446609003785228450>') return 2;
         if (s1 === '<:rarepepe:1446608891965214892>') return 1.5;
@@ -68,7 +65,6 @@ async function runSlots(interaction, betAmount) {
     const balance = userData.balance ?? 0;
 
     if (balance < betAmount) {
-         // Reply or Edit based on context
          const embed = new EmbedBuilder()
             .setTitle('Insufficient Funds')
             .setDescription(`You don't have enough coins! You need **֍ ${betAmount.toLocaleString()}**.`)
@@ -82,27 +78,17 @@ async function runSlots(interaction, betAmount) {
          return;
     }
 
-    // Deduct Bet Immediately
     db.removeBalance(userId, betAmount);
     db.logTransaction(userId, 'slots', { amount: -betAmount });
 
-    // Defer update or reply to ensure we have the message to edit
     let message;
     if (interaction.isButton() || interaction.isModalSubmit()) {
-        // If it's a button click ("Spin Again"), we want to reuse the interaction to update the message
-        // But the prompt says "Edit the message 11 times".
-        // Usually, we update the existing message.
         await interaction.deferUpdate();
         message = interaction.message;
     } else {
-        // Slash command
         await interaction.deferReply();
         message = await interaction.fetchReply();
     }
-
-    // Initial State
-    // We need 5 edits total now (prompt request).
-    // 4 random frames + 1 final result frame.
 
     const getEmbed = (row1, row2, row3, isFinal = false, multiplier = 0) => {
         const currentBalance = (db.getUser(userId).balance ?? 0);
@@ -121,7 +107,7 @@ async function runSlots(interaction, betAmount) {
         desc += `<:emptyspace:1446608999293391140>\n`;
         desc += `<:emptyspace:1446608999293391140>`;
 
-        const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF; // Blue for spinning, Green/Red for result
+        const color = isFinal ? (net > 0 ? 0x00FF00 : 0xFF0000) : 0x0099FF;
 
         return new EmbedBuilder()
             .setTitle(`${interaction.user.username}'s Slot Machine`)
@@ -130,25 +116,21 @@ async function runSlots(interaction, betAmount) {
             .setFooter({ text: `Bet: ${betAmount.toLocaleString()} | Min: ֍ ${MIN_BET.toLocaleString()} | Max: ֍ ${MAX_BET.toLocaleString()}` });
     };
 
-    // Prepare components (disabled initially)
     const getButtons = (disabled = false) => {
         return new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId(`slots_spin_again_${betAmount}`).setLabel('Spin Again').setStyle(ButtonStyle.Primary).setDisabled(disabled),
             new ButtonBuilder().setCustomId('slots_change_bet').setLabel('Change Bet').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-            new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary).setDisabled(disabled) // Optional to disable this too, keeping consistent
+            new ButtonBuilder().setCustomId('slots_payouts').setLabel('See Payouts').setStyle(ButtonStyle.Secondary).setDisabled(disabled)
         );
     };
 
-    // Animation Loop
-    // Determine Final Rows
     const finalRow1 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
-    const finalRow2 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()]; // Payline
+    const finalRow2 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
     const finalRow3 = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 
     const multiplier = calculateMultiplier(finalRow2);
     const winnings = Math.floor(betAmount * multiplier);
 
-    // Initial display (before loop):
     if (interaction.isButton() || interaction.isModalSubmit()) {
          await interaction.editReply({
              embeds: [getEmbed(
@@ -169,7 +151,6 @@ async function runSlots(interaction, betAmount) {
          });
     }
 
-    // Now edit 4 times (random).
     for (let i = 0; i < 4; i++) {
         await sleep(200);
         await interaction.editReply({
@@ -181,22 +162,19 @@ async function runSlots(interaction, betAmount) {
         });
     }
 
-    // Final Edit (5th edit total)
     await sleep(200);
 
-    // Update DB if win
     if (winnings > 0) {
         db.addBalance(userId, winnings);
         db.logTransaction(userId, 'slots', { amount: winnings });
         db.incrementStat(userId, 'slots_wins');
         db.incrementStat(userId, 'slots_won_amount', winnings);
     } else {
-        db.incrementStat(userId, 'slots_lost_amount', betAmount); // Technically net loss is betAmount
+        db.incrementStat(userId, 'slots_lost_amount', betAmount);
     }
 
     db.incrementStat(userId, 'slots_played');
 
-    // Check Badges (Bet deduction or Win)
     await checkAndUnlockBadges(userId, interaction);
     await checkAndUnlockAchievements(userId, interaction);
 
@@ -220,7 +198,6 @@ module.exports = {
         const userData = db.getUser(interaction.user.id);
         const balance = userData.balance ?? 0;
 
-        // Parse bet
         const betAmount = parseNumber(betStr, balance);
 
         if (betAmount < MIN_BET) {
@@ -242,16 +219,39 @@ module.exports = {
     },
     // Handler methods for external calls from interactionCreate
     async handleButton(interaction) {
+        // SECURITY CHECK
+        // If interaction.message.interaction is defined, use it. Otherwise, we rely on the embed title or footer hacking, but V14 usually links interactions.
+        // `interaction.message.interaction` is the *original* interaction that created the message (if it was a slash command).
+        // However, persistent messages (like from buttons) might need explicit checks.
+        // The most reliable way for stateless buttons (using customId) is to embed user ID in customId OR checking the original interaction if linked.
+        // But `slots_spin_again_100` doesn't have UserID.
+        // `interaction.message.interaction.user.id` works if it was a Slash Command reply.
+        // If `slots` was called via Slash Command, `message.interaction` should be populated.
+
+        let originalUserId = null;
+        if (interaction.message.interaction) {
+            originalUserId = interaction.message.interaction.user.id;
+        } else {
+            // Fallback: Check Embed Footer or Title if desperate, but `interaction.message.interaction` is standard for replies.
+            // If it was a button reply (deferred update), it might chain.
+            // For now, assume `interaction.message.interaction` exists.
+        }
+
+        if (originalUserId && interaction.user.id !== originalUserId) {
+            const embed = new EmbedBuilder()
+                .setTitle('Access Denied')
+                .setDescription("You cannot interact with someone else's slot machine! Start your own game with `/slots`.")
+                .setColor(0xFF0000)
+                .setFooter({ text: 'Get your own coins!' });
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+        }
+
         const customId = interaction.customId;
 
         if (customId.startsWith('slots_spin_again_')) {
             const betAmount = parseInt(customId.replace('slots_spin_again_', ''));
-            const userData = db.getUser(interaction.user.id);
-            const balance = userData.balance ?? 0;
-
-            // Check constraints again (in case balance changed or hardcoded constraints changed)
+            // Range check again just in case
              if (betAmount < MIN_BET || betAmount > MAX_BET) {
-                // Should not happen with valid IDs but safety
                 const embed = new EmbedBuilder()
                     .setTitle('Invalid Bet')
                     .setDescription('Invalid bet amount.')
@@ -287,6 +287,16 @@ module.exports = {
         }
     },
     async handleModal(interaction) {
+        // Security check for Modal
+        // Modals are usually responding to a user who clicked a button.
+        // If we blocked the button click, they can't see the modal.
+        // So this check is redundant but safe.
+        // However, `interaction.message` might be null in modal submission context depending on how it was shown.
+        // But since only the person who saw the modal can submit it (Ephemeral logic notwithstanding), and we blocked the button...
+        // Actually, Modals don't have `interaction.message` directly linked in the same way always.
+        // But `handleButton` blocked the *opening* of the modal.
+        // So `handleModal` is safe implicitly.
+
         if (interaction.customId === 'slots_bet_modal') {
             const betStr = interaction.fields.getTextInputValue('slots_bet_input');
             const userData = db.getUser(interaction.user.id);

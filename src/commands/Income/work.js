@@ -75,11 +75,11 @@ module.exports = {
             const end = start + ITEMS_PER_PAGE;
             const currentJobs = jobs.slice(start, end);
 
-            let desc = 'Jobs with <:CX:1071484097957994587> next to them are locked.\n\n';
+            let desc = 'Jobs with <:CX:1458227573950775577> next to them are locked.\n\n';
 
             currentJobs.forEach(job => {
                 const isUnlocked = totalShifts >= job.req_shifts;
-                const statusEmoji = isUnlocked ? '<:CY:1071484103762915348>' : '<:CX:1071484097957994587>';
+                const statusEmoji = isUnlocked ? '<:CY:1458227576492392540>' : '<:CX:1458227573950775577>';
                 const timeString = `${job.cooldown}m`;
 
                 desc += `${statusEmoji} ${job.emoji} **${job.name}**\n`;
