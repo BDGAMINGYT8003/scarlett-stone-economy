@@ -2,35 +2,14 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const levelsConfig = require('../../config/levels.json');
 const itemsConfig = require('../../config/items.json');
+const { getProgressBar } = require('../../utils/progressBar');
 
 const ITEMS_PER_PAGE = 5;
 
 // Emojis
 const REPLY = '<:Reply:1457839486011445391>';
 const REPLY_CONT = '<:ReplyCont:1457839483541127208>';
-const CY = '<:CY:1458227576492392540>'; // Using new ID from memory (anti-hallucination protocol compliant)
-// Wait, prompt specific embed used `1071484103762915348`.
-// The PROMPT explicitly says:
-// "**<:CY:1071484103762915348> Level 1**"
-// BUT Step 5 of the prompt says: "Exclusively use the custom bot emojis provided: <:CY:1458227576492392540>".
-// Step 5 overrides the visual example in the description?
-// "Deeply scan... prevent abuse... Here is how the embed... should look" -> uses old ID.
-// "5. Final Visual Check ... Exclusively use the custom bot emojis provided: ... 1458..."
-// I will use the NEW ID (1458...) because Step 5 is a constraint on visual check and "Exclusively use".
-// The example probably used old IDs for illustration.
-
 const CY_FINAL = '<:CY:1458227576492392540>';
-// CX is not used in the success list usually, but if we show locked levels?
-// The example shows unlocked levels I presume? Or all?
-// "Your current level is X".
-// Example shows Level 1, 2, 3, 4, 5.
-// If I am level 325, do I show 1-5? Or 321-325? Or just page 1?
-// Usually paginated lists start at 1.
-// Visual indicator: The example shows CY for all levels 1-5.
-// If I am level X, previous levels are unlocked (CY). Future levels are likely Locked (CX)?
-// The example doesn't show CX. But standard "Advancements" UI usually shows lock status.
-// I will use CY for unlocked, CX for locked.
-
 const CX_FINAL = '<:CX:1458227573950775577>';
 
 // Navigation Emojis
@@ -40,6 +19,19 @@ const REFRESH_EMOJI = '<:Refresh:1458212851637420224>';
 const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
 const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
 
+const CONGRATS_PHRASES = [
+    "Congratulations, you absolute gamer. You have earned this prestige and the rewards associated with it; don't let anyone tell you otherwise. Omega when?",
+    "Prestige achieved! You are officially addicted. Go touch some grass... after checking your rewards.",
+    "Another prestige down! Your dedication is scary. Good job!",
+    "Wow, you actually did it. Resetting everything for clout? Respect.",
+    "Level 0 looks good on you. Time to grind all over again!",
+    "You pressed the button! Enjoy the prestige icon and the bragging rights.",
+    "Prestiged! Your bank account is crying, but your profile looks awesome.",
+    "The grind never ends. Welcome to the next level of prestige!",
+    "One small step for man, one giant leap for your Discord profile.",
+    "Absolute madness. You prestiged again. Here are your rewards!"
+];
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('advancements')
@@ -47,9 +39,19 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName('levels')
-                .setDescription('View level rewards.')),
+                .setDescription('View level rewards.'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('prestige')
+                .setDescription('View prestige requirements and advancement.')),
 
     async execute(interaction) {
+        const subcommand = interaction.options.getSubcommand();
+        if (subcommand === 'levels') await this.handleLevels(interaction);
+        else if (subcommand === 'prestige') await this.handlePrestige(interaction);
+    },
+
+    async handleLevels(interaction) {
         const userId = interaction.user.id;
         const user = db.getUser(userId);
         const currentLevel = user.level || 0;
@@ -77,17 +79,10 @@ module.exports = {
                 if (lvl.rewards.items) {
                     lvl.rewards.items.forEach(i => {
                         const itemRef = itemsConfig.find(it => it.id === i.id);
-                        const name = itemRef ? `${itemRef.emoji} ${itemRef.name}` : i.id; // Fallback
-                        rewards.push(`${i.amount} ${name}`); // Example: "1 Life Saver"
-                        // Wait, example says "1 <emoji> Life Saver".
-                        // My loop logic: `${i.amount} ${name}` -> "1 <emoji> Life Saver". Correct.
+                        const name = itemRef ? `${itemRef.emoji} ${itemRef.name}` : i.id;
+                        rewards.push(`${i.amount} ${name}`);
                     });
                 }
-
-                // Formatting lines with emojis
-                // Example:
-                // <:ReplyCont:...> Reward 1
-                // <:Reply:...> Reward 2
 
                 rewards.forEach((reward, index) => {
                     const isLast = index === rewards.length - 1;
@@ -136,9 +131,7 @@ module.exports = {
             if (i.customId === 'next_page') currentPage = Math.min(maxPages - 1, currentPage + 1);
             if (i.customId === 'first_page') currentPage = 0;
             if (i.customId === 'last_page') currentPage = maxPages - 1;
-            if (i.customId === 'refresh_levels') {
-                // re-render
-            }
+            // refresh just re-renders
 
             await i.update({
                 embeds: [generateEmbed(currentPage)],
@@ -146,4 +139,160 @@ module.exports = {
             });
         });
     },
+
+    async handlePrestige(interaction) {
+        const userId = interaction.user.id;
+        const user = db.getUser(userId);
+        const currentPrestige = user.prestige || 0;
+        const nextPrestige = currentPrestige + 1;
+
+        // Requirements
+        const coinsReq = nextPrestige * 25000000;
+        const levelReq = nextPrestige * 85;
+
+        // Current Stats
+        const currentCoins = (user.balance || 0);
+        const currentLevel = user.level || 0;
+
+        const isCoinsMet = currentCoins >= coinsReq;
+        const isLevelMet = currentLevel >= levelReq;
+        const isEligible = isCoinsMet && isLevelMet;
+
+        const generateEmbed = (state) => {
+            // States: 'status', 'pending', 'final_pending', 'cancelled', 'timeout'
+
+            const color = isEligible ? 0x00FF00 : 0xFF0000;
+            const title = state === 'status' ? `Prestige ${nextPrestige} Requirements` :
+                          state === 'pending' || state === 'final_pending' ? 'Action Pending' :
+                          state === 'cancelled' ? 'Action Cancelled' : 'Timed Out';
+
+            const footerText = state === 'status' ? (isEligible ? "You are eligible to prestige!" : "Imagine thinking you can prestige already LOL") :
+                               state === 'pending' || state === 'final_pending' ? "Are you sure you want to prestige?" :
+                               state === 'cancelled' ? "Prestige cancelled." : "Prestige timed out.";
+
+            // Bars
+            const coinsPct = Math.min(100, Math.floor((currentCoins / coinsReq) * 100));
+            const levelPct = Math.min(100, Math.floor((currentLevel / levelReq) * 100));
+            const coinsBar = getProgressBar(currentCoins, coinsReq, 5);
+            const levelBar = getProgressBar(currentLevel, levelReq, 5);
+
+            const coinsEmoji = isCoinsMet ? CY_FINAL : CX_FINAL;
+            const levelEmoji = isLevelMet ? CY_FINAL : CX_FINAL;
+
+            let desc = "";
+            if (state === 'cancelled' || state === 'timeout') {
+                desc += `~~${coinsEmoji} **Pocket Balance**~~\n`;
+                desc += `~~${REPLY_CONT} ֍ ${currentCoins.toLocaleString()}/${coinsReq.toLocaleString()}~~\n`;
+                desc += `~~${REPLY} ${coinsBar} \` ${coinsPct}% \`~~\n\n`;
+
+                desc += `~~${levelEmoji} **Level Required**~~\n`;
+                desc += `~~${REPLY_CONT} ${currentLevel}/${levelReq}~~\n`;
+                desc += `~~${REPLY} ${levelBar} \` ${levelPct}% \`~~\n`;
+            } else {
+                desc += `${coinsEmoji} **Pocket Balance**\n`;
+                desc += `${REPLY_CONT} ֍ ${currentCoins.toLocaleString()}/${coinsReq.toLocaleString()}\n`;
+                desc += `${REPLY} ${coinsBar} \` ${coinsPct}% \`\n\n`;
+
+                desc += `${levelEmoji} **Level Required**\n`;
+                desc += `${REPLY_CONT} ${currentLevel}/${levelReq}\n`;
+                desc += `${REPLY} ${levelBar} \` ${levelPct}% \`\n`;
+            }
+
+            if (state === 'pending' || state === 'final_pending') {
+                desc += `\nPrestiging takes a lot of things away in exchange for a small upgrade. Click the ❓ to learn about what you lose to prestige.`;
+                if (state === 'final_pending') {
+                    desc += `\n\n**FINAL WARNING**: This action cannot be undone. Are you REALLY sure?`;
+                }
+            }
+
+            return new EmbedBuilder()
+                .setTitle(title)
+                .setDescription(desc)
+                .setColor(color)
+                .setFooter({ text: footerText });
+        };
+
+        const getComponents = (state) => {
+            const row = new ActionRowBuilder();
+            if (state === 'status') {
+                row.addComponents(
+                    new ButtonBuilder().setCustomId('prestige_start').setLabel('Prestige Now').setStyle(ButtonStyle.Success).setDisabled(!isEligible)
+                );
+            } else if (state === 'pending') {
+                row.addComponents(
+                    new ButtonBuilder().setCustomId('prestige_confirm').setLabel('Confirm').setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder().setCustomId('prestige_cancel').setLabel('Cancel').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('prestige_help').setLabel('❓').setStyle(ButtonStyle.Secondary)
+                );
+            } else if (state === 'final_pending') {
+                row.addComponents(
+                    new ButtonBuilder().setCustomId('prestige_final_confirm').setLabel('Final Confirm').setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder().setCustomId('prestige_cancel').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
+                );
+            }
+            return [row];
+        };
+
+        const response = await interaction.reply({
+            embeds: [generateEmbed('status')],
+            components: getComponents('status'),
+            fetchReply: true
+        });
+
+        const collector = response.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+            time: 60000
+        });
+
+        collector.on('collect', async i => {
+            if (i.user.id !== userId) {
+                const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your session!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
+                return i.reply({ embeds: [errorEmbed], flags: MessageFlags.Ephemeral });
+            }
+
+            if (i.customId === 'prestige_start') {
+                await i.update({ embeds: [generateEmbed('pending')], components: getComponents('pending') });
+            } else if (i.customId === 'prestige_confirm') {
+                await i.update({ embeds: [generateEmbed('final_pending')], components: getComponents('final_pending') });
+            } else if (i.customId === 'prestige_final_confirm') {
+                // Execute Prestige
+                db.addPrestige(userId); // Add prestige FIRST
+                db.resetProfileForPrestige(userId); // Then reset stats
+
+                // Grant Rewards
+                db.addItem(userId, 'prestige_pack', 1);
+                db.addItem(userId, 'prestige_coin', 1);
+
+                // Phrase
+                const phrase = CONGRATS_PHRASES[Math.floor(Math.random() * CONGRATS_PHRASES.length)];
+
+                const successEmbed = new EmbedBuilder()
+                    .setTitle(`${interaction.user.username} | Prestige ${nextPrestige}`)
+                    .setDescription(`**${phrase}**\n\n**Earned Items:**\n1x <:PrestigePack:898709240837976064> Prestige Pack\n1x <:PrestigeCoin:899772669262700615> Prestige Coin\n\n**Earned Perks:**\n- Prestige badge in profile\n- Increased bank space gain rate from using <:BankNote:914902643531477002> Bank Notes\n- Coin Multiplier (+5% per prestige)`)
+                    .setColor(0xFFD700)
+                    .setFooter({ text: 'Omega when?' });
+
+                await i.update({ embeds: [successEmbed], components: [] });
+                collector.stop('success');
+
+            } else if (i.customId === 'prestige_cancel') {
+                await i.update({ embeds: [generateEmbed('cancelled')], components: [] });
+                collector.stop('cancelled');
+            } else if (i.customId === 'prestige_help') {
+                const helpEmbed = new EmbedBuilder()
+                    .setTitle('Prestige Information')
+                    .setDescription('**What you LOSE:**\n- All coins in your wallet and bank\n- All unlocked levels and XP (Reset to 0)\n- Your current job and promotions\n- Bank space earned from leveling\n- Active items\n\n**What you KEEP:**\n- Inventory items\n- Friends list\n- Work history/stars\n- Daily streak\n- Max bank storage from Bank Notes\n- Command history\n- Badges/Achievements\n\n**What you EARN:**\n- Prestige Icon\n- Prestige Pack & Coin\n- Coin Multiplier (+5%)\n- Faster bank space gain from levels')
+                    .setColor(0x00AAFF);
+                await i.reply({ embeds: [helpEmbed], flags: MessageFlags.Ephemeral });
+            }
+        });
+
+        collector.on('end', async (c, reason) => {
+            if (reason === 'time') {
+                try {
+                    await interaction.editReply({ embeds: [generateEmbed('timeout')], components: [] });
+                } catch (e) {}
+            }
+        });
+    }
 };

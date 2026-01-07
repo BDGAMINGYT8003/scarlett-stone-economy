@@ -42,7 +42,23 @@ async function grantXp(userId, outcomeType, interaction) {
 async function handleLevelUp(userId, oldLevel, newLevel, interaction) {
     const rewardsList = [];
 
+    // Calculate User's Prestige Bonus for Bank Space Display
+    const user = db.getUser(userId);
+    const prestige = user.prestige || 0;
+    const bankSpacePerLevel = 1000 + (prestige * 10);
+    // Note: The formula in db.js handles the cumulative logic.
+    // Here we just want to display what was gained.
+    // Gain per level is: (1000 + P*10) + ((L-1)*100).
+    // Let's iterate levels to calculate exact bank gain display.
+
+    let totalBankSpaceGained = 0;
+
     for (let lvl = oldLevel + 1; lvl <= newLevel; lvl++) {
+        // Bank Space Calculation for this specific level
+        // Formula: 1000 + (P*10) + ((lvl-1)*100)
+        const currentLevelGain = bankSpacePerLevel + ((lvl - 1) * 100);
+        totalBankSpaceGained += currentLevelGain;
+
         const config = levelsConfig.find(l => l.level === lvl);
         if (config && config.rewards) {
             const r = config.rewards;
@@ -71,6 +87,11 @@ async function handleLevelUp(userId, oldLevel, newLevel, interaction) {
                 rewardsList.push(`+${r.multiplier_bonus}% Coin Multiplier`);
             }
         }
+    }
+
+    // Add Bank Space to rewards list if > 0
+    if (totalBankSpaceGained > 0) {
+        rewardsList.push(`+${totalBankSpaceGained.toLocaleString()} Bank Space`);
     }
 
     const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)].replace('{user}', interaction.user.username);

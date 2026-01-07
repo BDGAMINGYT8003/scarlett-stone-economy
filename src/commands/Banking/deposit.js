@@ -33,26 +33,29 @@ module.exports = {
             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
-        // Check Bank Capacity
-        const availableSpace = userData.bank_capacity - userData.bank;
+        // Check Bank Capacity using new Helper
+        const effectiveCapacity = db.getEffectiveBankCapacity(userId);
+        const currentBank = userData.bank ?? 0;
+        const availableSpace = effectiveCapacity - currentBank;
+
         if (amount > availableSpace) {
              const embed = new EmbedBuilder()
                 .setTitle('Bank Full')
-                .setDescription(`You don't have enough bank space! You can only deposit **֍ ${availableSpace.toLocaleString()}** more.`)
+                .setDescription(`You don't have enough bank space! You can only deposit **֍ ${Math.max(0, availableSpace).toLocaleString()}** more.\n\n**Max Capacity:** ֍ ${effectiveCapacity.toLocaleString()}`)
                 .setColor(0xFF0000);
             return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         db.removeBalance(userId, amount);
         db.addBank(userId, amount);
-        db.logTransaction(userId, 'deposit', { amount: -amount });
+        db.logTransaction(userId, 'deposit', { amount: -amount }); // 'deposit' usually means +bank -wallet. Logic is handled. logTransaction might be storing 'balance impact' or just type. Here it seems to imply net worth neutral but... db.logTransaction is mostly for history.
 
         const updatedUser = db.getUser(userId);
 
         const embed = new EmbedBuilder()
             .setColor(0x00FF00)
             .setTitle('Deposited to Bank')
-            .setDescription(`**֍ ${amount.toLocaleString()}** deposited.\n\n**Wallet:** ֍ ${updatedUser.balance.toLocaleString()}\n**Bank:** ֍ ${updatedUser.bank.toLocaleString()}`);
+            .setDescription(`**֍ ${amount.toLocaleString()}** deposited.\n\n**Wallet:** ֍ ${updatedUser.balance.toLocaleString()}\n**Bank:** ֍ ${updatedUser.bank.toLocaleString()} / ${effectiveCapacity.toLocaleString()}`);
 
         await interaction.reply({ embeds: [embed] });
     },

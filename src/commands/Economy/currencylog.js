@@ -44,9 +44,6 @@ module.exports = {
             } else {
                 currentLogs.forEach(log => {
                     const timestampUnix = Math.floor(log.timestamp / 1000);
-                    const amountStr = log.amount >= 0 ? `⏣ ${log.amount.toLocaleString()}` : `- ⏣ ${Math.abs(log.amount).toLocaleString()}`; // Prompt says use ֍ but previous file used ⏣ in code but prompted to replace globally?
-                    // Wait, I replaced all ⏣ with ֍ globally in previous step.
-                    // I should use ֍ here.
                     const finalAmountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
 
                     desc += `**Type: ${log.type}**\n`;

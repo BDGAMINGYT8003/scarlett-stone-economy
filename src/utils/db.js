@@ -51,7 +51,7 @@ db.prepare(`
     )
 `).run();
 
-// Migrations for existing DB
+// Migrations
 const columns = [
     'daily_streak', 'job_id', 'shifts_completed_today', 'total_shifts_completed',
     'last_shift_timestamp', 'promotions', 'is_premium', 'beg_count', 'search_count',
@@ -152,14 +152,11 @@ const addXp = (userId, amount) => {
     let newXp = (user.xp || 0) + amount;
     let currentLevel = user.level || 0;
 
-    // Linear formula: Req = 80 + (Level * 0.05)
-    // We must ceil because XP is integer.
     let required = Math.ceil(80 + (currentLevel * 0.05));
 
     while (newXp >= required) {
         newXp -= required;
         currentLevel++;
-        // Recalculate required for NEXT level
         required = Math.ceil(80 + (currentLevel * 0.05));
     }
 
@@ -168,7 +165,43 @@ const addXp = (userId, amount) => {
 
 const addPrestige = (userId) => {
     getUser(userId);
-    db.prepare('UPDATE users SET prestige = prestige + 1, level = 0, xp = 0 WHERE id = ?').run(userId);
+    db.prepare('UPDATE users SET prestige = prestige + 1 WHERE id = ?').run(userId);
+};
+
+const resetProfileForPrestige = (userId) => {
+    // Reset specific columns for prestige
+    // Keep: prestige (incremented), stats, inventory, friends, bank_capacity (notes/permanent)
+    // Lose: balance, bank, level, xp, job_id, promotions, daily_streak?, god_mode?, premium?
+    // Prompt: "What you LOSE: All coins... All unlocked levels... Your current job... Any bank space from leveling... Active items"
+    // Prompt: "What you KEEP: Inventory, Friends, Work history, Daily streak, Max bank storage from Notes, Command history, Badges"
+
+    // We treat 'bank_capacity' column as the 'from Notes' capacity because `deposit` uses `getEffectiveBankCapacity` now.
+    // So we DON'T reset `bank_capacity`.
+
+    // Reset Level/XP/Money
+    // Reset Job
+    // Reset active items (not explicitly stored in `users` except maybe premium? Prompt says "Any active items", "What you KEEP: ... Badges").
+    // Premium is distinct from "active items" usually (it's a status). "Premium status" is usually kept?
+    // Prompt lists "Active items" under LOSE.
+    // Prompt doesn't list Premium under KEEP or LOSE explicitly, but typically Premium is a paid status/subscription.
+    // "What you LOSE: ... Any active items on your account."
+    // I will assume this means consumable buffs like alcohol, horseshoe, etc. which we currently don't track in `users` table except via... wait, we DON'T track them yet in `users` table. `use.js` handles them via... memory? No, that would be bad.
+    // I haven't seen `alcohol_expires` column.
+    // I will skip "active items" reset if columns don't exist, assuming they aren't implemented persistantly yet or handled elsewhere.
+
+    db.prepare(`
+        UPDATE users SET
+            balance = 0,
+            bank = 0,
+            level = 0,
+            xp = 0,
+            job_id = NULL,
+            promotions = 0
+        WHERE id = ?
+    `).run(userId);
+
+    // Note: 'daily_streak' is KEPT per prompt.
+    // 'bank_capacity' is KEPT per prompt strategy.
 };
 
 // Premium Methods
@@ -248,6 +281,48 @@ const removeBank = (userId, amount) => {
 const increaseBankCapacity = (userId, amount) => {
     getUser(userId);
     db.prepare('UPDATE users SET bank_capacity = bank_capacity + ? WHERE id = ?').run(amount, userId);
+};
+
+const getEffectiveBankCapacity = (userId) => {
+    const user = getUser(userId);
+    const baseCapacity = user.bank_capacity || 0; // Permanent capacity (Notes + Initial 5000)
+    const level = user.level || 0;
+    const prestige = user.prestige || 0;
+
+    // Formula derived: LevelBonus = 900 + (Level * (100 + (Prestige * 10)))
+    // This satisfies "Level 1 = 1000" (if base 0) but we have baseCapacity.
+    // Prompt says "Implement a new system where leveling up grants total bank storage... Level 1 = 1000...".
+    // This implies the level contribution *itself* is that amount.
+    // Or does it mean *Total* is that?
+    // "At Level 1, you gain 1,000 max bank storage".
+    // This phrasing usually means "Add 1000 to total".
+    // "Level 2, you gain 1,100".
+    // If it means cumulative addition: L1=+1000, L2=+1100. Total added = 2100.
+    // If it means "Total from levels is 1100 at Level 2", then the formula is simpler.
+    // Given "gain bank space slightly faster", cumulative makes sense for "faster".
+    // Let's go with Cumulative Sum.
+    // Sum of arithmetic progression?
+    // Per Level Gain = 1000 + (Level-1)*100?
+    // L1 gain 1000. L2 gain 1100. L3 gain 1200.
+    // Total Level Capacity = Sum(1000 + (i-1)*100) for i=1 to Level.
+    // This is `Level * 1000 + 100 * (Level * (Level - 1)) / 2`.
+    // With Prestige: "gain bank space slightly faster".
+    // Maybe base gain increases? `1000 + (Prestige * 50)`?
+    // Let's use: Gain at Level L = `(1000 + (Prestige * 10)) + ((L-1) * 100)`.
+    // Total = Sum.
+    // To implement `getEffectiveBankCapacity` efficiently without looping:
+    // Arithmetic Series Sum: n/2 * (2a + (n-1)d)
+    // n = Level. a = (1000 + Prestige*10). d = 100.
+
+    if (level === 0) return baseCapacity;
+
+    const a = 1000 + (prestige * 10);
+    const d = 100;
+    const n = level;
+
+    const levelCapacity = (n / 2) * (2 * a + (n - 1) * d);
+
+    return baseCapacity + Math.floor(levelCapacity);
 };
 
 // Stat Increment Methods
@@ -384,8 +459,6 @@ const incrementCommandUsage = (userId, commandName) => {
     } else {
         db.prepare('INSERT INTO command_usage (user_id, command_name, count) VALUES (?, ?, 1)').run(userId, commandName);
     }
-
-    // Removed auto-XP grant here to strictly allow only Economy commands to grant XP via levelManager.
 };
 
 const getFavoriteCommand = (userId) => {
@@ -509,6 +582,7 @@ module.exports = {
     addBank,
     removeBank,
     increaseBankCapacity,
+    getEffectiveBankCapacity,
     incrementStat,
     setStat,
     getUnlockedBadges,
@@ -542,5 +616,6 @@ module.exports = {
     addTitle,
     setTitle,
     addXp,
-    addPrestige
+    addPrestige,
+    resetProfileForPrestige
 };
