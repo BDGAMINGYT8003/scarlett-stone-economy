@@ -13,6 +13,15 @@ module.exports = {
         const initiator = interaction.user;
         const target = interaction.options.getUser('user');
 
+        if (initiator.id === target.id) {
+            const embed = new EmbedBuilder()
+                .setTitle('Are you lonely?')
+                .setDescription('You cannot compare yourself to your own reflection. Go find a friend (or an enemy).')
+                .setColor(0xFF0000)
+                .setFooter({ text: 'Narcissism check failed' });
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+        }
+
         if (target.bot) {
             const embed = new EmbedBuilder()
                 .setTitle('Error')
@@ -96,7 +105,7 @@ module.exports = {
                 emoji2 = ` ${KICK}`;
             }
 
-            return `**${label}**\n${initiator.username}: \`${str1}\`${emoji1}\n${target.username}: \`${str2}\`${emoji2}`;
+            return `${initiator.username}: \`${str1}\`${emoji1}\n${target.username}: \`${str2}\`${emoji2}`;
         };
 
         const embed = new EmbedBuilder()
