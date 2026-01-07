@@ -94,7 +94,7 @@ module.exports = {
                     .setDescription('Multipliers boost your earnings from commands like `/beg`, `/search`, and `/crime`. Here is how you can stack them:')
                     .addFields(
                         { name: '💼 Jobs', value: 'Earn **1% - 20%** based on your job role.\nHigh-tier jobs provide higher multipliers.', inline: false },
-                        { name: '📛 Badges', value: 'Each badge grants **+15%**.\nCollect all badges for massive bonuses!', inline: false },
+                        { name: '📛 Badges', value: 'Gold Badges grant **+5%**.\nPlatinum Badges grant **+10%** (Replaces Gold).\nCollect all badges for massive bonuses!', inline: false },
                         { name: '🌟 Prestige', value: 'Each Prestige level adds **+5%**.\nReset your progress to gain permanent multipliers.', inline: false },
                         { name: '📈 Level', value: 'Gain **+1%** for every level you advance.\nJust keep playing to level up!', inline: false },
                         { name: '💎 Premium', value: 'Premium members get a flat **+50%** bonus.\nSupport the bot to earn more!', inline: false }
