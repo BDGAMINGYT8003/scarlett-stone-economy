@@ -107,6 +107,16 @@ module.exports = {
                     db.addItem(userId, item.id, 1);
                 }
 
+                db.logTransaction(userId, 'crime', {
+                    amount: amount,
+                    items: item ? [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: 1
+                    }] : []
+                });
+
                 message = special.message.replace('{amount}', amount.toLocaleString());
                 if (item) {
                     message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
@@ -133,7 +143,7 @@ module.exports = {
                     amount = baseAmount + bonusAmount;
 
                     db.addBalance(userId, amount);
-                    db.logTransaction(userId, 'crime', { amount: amount });
+                    db.logTransaction(userId, 'crime', { amount: amount }); // No items here
                     message = message.replace('{amount}', amount.toLocaleString());
 
                     // XP Grant - Profit

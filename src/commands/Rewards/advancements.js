@@ -268,6 +268,14 @@ module.exports = {
                 db.addItem(userId, 'prestige_pack', 1);
                 db.addItem(userId, 'prestige_coin', 1);
 
+                db.logTransaction(userId, 'prestige reward', {
+                    amount: 0,
+                    items: [
+                        { id: 'prestige_pack', name: 'Prestige Pack', emoji: '<:PrestigePack:898709240837976064>', quantity: 1 },
+                        { id: 'prestige_coin', name: 'Prestige Coin', emoji: '<:PrestigeCoin:899772669262700615>', quantity: 1 }
+                    ]
+                });
+
                 // Phrase
                 const phrase = CONGRATS_PHRASES[Math.floor(Math.random() * CONGRATS_PHRASES.length)];
 

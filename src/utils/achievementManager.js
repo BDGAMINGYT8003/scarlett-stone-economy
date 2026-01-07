@@ -38,15 +38,28 @@ async function checkAndUnlockAchievements(userId, interaction) {
 
             // Grant Rewards
             if (achievement.rewards) {
+                const loggedItems = [];
+
                 if (achievement.rewards.coins) {
                     db.addBalance(userId, achievement.rewards.coins);
-                    db.logTransaction(userId, 'achievement', { amount: achievement.rewards.coins });
                 }
                 if (achievement.rewards.items) {
                     achievement.rewards.items.forEach(item => {
                         db.addItem(userId, item.id, item.amount);
+                        loggedItems.push({
+                            id: item.id,
+                            name: item.id.replace(/_/g, ' '), // Basic format since config isn't imported
+                            emoji: '📦', // Placeholder or fetch if possible
+                            quantity: item.amount
+                        });
                     });
                 }
+
+                db.logTransaction(userId, 'achievement', {
+                    amount: achievement.rewards.coins || 0,
+                    items: loggedItems
+                });
+
                 if (achievement.rewards.title) {
                     // Need to find title ID? Or just use string?
                     // Titles logic: `unlocked_titles` table stores `title_id`.

@@ -132,6 +132,16 @@ module.exports = {
             confirmMessage = `Are you sure you want to grant **${finalAmount.toLocaleString()} ${item.emoji} ${item.name}** to ${targetUser}?`;
             executeAction = async () => {
                 db.addItem(targetUser.id, item.id, finalAmount);
+                db.logTransaction(targetUser.id, 'grant items', {
+                    amount: 0,
+                    items: [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: finalAmount
+                    }]
+                });
+
                 const newCount = db.getItemCount(targetUser.id, item.id);
 
                 const embed = new EmbedBuilder()

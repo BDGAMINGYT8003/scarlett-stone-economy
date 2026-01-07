@@ -89,6 +89,15 @@ module.exports = {
             }
 
             db.removeItem(userId, item.id, quantity);
+            db.logTransaction(userId, 'item use', {
+                amount: 0,
+                items: [{
+                    id: item.id,
+                    name: item.name,
+                    emoji: item.emoji,
+                    quantity: quantity // Usually tracked as usage (consumed)
+                }]
+            });
             db.increaseBankCapacity(userId, totalAdded);
 
             const userData = db.getUser(userId);
@@ -110,7 +119,15 @@ module.exports = {
 
              db.removeItem(userId, item.id, quantity);
              db.addBalance(userId, totalCoins);
-             db.logTransaction(userId, 'item_use', { amount: totalCoins, title: `Used ${item.name}` });
+             db.logTransaction(userId, 'item use', {
+                 amount: totalCoins,
+                 items: [{
+                    id: item.id,
+                    name: item.name,
+                    emoji: item.emoji,
+                    quantity: quantity
+                }]
+             });
 
              const embed = new EmbedBuilder()
                 .setColor(0x00FF00)
@@ -122,6 +139,16 @@ module.exports = {
         } else {
             // Generic placeholder for other usable items
              db.removeItem(userId, item.id, quantity);
+             db.logTransaction(userId, 'item use', {
+                 amount: 0,
+                 items: [{
+                    id: item.id,
+                    name: item.name,
+                    emoji: item.emoji,
+                    quantity: quantity
+                }]
+             });
+
              const embed = new EmbedBuilder()
                 .setColor(0x00FF00)
                 .setTitle(`${item.name} Used`)

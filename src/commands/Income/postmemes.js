@@ -268,7 +268,15 @@ module.exports = {
                         db.addBalance(userId, wonMoney);
                     }
 
-                    db.logTransaction(userId, 'postmemes', { amount: wonMoney, items: wonItem ? [wonItem.name] : [] });
+                    db.logTransaction(userId, 'postmemes', {
+                        amount: wonMoney,
+                        items: wonItem ? [{
+                            id: wonItem.id,
+                            name: wonItem.name,
+                            emoji: wonItem.emoji,
+                            quantity: 1
+                        }] : []
+                    });
 
                     let desc = `${getRandomPhrase('success', selectedPlatform, selectedType)}\n\n**You Received:**\n`;
                     if (wonMoney > 0) desc += `- ֍ ${wonMoney.toLocaleString()}\n`;

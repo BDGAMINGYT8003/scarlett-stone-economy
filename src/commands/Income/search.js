@@ -130,8 +130,16 @@ module.exports = {
                 }
             }
 
-            if (amount > 0) {
-                db.logTransaction(userId, 'search', { amount: amount });
+            if (amount > 0 || isSpecial) {
+                db.logTransaction(userId, 'search', {
+                    amount: amount,
+                    items: item ? [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: 1
+                    }] : []
+                });
             }
 
             // Set Cooldown on successful interaction

@@ -40,6 +40,16 @@ module.exports = {
                 db.addItem(userId, item.id, 1);
             }
 
+            db.logTransaction(userId, 'beg', {
+                amount: amount,
+                items: item ? [{
+                    id: item.id,
+                    name: item.name,
+                    emoji: item.emoji,
+                    quantity: 1
+                }] : []
+            });
+
             let message = special.message.replace('{amount}', amount.toLocaleString());
             if (item) {
                 message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
@@ -72,7 +82,7 @@ module.exports = {
             const totalAmount = baseAmount + bonusAmount;
 
             db.addBalance(userId, totalAmount);
-            db.logTransaction(userId, 'beg', { amount: totalAmount });
+            db.logTransaction(userId, 'beg', { amount: totalAmount }); // No items here
             db.incrementStat(userId, 'beg_count');
             await checkAndUnlockBadges(userId, interaction);
 

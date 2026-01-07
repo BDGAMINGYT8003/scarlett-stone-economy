@@ -127,10 +127,22 @@ async function adminRevokeLevels(userId, amount) {
 }
 
 async function handleLevelUp(userId, oldLevel, newLevel, interaction) {
+    // Fetch target user if not interaction user
+    let targetUser = interaction.user;
+    if (interaction.user.id !== userId) {
+        try {
+            targetUser = await interaction.client.users.fetch(userId);
+        } catch (e) {
+            console.error('Failed to fetch target user for level up DM:', e);
+            // Fallback to interaction.user? No, that would be weird.
+            // Just rely on targetUser being set or handle null in DM send.
+        }
+    }
+
     // Loop through each level to send individual DMs
     for (let lvl = oldLevel + 1; lvl <= newLevel; lvl++) {
         try {
-            await processSingleLevelUp(userId, lvl - 1, lvl, interaction);
+            await processSingleLevelUp(userId, lvl - 1, lvl, interaction, targetUser);
         } catch (err) {
             console.error(`Failed to process level up for user ${userId} at level ${lvl}:`, err);
             // Continue to next level despite error
@@ -138,8 +150,9 @@ async function handleLevelUp(userId, oldLevel, newLevel, interaction) {
     }
 }
 
-async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
+async function processSingleLevelUp(userId, fromLevel, toLevel, interaction, targetUser) {
     const rewardsList = [];
+    const loggedItems = [];
 
     // Bank Space
     const user = db.getUser(userId);
@@ -157,7 +170,6 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
 
         if (r.coins) {
             db.addBalance(userId, r.coins);
-            db.logTransaction(userId, 'level up reward', { amount: r.coins });
             rewardsList.push(`֍ ${r.coins.toLocaleString()}`);
         }
 
@@ -167,9 +179,21 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
                 if (itemRef) {
                     db.addItem(userId, item.id, item.amount);
                     rewardsList.push(`${item.amount}x ${itemRef.emoji} ${itemRef.name}`);
+                    loggedItems.push({
+                        id: item.id,
+                        name: itemRef.name,
+                        emoji: itemRef.emoji,
+                        quantity: item.amount
+                    });
                 }
             }
         }
+
+        // Log transaction with combined coins and items
+        db.logTransaction(userId, 'level up reward', {
+            amount: r.coins || 0,
+            items: loggedItems
+        });
 
         if (r.title) {
             db.addTitle(userId, r.title);
@@ -181,7 +205,9 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
         }
     }
 
-    const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)].replace('{user}', interaction.user.username);
+    // Use targetUser for greeting and DM
+    const userToDm = targetUser || interaction.user;
+    const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)].replace('{user}', userToDm.username);
     const dateFooter = new Date().toLocaleString('en-US', { hour12: false });
 
     const embed = new EmbedBuilder()
@@ -195,7 +221,7 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
     }
 
     try {
-        await interaction.user.send({ embeds: [embed] });
+        await userToDm.send({ embeds: [embed] });
     } catch (e) {
         // Fallback to Ephemeral
         const failEmbed = new EmbedBuilder(embed.toJSON());

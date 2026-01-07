@@ -485,7 +485,26 @@ module.exports = {
 
             if (i.customId === 'confirm_share') {
                 db.removeItem(userId, item.id, quantity);
+                db.logTransaction(userId, 'share items', {
+                    amount: 0,
+                    items: [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: quantity // Removing so technically "negative", but usually tracked as just item
+                    }]
+                });
+
                 db.addItem(targetUser.id, item.id, quantity);
+                db.logTransaction(targetUser.id, 'share items', {
+                    amount: 0,
+                    items: [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: quantity
+                    }]
+                });
 
                  const dmEmbed = new EmbedBuilder()
                     .setTitle('You have been given items!')

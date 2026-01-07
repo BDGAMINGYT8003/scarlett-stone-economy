@@ -124,9 +124,13 @@ db.prepare(`
         type TEXT,
         amount INTEGER,
         balance_after INTEGER,
-        timestamp INTEGER
+        timestamp INTEGER,
+        items TEXT DEFAULT '[]'
     )
 `).run();
+
+// Migration for items column
+try { db.prepare(`ALTER TABLE currency_logs ADD COLUMN items TEXT DEFAULT '[]'`).run(); } catch (e) {}
 
 db.prepare(`
     CREATE TABLE IF NOT EXISTS friends (
@@ -473,18 +477,26 @@ const getFavoriteCommand = (userId) => {
 // Currency Log Methods
 const logTransaction = (userId, type, details) => {
     let amount = 0;
+    let items = [];
+
     if (typeof details === 'number') {
         amount = details;
     } else if (typeof details === 'object' && details !== null) {
         amount = details.amount || 0;
+        if (Array.isArray(details.items)) {
+            items = details.items;
+        }
     }
 
     const user = getUser(userId);
     const balanceAfter = user.balance ?? 0;
+    const itemsJson = JSON.stringify(items);
 
     try {
-        db.prepare('INSERT INTO currency_logs (user_id, type, amount, balance_after, timestamp) VALUES (?, ?, ?, ?, ?)').run(userId, type, amount, balanceAfter, Date.now());
-    } catch (e) {}
+        db.prepare('INSERT INTO currency_logs (user_id, type, amount, balance_after, timestamp, items) VALUES (?, ?, ?, ?, ?, ?)').run(userId, type, amount, balanceAfter, Date.now(), itemsJson);
+    } catch (e) {
+        console.error('Failed to log transaction:', e);
+    }
 
     db.prepare(`
         DELETE FROM currency_logs

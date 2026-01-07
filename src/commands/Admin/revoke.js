@@ -130,6 +130,16 @@ module.exports = {
             confirmMessage = `Are you sure you want to revoke **${finalAmount.toLocaleString()} ${item.emoji} ${item.name}** from ${targetUser}?`;
             executeAction = async () => {
                 db.removeItem(targetUser.id, item.id, finalAmount);
+                db.logTransaction(targetUser.id, 'revoke items', {
+                    amount: 0,
+                    items: [{
+                        id: item.id,
+                        name: item.name,
+                        emoji: item.emoji,
+                        quantity: finalAmount // Could specify negative, but 'revoke' type implies removal
+                    }]
+                });
+
                 const newCount = db.getItemCount(targetUser.id, item.id);
 
                 const embed = new EmbedBuilder()

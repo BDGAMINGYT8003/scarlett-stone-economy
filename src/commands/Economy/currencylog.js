@@ -6,6 +6,7 @@ const ITEMS_PER_PAGE = 5;
 // Emojis
 const REPLY = '<:Reply:1457839486011445391>';
 const REPLY_CONT = '<:ReplyCont:1457839483541127208>';
+const ITEMS_EMOJI = '📦'; // Fallback if needed, but we use specific item emojis
 
 // Navigation Emojis
 const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
@@ -44,11 +45,48 @@ module.exports = {
             } else {
                 currentLogs.forEach(log => {
                     const timestampUnix = Math.floor(log.timestamp / 1000);
-                    const finalAmountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
+                    const hasAmount = log.amount !== 0;
+
+                    // Parse items
+                    let logItems = [];
+                    try {
+                        logItems = JSON.parse(log.items || '[]');
+                    } catch (e) {
+                        logItems = [];
+                    }
+
+                    const hasItems = logItems.length > 0;
 
                     desc += `**Type: ${log.type}**\n`;
                     desc += `${REPLY_CONT} <t:${timestampUnix}:R>\n`;
-                    desc += `${REPLY} ${finalAmountStr}\n\n`;
+
+                    if (hasAmount) {
+                        const finalAmountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
+                        // Use REPLY_CONT if items follow, else REPLY
+                        const amountEmoji = hasItems ? REPLY_CONT : REPLY;
+                        desc += `${amountEmoji} ${finalAmountStr}\n`;
+                    }
+
+                    if (hasItems) {
+                        logItems.forEach((item, index) => {
+                            // Use REPLY if it's the last item, else REPLY_CONT
+                            const itemEmoji = index === logItems.length - 1 ? REPLY : REPLY_CONT;
+                            // Check if item has a custom emoji, else use default or name
+                            // item structure: { id, name, quantity, emoji }
+                            // If emoji is missing, we might need to lookup, but ideally it's stored.
+                            // If stored emoji is just ID, formatting needed?
+                            // Usually logTransaction callers should store full emoji string or ID.
+                            // Let's assume the caller stores the full emoji string or we format it if we can.
+                            // However, db.logTransaction just stores what passes.
+                            // Best practice: store { name, quantity, emoji: '<:ID:...>' }
+
+                            const displayEmoji = item.emoji || '📦';
+                            desc += `${itemEmoji} ${item.quantity.toLocaleString()}x ${displayEmoji} **${item.name}**\n`;
+                        });
+                    }
+
+                    // Add spacing
+                    desc += '\n';
                 });
             }
 
