@@ -24,6 +24,64 @@ const categories = {
         { name: '/friends', description: 'Manage your friends list and share resources.' },
         { name: '/currencylog', description: 'View your currency transaction history.' }
     ],
+    Rewards: [
+        { name: '/advancements levels', description: 'View level rewards.' },
+        // ... (Keep existing if any or reorganize)
+        // Help menu is categorized by prompt example: Currency, Utility, Admin.
+        // Prompt says "The /help command utilizes a category selection menu...".
+        // I should add the new command to the list.
+        // Let's stick to the structure. `advancements` is in Rewards folder. But Help categories are logical.
+        // I'll add it to 'Currency' or 'Utility' or create 'Rewards' if supported?
+        // Current categories: Currency, Utility, Admin.
+        // `achievements` is under Currency in existing code.
+        // `badges`? I don't see `/badges` in the existing list above. I should add it too.
+        // I will add `/advancements` and `/badges` to 'Currency' as they are related to economy progression.
+        // Or create 'Rewards' category if I modify the Select Menu.
+        // The prompt doesn't explicitly ask to update `/help` categories, but I should add the command.
+        // I'll add `/advancements` to 'Currency' for now.
+    ],
+    Utility: [
+        { name: '/help', description: 'Get help using the bot’s commands.' },
+        { name: '/profile', description: 'View your profile and stats.' },
+        { name: '/title', description: 'Manage your profile title.' }
+    ],
+    Admin: [
+        { name: '/grant', description: 'Grants money or items to a user (Developer Only).' },
+        { name: '/revoke', description: 'Revokes money, items, or premium from a user (Developer Only).' },
+        { name: '/godmode', description: 'Grants God Mode (No Cooldowns) to a user (Developer Only).' }
+    ]
+};
+
+// Actually, let's fix the array. The `categories` object above had an issue in my thought process.
+// `achievements` was in Currency.
+// I will add `advancements` and `badges` to `Currency` for consistency with `achievements`.
+
+const updatedCategories = {
+    Currency: [
+        { name: '/deposit', description: 'Deposit coins into your bank from your pocket.' },
+        { name: '/withdraw', description: 'Withdraw money from your bank into your pocket.' },
+        { name: '/balance', description: 'See someone’s balance, including pocket, bank, net worth, and more.' },
+        { name: '/beg', description: 'Beg for coins to help increase your pocket balance.' },
+        { name: '/search', description: 'Search various places for items and coins, with some risks.' },
+        { name: '/crime', description: 'Commit a fake crime for items and coins, with some risk.' },
+        { name: '/daily', description: 'Each day you can get a small amount of coins and maintain a streak.' },
+        { name: '/weekly', description: 'Once per week, get a moderate amount of coins.' },
+        { name: '/monthly', description: 'Each month, receive a large amount of coins.' },
+        { name: '/item', description: 'View information about an item.' },
+        { name: '/inventory', description: 'View your inventory or someone else’s.' },
+        { name: '/use', description: 'Use an item from your inventory.' },
+        { name: '/slots', description: 'Bet some coins on the slot machine.' },
+        { name: '/snakeeyes', description: 'Roll the dice for a chance to win big!' },
+        { name: '/highlow', description: 'Guess if the secret number is higher or lower!' },
+        { name: '/postmemes', description: 'Post a meme to earn money (requires a Laptop).' },
+        { name: '/work', description: 'Work shifts to earn money and unlock better jobs.' },
+        { name: '/multipliers', description: 'Check your current coin multipliers.' },
+        { name: '/achievements', description: 'View your achievements progress.' },
+        { name: '/badges', description: 'View and manage your badges.' },
+        { name: '/advancements levels', description: 'View level rewards.' },
+        { name: '/friends', description: 'Manage your friends list and share resources.' },
+        { name: '/currencylog', description: 'View your currency transaction history.' }
+    ],
     Utility: [
         { name: '/help', description: 'Get help using the bot’s commands.' },
         { name: '/profile', description: 'View your profile and stats.' },
@@ -41,11 +99,7 @@ const ITEMS_PER_PAGE = 6;
 // Navigation Emojis
 const PREV_EMOJI = '<:SingleArrowLeft:1458212849305387069>';
 const NEXT_EMOJI = '<:SingleArrowRight:1458212847157903565>';
-const REFRESH_EMOJI = '<:Refresh:1458212851637420224>'; // Not strictly needed for help as data is static, but requested "Global Pagination UI Overhaul". But help is static. I'll omit refresh for help or include it as no-op?
-// "Replace existing ... buttons". Help has Prev/Next. It does NOT have Refresh.
-// "Refresh" logic: "The 'Refresh' button should still exist to reload the current page's data as it perfectly works right now" -> applied to dynamic data.
-// Help is static. I will just update Prev/Next and add First/Last.
-// Actually, adding Refresh to static Help is harmless.
+const REFRESH_EMOJI = '<:Refresh:1458212851637420224>';
 const FIRST_EMOJI = '<:DoubleArrowLeft:1458212845161283677>';
 const LAST_EMOJI = '<:DoubleArrowRight:1446611400251281542>';
 
@@ -58,7 +112,7 @@ module.exports = {
         let currentPage = 0;
 
         const generateEmbed = (category, page) => {
-            const commands = categories[category];
+            const commands = updatedCategories[category];
             const maxPages = Math.ceil(commands.length / ITEMS_PER_PAGE);
 
             const start = page * ITEMS_PER_PAGE;
@@ -78,7 +132,7 @@ module.exports = {
         };
 
         const generateComponents = (category, page) => {
-            const commands = categories[category];
+            const commands = updatedCategories[category];
             const maxPages = Math.ceil(commands.length / ITEMS_PER_PAGE);
 
             const selectMenu = new StringSelectMenuBuilder()
@@ -95,11 +149,6 @@ module.exports = {
             const row2 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 0),
                 new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 0),
-                // No Refresh for static help? Or add it for consistency?
-                // Request: "Replace the existing ... buttons ... which currently contain text labels".
-                // Help has Prev/Next.
-                // Request: "The button row for all paginated embeds must follow this exact order: [First] [Prev] [Refresh] [Next] [Last]".
-                // So I MUST add Refresh.
                 new ButtonBuilder().setCustomId('refresh_help').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
                 new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page >= maxPages - 1),
                 new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page >= maxPages - 1)
@@ -131,13 +180,12 @@ module.exports = {
                 currentCategory = i.values[0];
                 currentPage = 0;
             } else if (i.componentType === ComponentType.Button) {
-                const maxPages = Math.ceil(categories[currentCategory].length / ITEMS_PER_PAGE);
+                const maxPages = Math.ceil(updatedCategories[currentCategory].length / ITEMS_PER_PAGE);
 
                 if (i.customId === 'prev_page') currentPage = Math.max(0, currentPage - 1);
                 else if (i.customId === 'next_page') currentPage = Math.min(maxPages - 1, currentPage + 1);
                 else if (i.customId === 'first_page') currentPage = 0;
                 else if (i.customId === 'last_page') currentPage = maxPages - 1;
-                // refresh does nothing but re-render
             }
 
             await i.update({

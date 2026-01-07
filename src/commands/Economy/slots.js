@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
+const levelManager = require('../../utils/levelManager');
 const parseNumber = require('../../utils/numberParser');
 
 const SYMBOLS = [
@@ -169,8 +170,14 @@ async function runSlots(interaction, betAmount) {
         db.logTransaction(userId, 'slots', { amount: winnings });
         db.incrementStat(userId, 'slots_wins');
         db.incrementStat(userId, 'slots_won_amount', winnings);
+
+        // XP Grant - Profit
+        await levelManager.grantXp(userId, 'profit', interaction);
     } else {
         db.incrementStat(userId, 'slots_lost_amount', betAmount);
+
+        // XP Grant - Loss/Neutral
+        await levelManager.grantXp(userId, 'loss', interaction);
     }
 
     db.incrementStat(userId, 'slots_played');
@@ -219,22 +226,9 @@ module.exports = {
     },
     // Handler methods for external calls from interactionCreate
     async handleButton(interaction) {
-        // SECURITY CHECK
-        // If interaction.message.interaction is defined, use it. Otherwise, we rely on the embed title or footer hacking, but V14 usually links interactions.
-        // `interaction.message.interaction` is the *original* interaction that created the message (if it was a slash command).
-        // However, persistent messages (like from buttons) might need explicit checks.
-        // The most reliable way for stateless buttons (using customId) is to embed user ID in customId OR checking the original interaction if linked.
-        // But `slots_spin_again_100` doesn't have UserID.
-        // `interaction.message.interaction.user.id` works if it was a Slash Command reply.
-        // If `slots` was called via Slash Command, `message.interaction` should be populated.
-
         let originalUserId = null;
         if (interaction.message.interaction) {
             originalUserId = interaction.message.interaction.user.id;
-        } else {
-            // Fallback: Check Embed Footer or Title if desperate, but `interaction.message.interaction` is standard for replies.
-            // If it was a button reply (deferred update), it might chain.
-            // For now, assume `interaction.message.interaction` exists.
         }
 
         if (originalUserId && interaction.user.id !== originalUserId) {
@@ -250,7 +244,6 @@ module.exports = {
 
         if (customId.startsWith('slots_spin_again_')) {
             const betAmount = parseInt(customId.replace('slots_spin_again_', ''));
-            // Range check again just in case
              if (betAmount < MIN_BET || betAmount > MAX_BET) {
                 const embed = new EmbedBuilder()
                     .setTitle('Invalid Bet')
@@ -287,16 +280,6 @@ module.exports = {
         }
     },
     async handleModal(interaction) {
-        // Security check for Modal
-        // Modals are usually responding to a user who clicked a button.
-        // If we blocked the button click, they can't see the modal.
-        // So this check is redundant but safe.
-        // However, `interaction.message` might be null in modal submission context depending on how it was shown.
-        // But since only the person who saw the modal can submit it (Ephemeral logic notwithstanding), and we blocked the button...
-        // Actually, Modals don't have `interaction.message` directly linked in the same way always.
-        // But `handleButton` blocked the *opening* of the modal.
-        // So `handleModal` is safe implicitly.
-
         if (interaction.customId === 'slots_bet_modal') {
             const betStr = interaction.fields.getTextInputValue('slots_bet_input');
             const userData = db.getUser(interaction.user.id);

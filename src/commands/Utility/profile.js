@@ -29,15 +29,15 @@ module.exports = {
             const unlockedBadges = db.getUnlockedBadges(userId);
             const badgeEmojis = getBadgeEmojis(unlockedBadges);
 
-            // Level Calc
-            const commandsRan = user.commands_ran || 0;
-            const level = Math.floor(commandsRan / 75);
-            const xp = commandsRan % 75;
-            const xpNeeded = 75; // simplified
+            // Level Calc (New System)
+            const level = user.level || 0;
+            const xp = user.xp || 0;
+            const xpNeeded = (level + 1) * 250;
 
             const xpBar = getProgressBar(xp, xpNeeded, 5);
 
             const favoriteCommand = db.getFavoriteCommand(userId);
+            const commandsRan = user.commands_ran || 0;
 
             const totalItems = inventory.reduce((acc, i) => acc + i.quantity, 0);
             const uniqueItems = inventory.length;

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const levelManager = require('../../utils/levelManager');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
 module.exports = {
@@ -98,6 +99,10 @@ module.exports = {
                         .setFooter({ text: "You're really good at this!" })
                         .setColor(0x00FF00); // Green
                 }
+
+                // XP Grant - Profit
+                await levelManager.grantXp(userId, 'profit', i);
+
             } else {
                 // Loss
                 resultEmbed = new EmbedBuilder()
@@ -105,6 +110,9 @@ module.exports = {
                     .setDescription(`**You lost!**\n\nYour hint was **${hintNumber}**. The hidden number was **${secretNumber}**.`)
                     .setFooter({ text: "Better luck next time!" })
                     .setColor(0xFF0000); // Red
+
+                // XP Grant - Loss/Neutral
+                await levelManager.grantXp(userId, 'loss', i);
             }
 
             // Update Buttons
@@ -140,7 +148,7 @@ module.exports = {
                     .setTitle(`${interaction.user.username}'s expired High-Low Game`)
                     .setDescription(`Too slow!\nYour hint was **${hintNumber}** and the hidden number was **${secretNumber}**.`)
                     .setFooter({ text: "This game of high-low expired!" })
-                    .setColor(0xFF0000); // Red? Prompt didn't specify color, assuming Red/Dark
+                    .setColor(0xFF0000);
 
                 const disabledButtons = new ActionRowBuilder().addComponents(
                     buttons.components.map(btn => btn.setDisabled(true).setStyle(ButtonStyle.Secondary))

@@ -3,6 +3,7 @@ const db = require('../../utils/db');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const levelManager = require('../../utils/levelManager');
 const peoples = require('../../config/peoples.json');
 const items = require('../../config/items.json');
 
@@ -50,6 +51,9 @@ module.exports = {
                 .setDescription(message)
                 .setFooter({ text: 'RARE DROP!' });
 
+            // XP Grant - Profit
+            await levelManager.grantXp(userId, 'profit', interaction);
+
             return interaction.reply({ embeds: [embed] });
         }
 
@@ -84,12 +88,19 @@ module.exports = {
             } else {
                 embed.setFooter({ text: 'They felt bad for you' });
             }
+
+            // XP Grant - Profit
+            await levelManager.grantXp(userId, 'profit', interaction);
+
         } else {
             const quote = person.fail_quotes[Math.floor(Math.random() * person.fail_quotes.length)];
 
             embed.setColor(0xFF0000)
                 .setDescription(quote)
                 .setFooter({ text: 'They walked away without even glancing at you' });
+
+            // XP Grant - Loss/Neutral
+            await levelManager.grantXp(userId, 'loss', interaction);
         }
 
         await interaction.reply({ embeds: [embed] });

@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
+const levelManager = require('../../utils/levelManager');
 const parseNumber = require('../../utils/numberParser');
 
 const MIN_BET = 5000;
@@ -86,8 +87,14 @@ async function runSnakeEyes(interaction, betAmount) {
         db.logTransaction(userId, 'snakeeyes', { amount: winnings });
         db.incrementStat(userId, 'snakeeyes_wins');
         db.incrementStat(userId, 'snakeeyes_won_amount', winnings);
+
+        // XP Grant - Profit
+        await levelManager.grantXp(userId, 'profit', interaction);
     } else {
         db.incrementStat(userId, 'snakeeyes_lost_amount', betAmount);
+
+        // XP Grant - Loss/Neutral
+        await levelManager.grantXp(userId, 'loss', interaction);
     }
 
     db.incrementStat(userId, 'snakeeyes_played');
@@ -148,6 +155,21 @@ module.exports = {
         await runSnakeEyes(interaction, betAmount);
     },
     async handleButton(interaction) {
+        // SECURITY CHECK
+        let originalUserId = null;
+        if (interaction.message.interaction) {
+            originalUserId = interaction.message.interaction.user.id;
+        }
+
+        if (originalUserId && interaction.user.id !== originalUserId) {
+            const embed = new EmbedBuilder()
+                .setTitle('Access Denied')
+                .setDescription("You cannot interact with someone else's game! Start your own game with `/snakeeyes`.")
+                .setColor(0xFF0000)
+                .setFooter({ text: 'Get your own coins!' });
+            return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+        }
+
         const customId = interaction.customId;
 
         if (customId.startsWith('snakeeyes_roll_again_')) {

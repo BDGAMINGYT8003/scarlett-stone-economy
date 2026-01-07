@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const levelManager = require('../../utils/levelManager');
 const locations = require('../../config/locations.json');
 const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
@@ -97,6 +98,10 @@ module.exports = {
                 if (item) {
                     message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
                 }
+
+                // XP Grant - Profit
+                await levelManager.grantXp(userId, 'profit', i);
+
             } else {
                 // Determine Outcome
                 const isSuccess = Math.random() * 100 < location.success_chance;
@@ -116,6 +121,12 @@ module.exports = {
 
                     db.addBalance(userId, amount);
                     message = message.replace('{amount}', amount.toLocaleString());
+
+                    // XP Grant - Profit
+                    await levelManager.grantXp(userId, 'profit', i);
+                } else {
+                    // XP Grant - Loss/Neutral
+                    await levelManager.grantXp(userId, 'loss', i);
                 }
             }
 

@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBui
 const db = require('../../utils/db');
 const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const levelManager = require('../../utils/levelManager');
 const items = require('../../config/items.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -215,6 +216,9 @@ module.exports = {
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
 
+                    // XP Grant - Loss/Neutral
+                    await levelManager.grantXp(userId, 'loss', i);
+
                 } else if (outcome.type === 'fail') {
                     // Fail
                     finalEmbed = new EmbedBuilder()
@@ -223,6 +227,9 @@ module.exports = {
                         .setFooter({ text: 'Better luck next time' })
                         .setColor(0xFF0000);
                     buttonStyle = ButtonStyle.Danger;
+
+                    // XP Grant - Loss/Neutral
+                    await levelManager.grantXp(userId, 'loss', i);
 
                 } else {
                     // Success (Common, Uncommon, Rare, Jackpot)
@@ -279,6 +286,9 @@ module.exports = {
                         finalEmbed.setFooter({ text: 'Meme Lord Status: Rising' });
                     }
                     buttonStyle = ButtonStyle.Success;
+
+                    // XP Grant - Profit
+                    await levelManager.grantXp(userId, 'profit', i);
                 }
 
                 setDurationCooldown(userId, 'postmemes', cooldownTime, premiumCooldownTime);

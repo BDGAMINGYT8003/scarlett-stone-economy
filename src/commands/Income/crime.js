@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const { calculateMultiplier } = require('../../utils/multiplier');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
+const levelManager = require('../../utils/levelManager');
 const crimes = require('../../config/crimes.json');
 const items = require('../../config/items.json');
 const { acquireLock, releaseLock } = require('../../utils/lockManager');
@@ -110,6 +111,10 @@ module.exports = {
                 if (item) {
                     message = message.replace('{item_emoji}', item.emoji).replace('{item_name}', item.name);
                 }
+
+                // XP Grant - Profit
+                await levelManager.grantXp(userId, 'profit', i);
+
             } else {
                 // Regular Outcome
                 const isSuccess = Math.random() * 100 < crime.success_chance;
@@ -130,20 +135,21 @@ module.exports = {
                     db.addBalance(userId, amount);
                     db.logTransaction(userId, 'crime', { amount: amount });
                     message = message.replace('{amount}', amount.toLocaleString());
+
+                    // XP Grant - Profit
+                    await levelManager.grantXp(userId, 'profit', i);
+
                 } else {
-                    // Fail - Determine if fined (50/50 for simplicity unless specified otherwise)
+                    // Fail - Determine if fined
                     const isFined = Math.random() > 0.5;
                     if (isFined) {
                         const outcomes = crime.outcomes.fail_fined;
                         message = outcomes[Math.floor(Math.random() * outcomes.length)];
 
-                        // Fetch fresh balance to ensure we don't go negative
                         const currentData = db.getUser(userId);
                         const currentBalance = currentData.balance ?? 0;
 
                         let potentialFine = Math.floor(Math.random() * (crime.fine_max - crime.fine_min + 1)) + crime.fine_min;
-
-                        // Cap fine at current balance
                         fine = Math.min(potentialFine, currentBalance);
 
                         db.removeBalance(userId, fine);
@@ -153,6 +159,9 @@ module.exports = {
                         const outcomes = crime.outcomes.fail_safe;
                         message = outcomes[Math.floor(Math.random() * outcomes.length)];
                     }
+
+                    // XP Grant - Loss/Neutral
+                    await levelManager.grantXp(userId, 'loss', i);
                 }
             }
 

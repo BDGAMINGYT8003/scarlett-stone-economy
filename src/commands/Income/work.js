@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const db = require('../../utils/db');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const { checkAndUnlockAchievements } = require('../../utils/achievementManager');
+const levelManager = require('../../utils/levelManager');
 const jobs = require('../../config/jobs.json');
 const { checkDurationCooldown, setDurationCooldown, getCooldownEmbed } = require('../../utils/cooldownManager');
 
@@ -141,9 +142,6 @@ module.exports = {
     },
 
     async handleApply(interaction) {
-         // ... (Keep existing implementation)
-         // Since I'm overwriting, I must include content.
-         // Copied from previous read/overwrite.
         const jobId = interaction.options.getString('job');
         const userData = db.getUser(interaction.user.id);
 
@@ -264,7 +262,6 @@ module.exports = {
     },
 
     async handleShift(interaction) {
-        // ... (Keep existing implementation)
         const userId = interaction.user.id;
         const userData = db.getUser(userId);
 
@@ -493,11 +490,20 @@ module.exports = {
                 .setDescription(`Great work! You received your full salary.\n\n**You Received:**\n- ֍ ${salary.toLocaleString()}`)
                 .setColor(0x00FF00)
                 .setFooter({ text: `Working as a ${job.name}` });
+
+            // XP Grant - Profit
+            await levelManager.grantXp(userId, 'profit', interaction);
+
         } else {
             embed.setTitle('Terrible work!')
                 .setDescription('You slacked off and the boss caught you.\n\n**You were given:**\n- ֍ ' + salary.toLocaleString() + ' for a sub-par shift')
                 .setColor(0xFF0000)
                 .setFooter({ text: `Working as a ${job.name}` });
+
+            // XP Grant - Loss/Neutral (Partial salary is still technically profit in game terms, but "sub-par" implies loss of potential. Prompt: "Scenarios where a user earns money or items will grant 2 XP... interactions that yield nothing... grant 1 XP". Here user earns money. So Profit.)
+            // "Scenarios where a user earns money... grant 2 XP". Even if reduced salary, they earn money.
+            // So 'profit'.
+            await levelManager.grantXp(userId, 'profit', interaction);
         }
 
         await interaction.update({ embeds: [embed], components: [] });
