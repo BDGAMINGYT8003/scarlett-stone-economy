@@ -105,16 +105,19 @@ module.exports = {
         };
 
         const getComponents = () => {
-            return [
-                new ActionRowBuilder().addComponents(
-                    new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
-                    new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
-                    new ButtonBuilder().setCustomId('refresh_badges').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
-                    new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
-                    new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
-                    new ButtonBuilder().setCustomId('help_badges').setLabel('❓').setStyle(ButtonStyle.Secondary)
-                )
-            ];
+            const row1 = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('first_page').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                new ButtonBuilder().setCustomId('prev_page').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage === 0),
+                new ButtonBuilder().setCustomId('refresh_badges').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('next_page').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1),
+                new ButtonBuilder().setCustomId('last_page').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(currentPage >= maxPages - 1)
+            );
+
+            const row2 = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('help_badges').setLabel('❓').setStyle(ButtonStyle.Secondary)
+            );
+
+            return [row1, row2];
         };
 
         const response = await interaction.reply({

@@ -13,13 +13,6 @@ module.exports = {
         .setName('multipliers')
         .setDescription('Check your coin multipliers and sources'),
     async execute(interaction) {
-        // Fetch multipliers dynamically? Or just once? Usually state doesn't change fast.
-        // Prompt says "Dynamic Data Fetching" specifically for `/currencylog`.
-        // But for global overhaul, I should stick to UI unless logic fix requested.
-        // However, multipliers might change (e.g. if I use an item in another channel).
-        // Safest to fetch inside generate/update loop if cheap.
-        // `calculateMultiplier` is cheap.
-
         let result = calculateMultiplier(interaction.user.id);
 
         const ITEMS_PER_PAGE = 10;
@@ -54,31 +47,28 @@ module.exports = {
             return embed;
         };
 
-        const getRow = (page) => {
+        const getComponents = (page) => {
             const { breakdown } = result;
             const totalPages = Math.ceil(breakdown.length / ITEMS_PER_PAGE) || 1;
 
-            const row = new ActionRowBuilder();
-
-            row.addComponents(
+            const row1 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('multi_first').setEmoji(FIRST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 1),
                 new ButtonBuilder().setCustomId('multi_prev').setEmoji(PREV_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === 1),
                 new ButtonBuilder().setCustomId('multi_refresh').setEmoji(REFRESH_EMOJI).setStyle(ButtonStyle.Success),
                 new ButtonBuilder().setCustomId('multi_next').setEmoji(NEXT_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === totalPages),
-                new ButtonBuilder().setCustomId('multi_last').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === totalPages),
+                new ButtonBuilder().setCustomId('multi_last').setEmoji(LAST_EMOJI).setStyle(ButtonStyle.Primary).setDisabled(page === totalPages)
+            );
+
+            const row2 = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('multi_help').setLabel('❓').setStyle(ButtonStyle.Secondary)
             );
-            return row;
-        };
 
-        // If only 1 page, usually we might hide nav, but prompt says "Global Pagination UI Overhaul".
-        // Also "Refresh" implies we can always refresh.
-        // And "Help" button exists.
-        // So we should always show the row.
+            return [row1, row2];
+        };
 
         const response = await interaction.reply({
             embeds: [generateEmbed(currentPage)],
-            components: [getRow(currentPage)],
+            components: getComponents(currentPage),
             fetchReply: true
         });
 
@@ -130,7 +120,7 @@ module.exports = {
 
             await i.update({
                 embeds: [generateEmbed(currentPage)],
-                components: [getRow(currentPage)]
+                components: getComponents(currentPage)
             });
         });
     }
