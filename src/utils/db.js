@@ -152,12 +152,15 @@ const addXp = (userId, amount) => {
     let newXp = (user.xp || 0) + amount;
     let currentLevel = user.level || 0;
 
-    let required = (currentLevel + 1) * 250;
+    // Linear formula: Req = 80 + (Level * 0.05)
+    // We must ceil because XP is integer.
+    let required = Math.ceil(80 + (currentLevel * 0.05));
 
     while (newXp >= required) {
         newXp -= required;
         currentLevel++;
-        required = (currentLevel + 1) * 250;
+        // Recalculate required for NEXT level
+        required = Math.ceil(80 + (currentLevel * 0.05));
     }
 
     db.prepare('UPDATE users SET xp = ?, level = ? WHERE id = ?').run(newXp, currentLevel, userId);
@@ -203,13 +206,6 @@ const getExpiredPremiumUsers = () => {
 // God Mode Methods
 const setGodMode = (userId, durationMs) => {
     getUser(userId);
-    // If durationMs is 0 or null, we treat as permanent (conceptually), but storing 0 might imply "not active" in expiration logic.
-    // So for permanent, we can store a very large number or -1.
-    // Let's stick to "omitted = permanent".
-    // If permanent, set to MAX_INTEGER (or similar).
-    // SQLite MAX INTEGER: 9223372036854775807.
-    // JS Date max: 8640000000000000.
-
     let expiresAt = -1; // Permanent
     if (durationMs) {
         expiresAt = Date.now() + durationMs;
@@ -257,7 +253,6 @@ const increaseBankCapacity = (userId, amount) => {
 // Stat Increment Methods
 const incrementStat = (userId, stat, amount = 1) => {
     getUser(userId);
-    // Allow extended stats
     const validStats = [
         'beg_count', 'search_count', 'crime_count', 'postmemes_count',
         'work_earnings', 'slots_wins', 'highlow_wins', 'snakeeyes_wins',
@@ -307,7 +302,6 @@ const addTitle = (userId, titleId) => {
 };
 
 const setTitle = (userId, titleId) => {
-    // Verify ownership first logic should be in command/manager, but DB just updates
     setStat(userId, 'selected_title', titleId);
 };
 
@@ -391,7 +385,7 @@ const incrementCommandUsage = (userId, commandName) => {
         db.prepare('INSERT INTO command_usage (user_id, command_name, count) VALUES (?, ?, 1)').run(userId, commandName);
     }
 
-    addXp(userId, Math.floor(Math.random() * 11) + 10);
+    // Removed auto-XP grant here to strictly allow only Economy commands to grant XP via levelManager.
 };
 
 const getFavoriteCommand = (userId) => {
@@ -405,11 +399,7 @@ const getFavoriteCommand = (userId) => {
 
 // Currency Log Methods
 const logTransaction = (userId, type, details) => {
-    // details can be an object { amount: number, items: Array, title: string }
-    // or just number for backward compatibility (though we should enforce object)
-
     let amount = 0;
-    // Handle overload
     if (typeof details === 'number') {
         amount = details;
     } else if (typeof details === 'object' && details !== null) {
@@ -419,24 +409,10 @@ const logTransaction = (userId, type, details) => {
     const user = getUser(userId);
     const balanceAfter = user.balance ?? 0;
 
-    // If schema has 'command', we should insert into that, but we are renaming to 'type'.
-    // If 'command' column exists (old schema), we might error.
-    // We should migrate 'command' -> 'type' or just handle it.
-    // For now, let's assume we can drop/recreate or add 'type'.
-    // Since we updated CREATE TABLE, new installs are fine.
-    // Existing installs need migration.
-
     try {
         db.prepare('INSERT INTO currency_logs (user_id, type, amount, balance_after, timestamp) VALUES (?, ?, ?, ?, ?)').run(userId, type, amount, balanceAfter, Date.now());
-    } catch (e) {
-        // Fallback for existing DB without 'type' column? Or migration failed?
-        // Let's assume migration is handled below.
-    }
+    } catch (e) {}
 
-    // Prune logs > 500
-    // This might be slow if done every time.
-    // Optimization: Check count first? Or just delete where id not in top 500.
-    // "DELETE FROM currency_logs WHERE user_id = ? AND id NOT IN (SELECT id FROM currency_logs WHERE user_id = ? ORDER BY timestamp DESC LIMIT 500)"
     db.prepare(`
         DELETE FROM currency_logs
         WHERE user_id = ?
@@ -465,7 +441,6 @@ const removeFriend = (u1, u2) => {
 };
 
 const getFriends = (userId) => {
-    // Check both columns
     return db.prepare('SELECT * FROM friends WHERE user1 = ? OR user2 = ?').all(userId, userId);
 };
 

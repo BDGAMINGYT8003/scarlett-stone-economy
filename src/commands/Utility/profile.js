@@ -32,7 +32,8 @@ module.exports = {
             // Level Calc (New System)
             const level = user.level || 0;
             const xp = user.xp || 0;
-            const xpNeeded = (level + 1) * 250;
+            // Formula: Req = ceil(80 + (Level * 0.05))
+            const xpNeeded = Math.ceil(80 + (level * 0.05));
 
             const xpBar = getProgressBar(xp, xpNeeded, 5);
 
