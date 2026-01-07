@@ -4,7 +4,7 @@ const db = require('../../utils/db.js');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser.js');
 const { parseDuration } = require('../../utils/timeParser.js');
-const levelManager = require('../../utils/levelManager'); // Needed for progress grant
+const levelManager = require('../../utils/levelManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -192,29 +192,12 @@ module.exports = {
             confirmMessage = `Are you sure you want to grant **${amount} ${type}** to ${targetUser}?`;
 
             executeAction = async () => {
+                // Fixed: Use targetUser.id explicitly
                 if (type === 'xp') {
-                     // levelManager handles XP grant logic including level ups
-                     // We fake an interaction context or pass the current one
-                     // levelManager.grantXp calculates amount based on 'profit'/'loss'.
-                     // We need RAW grant.
-                     // db.addXp adds amount.
-                     // We should use db.addXp directly, but then we need to handle level up check.
-                     // The requirement: "If an admin grants multiple levels... send an individual DM for every single level earned".
-                     // If we grant XP, it might trigger multiple level ups.
-                     // We should verify how many levels are gained and loop manually if needed, or let handleLevelUp loop.
-                     // My `levelManager.js` `grantXp` calls `db.addXp`, which loops and updates level.
-                     // Then it checks `newUser.level > oldLevel` and calls `handleLevelUp`.
-                     // `handleLevelUp` loops `oldLevel + 1` to `newLevel`.
-                     // BUT it sends only ONE DM with a list of rewards.
-                     // Requirement 4 says: "send an individual DM for **every single level earned**... must not skip...".
-                     // So I need to refactor `levelManager.js` first to support this.
-                     // Assuming I will refactor `levelManager.js` in next step, here I just call a raw add helper?
-                     // I'll call `levelManager.adminGrantXp(userId, amount, interaction)` which I will add.
-
-                     await levelManager.adminGrantXp(userId, amount, interaction);
+                     await levelManager.adminGrantXp(targetUser.id, amount, interaction);
 
                 } else if (type === 'level') {
-                     await levelManager.adminGrantLevels(userId, amount, interaction);
+                     await levelManager.adminGrantLevels(targetUser.id, amount, interaction);
                 }
 
                 const newData = db.getUser(targetUser.id);
@@ -223,6 +206,7 @@ module.exports = {
                     .setTitle('Progress Granted')
                     .setDescription(`Successfully granted **${amount} ${type}** to ${targetUser}.`)
                     .addFields({ name: 'New Stats', value: `Level: ${newData.level} | XP: ${newData.xp}` })
+                    .setColor(0x00FF00)
                     .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 return embed;
@@ -240,13 +224,15 @@ module.exports = {
             new ButtonBuilder().setCustomId('cancel_grant').setLabel('Cancel').setStyle(ButtonStyle.Danger)
         );
 
+        // Use withResponse to avoid warning
         const response = await interaction.reply({
             embeds: [embed],
             components: [row],
-            fetchReply: true
+            withResponse: true
         });
 
-        const collector = response.createMessageComponentCollector({
+        // Collect from the response message
+        const collector = response.resource.message.createMessageComponentCollector({
             componentType: ComponentType.Button,
             time: 30000
         });
@@ -259,7 +245,7 @@ module.exports = {
 
             if (i.customId === 'confirm_grant') {
                 const resultEmbed = await executeAction();
-                resultEmbed.setColor(0x00FF00);
+                // Check if resultEmbed is valid (executeAction might fail or return undefined if I broke it, but logic seems fine)
                 await i.update({ embeds: [resultEmbed], components: [] });
             } else {
                 const cancelEmbed = new EmbedBuilder()

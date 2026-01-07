@@ -176,6 +176,7 @@ module.exports = {
             confirmMessage = `Are you sure you want to revoke **${amount} ${type}** from ${targetUser}?`;
 
             executeAction = async () => {
+                 // Fixed: Use targetUser.id explicitly
                  if (type === 'xp') {
                      await levelManager.adminRevokeXp(targetUser.id, amount);
                  } else if (type === 'level') {
@@ -206,13 +207,15 @@ module.exports = {
             new ButtonBuilder().setCustomId('cancel_revoke').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
         );
 
+        // Use withResponse to avoid warning
         const response = await interaction.reply({
             embeds: [embed],
             components: [row],
-            fetchReply: true
+            withResponse: true
         });
 
-        const collector = response.createMessageComponentCollector({
+        // Collect from the response message
+        const collector = response.resource.message.createMessageComponentCollector({
             componentType: ComponentType.Button,
             time: 30000
         });

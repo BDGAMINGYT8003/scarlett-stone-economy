@@ -64,25 +64,7 @@ async function adminGrantXp(userId, amount, interaction) {
 async function adminGrantLevels(userId, amount, interaction) {
     const user = db.getUser(userId);
     let currentLevel = user.level || 0;
-    let currentXp = user.xp || 0;
     let targetLevel = currentLevel + amount;
-
-    // We can manually update DB to target level and set XP to 0 (or keep partial?).
-    // Usually leveling up resets XP in this system (addXp consumes it).
-    // So let's just set Level to Target, XP to 0, and trigger notifications.
-    // BUT we need to trigger notifications for EACH level.
-
-    // We can just loop `handleLevelUp` calls?
-    // `handleLevelUp` sends notifications.
-    // But it expects DB state to be updated?
-    // `handleLevelUp` reads config and adds rewards to DB. It doesn't check user DB level state for validation, just assumes it happened.
-    // So we can update DB once to final state, then call handleLevelUp.
-    // Wait, requirement 4: "If an admin grants multiple levels... send an individual DM for **every single level earned**".
-    // My previous `handleLevelUp` batched them.
-    // I need to refactor `handleLevelUp` to support single level or be called in a loop.
-
-    // Let's refactor handleLevelUp to be single-level focused or loop inside it generating multiple DMs.
-    // Loop inside seems safer to avoid race conditions with DB if we did async calls.
 
     // Update DB first
     db.prepare('UPDATE users SET level = ?, xp = 0 WHERE id = ?').run(targetLevel, userId);
@@ -92,14 +74,6 @@ async function adminGrantLevels(userId, amount, interaction) {
 }
 
 async function adminRevokeXp(userId, amount) {
-    // Revoking XP is tricky if it causes level down.
-    // db.addXp doesn't support negative logic well (it loops up).
-    // Simple implementation: Subtract raw XP. If < 0, handle level down?
-    // Prompt just says "Revoke ... value".
-    // I will just subtract from `xp`. If it goes negative, I won't de-level automatically unless requested.
-    // Usually games don't de-level on XP loss unless specific.
-    // But `grant/revoke progress` implies moving bar.
-    // Let's just `UPDATE users SET xp = xp - amount`.
     db.prepare('UPDATE users SET xp = MAX(0, xp - ?) WHERE id = ?').run(amount, userId);
 }
 
@@ -121,6 +95,9 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
     const user = db.getUser(userId);
     const prestige = user.prestige || 0;
     const bankSpacePerLevel = 1000 + (prestige * 10);
+    // Correct cumulative gain calculation for THIS SINGLE LEVEL step
+    // The previous loop logic was confusing.
+    // At Level X, the bonus gained *from reaching X* is `1000 + P*10 + (X-1)*100`.
     const currentLevelGain = bankSpacePerLevel + ((toLevel - 1) * 100);
     rewardsList.push(`+${currentLevelGain.toLocaleString()} Bank Space`);
 
@@ -171,6 +148,7 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
     } catch (e) {
         // Fallback to Ephemeral
         const failEmbed = new EmbedBuilder(embed.toJSON());
+        // Humorous footer for DM fail
         failEmbed.setFooter({ text: `${dateFooter}\n(I tried to DM you but you blocked me. Rude.)` });
 
         try {
