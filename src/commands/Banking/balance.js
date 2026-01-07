@@ -18,7 +18,7 @@ module.exports = {
             const userData = db.getUser(targetUser.id);
             const balance = userData.balance ?? 0;
             const bank = userData.bank ?? 0;
-            const bankCapacity = userData.bank_capacity ?? 5000;
+            const bankCapacity = db.getEffectiveBankCapacity(targetUser.id);
             const freeSpace = bankCapacity - bank;
 
             return new EmbedBuilder()
@@ -110,7 +110,7 @@ module.exports = {
                     // Safe defaults
                     const userBalance = userData.balance ?? 0;
                     const userBank = userData.bank ?? 0;
-                    const userBankCapacity = userData.bank_capacity ?? 5000;
+                    const userBankCapacity = db.getEffectiveBankCapacity(targetUser.id);
 
                     let amount = 0;
                     let embed = null;

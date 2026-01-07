@@ -189,6 +189,24 @@ module.exports = {
             const type = interaction.options.getString('type');
             const amount = interaction.options.getInteger('amount');
 
+            if (type === 'level' && amount > 100) {
+                 const embed = new EmbedBuilder()
+                    .setTitle('Limit Exceeded')
+                    .setDescription('You can only grant up to **100 Levels** at a time.')
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'System Limit' });
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            }
+
+            if (type === 'xp' && amount > 5000) {
+                 const embed = new EmbedBuilder()
+                    .setTitle('Limit Exceeded')
+                    .setDescription('You can only grant up to **5,000 XP** at a time.')
+                    .setColor(0xFF0000)
+                    .setFooter({ text: 'System Limit' });
+                return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+            }
+
             confirmMessage = `Are you sure you want to grant **${amount} ${type}** to ${targetUser}?`;
 
             executeAction = async () => {
@@ -244,9 +262,21 @@ module.exports = {
             }
 
             if (i.customId === 'confirm_grant') {
-                const resultEmbed = await executeAction();
-                // Check if resultEmbed is valid (executeAction might fail or return undefined if I broke it, but logic seems fine)
-                await i.update({ embeds: [resultEmbed], components: [] });
+                // Defer immediately to prevent timeout during heavy processing
+                await i.deferUpdate();
+
+                try {
+                    const resultEmbed = await executeAction();
+                    await i.editReply({ embeds: [resultEmbed], components: [] });
+                } catch (error) {
+                    console.error('Grant execution failed:', error);
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('An error occurred while processing the grant.')
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Check console for details' });
+                    await i.editReply({ embeds: [errorEmbed], components: [] });
+                }
             } else {
                 const cancelEmbed = new EmbedBuilder()
                     .setTitle('Cancelled')

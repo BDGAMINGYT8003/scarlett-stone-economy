@@ -84,7 +84,12 @@ async function adminRevokeLevels(userId, amount) {
 async function handleLevelUp(userId, oldLevel, newLevel, interaction) {
     // Loop through each level to send individual DMs
     for (let lvl = oldLevel + 1; lvl <= newLevel; lvl++) {
-        await processSingleLevelUp(userId, lvl - 1, lvl, interaction);
+        try {
+            await processSingleLevelUp(userId, lvl - 1, lvl, interaction);
+        } catch (err) {
+            console.error(`Failed to process level up for user ${userId} at level ${lvl}:`, err);
+            // Continue to next level despite error
+        }
     }
 }
 
