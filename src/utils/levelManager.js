@@ -66,8 +66,53 @@ async function adminGrantLevels(userId, amount, interaction) {
     let currentLevel = user.level || 0;
     let targetLevel = currentLevel + amount;
 
-    // Update DB first
-    db.prepare('UPDATE users SET level = ?, xp = 0 WHERE id = ?').run(targetLevel, userId);
+    try {
+        // Update DB first using helper
+        db.setLevel(userId, targetLevel);
+    } catch (e) {
+        // Fallback: Calculate XP difference if direct level set fails
+        console.error(`Failed to set level directly for user ${userId}, falling back to XP grant:`, e);
+
+        // Calculate cumulative XP required to reach targetLevel from currentLevel
+        // Formula: Req = 80 + (Level * 0.05) per level step
+        // But since we want to reach targetLevel starting from current XP (assumed 0 after level up? No, current XP exists)
+        // Actually, simplest fallback as requested: "fetch current level and XP... calculate total XP needed... grant that XP"
+        // addXp handles level ups. So we just need to add enough XP to bridge the gap.
+
+        // However, calculating exact XP for N levels with a dynamic formula is complex.
+        // Formula: Req = ceil(80 + (L * 0.05))
+        // We can loop to sum it up.
+
+        let xpNeeded = 0;
+        let tempLevel = currentLevel;
+        // User already has `user.xp` towards the next level `tempLevel + 1`.
+        // First step: Finish current level.
+        let reqForNext = Math.ceil(80 + (tempLevel * 0.05));
+        let remainingForNext = Math.max(0, reqForNext - (user.xp || 0));
+
+        xpNeeded += remainingForNext;
+        tempLevel++;
+
+        // Subsequent steps
+        while (tempLevel < targetLevel) {
+            let req = Math.ceil(80 + (tempLevel * 0.05));
+            xpNeeded += req;
+            tempLevel++;
+        }
+
+        // Grant the XP
+        db.addXp(userId, xpNeeded);
+
+        // handleLevelUp is handled by addXp internal check?
+        // No, addXp calls `db.prepare` but does NOT call `handleLevelUp`.
+        // `grantXp` calls `addXp` then `handleLevelUp`.
+        // `adminGrantXp` calls `addXp` then `handleLevelUp`.
+        // So if we use `db.addXp`, we must manually call `handleLevelUp` OR use `adminGrantXp` (but recursively? No).
+        // Since we are inside `adminGrantLevels`, we want to trigger the DMs.
+        // `addXp` updates the DB state.
+        // So after `db.addXp`, the user IS at `targetLevel`.
+        // So we proceed to `await handleLevelUp` below.
+    }
 
     // Call handler
     await handleLevelUp(userId, currentLevel, targetLevel, interaction);
@@ -112,6 +157,7 @@ async function processSingleLevelUp(userId, fromLevel, toLevel, interaction) {
 
         if (r.coins) {
             db.addBalance(userId, r.coins);
+            db.logTransaction(userId, 'level up reward', { amount: r.coins });
             rewardsList.push(`֍ ${r.coins.toLocaleString()}`);
         }
 

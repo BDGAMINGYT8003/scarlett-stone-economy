@@ -617,5 +617,9 @@ module.exports = {
     setTitle,
     addXp,
     addPrestige,
-    resetProfileForPrestige
+    resetProfileForPrestige,
+    setLevel: (userId, level) => {
+        getUser(userId);
+        db.prepare('UPDATE users SET level = ?, xp = 0 WHERE id = ?').run(level, userId);
+    }
 };
