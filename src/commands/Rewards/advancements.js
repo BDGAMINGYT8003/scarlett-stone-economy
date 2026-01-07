@@ -244,6 +244,8 @@ module.exports = {
             time: 60000
         });
 
+        let currentState = 'status';
+
         collector.on('collect', async i => {
             if (i.user.id !== userId) {
                 const errorEmbed = new EmbedBuilder().setTitle('Error').setDescription("Not your session!").setColor(0xFF0000).setFooter({ text: 'Mind your business' });
@@ -251,10 +253,13 @@ module.exports = {
             }
 
             if (i.customId === 'prestige_start') {
+                currentState = 'pending';
                 await i.update({ embeds: [generateEmbed('pending')], components: getComponents('pending') });
             } else if (i.customId === 'prestige_confirm') {
+                currentState = 'final_pending';
                 await i.update({ embeds: [generateEmbed('final_pending')], components: getComponents('final_pending') });
             } else if (i.customId === 'prestige_final_confirm') {
+                currentState = 'success';
                 // Execute Prestige
                 db.addPrestige(userId); // Add prestige FIRST
                 db.resetProfileForPrestige(userId); // Then reset stats
@@ -276,6 +281,7 @@ module.exports = {
                 collector.stop('success');
 
             } else if (i.customId === 'prestige_cancel') {
+                currentState = 'cancelled';
                 await i.update({ embeds: [generateEmbed('cancelled')], components: [] });
                 collector.stop('cancelled');
             } else if (i.customId === 'prestige_help') {
@@ -289,9 +295,20 @@ module.exports = {
 
         collector.on('end', async (c, reason) => {
             if (reason === 'time') {
-                try {
-                    await interaction.editReply({ embeds: [generateEmbed('timeout')], components: [] });
-                } catch (e) {}
+                // Fix: Only strikethrough if pending/final_pending
+                if (currentState === 'pending' || currentState === 'final_pending') {
+                    try {
+                        await interaction.editReply({ embeds: [generateEmbed('timeout')], components: [] });
+                    } catch (e) {}
+                } else if (currentState === 'status') {
+                    // Just disable button to prevent interaction on stale state, but keep view readable
+                    try {
+                        const disabledRow = new ActionRowBuilder().addComponents(
+                            getComponents('status')[0].components.map(btn => btn.setDisabled(true))
+                        );
+                        await interaction.editReply({ components: [disabledRow] });
+                    } catch (e) {}
+                }
             }
         });
     }

@@ -4,6 +4,7 @@ const db = require('../../utils/db.js');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser.js');
 const { parseDuration } = require('../../utils/timeParser.js');
+const levelManager = require('../../utils/levelManager'); // Needed for progress grant
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -35,6 +36,16 @@ module.exports = {
                     option.setName('user').setDescription('The user to grant to').setRequired(true))
                 .addStringOption(option =>
                     option.setName('duration').setDescription('Duration (e.g. 7d, 1mo). Leave empty for permanent.').setRequired(false)))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('progress')
+                .setDescription('Grant Level or XP to a user.')
+                .addUserOption(option =>
+                    option.setName('user').setDescription('The user to grant to').setRequired(true))
+                .addStringOption(option =>
+                    option.setName('type').setDescription('Level or XP').setRequired(true).addChoices({ name: 'Level', value: 'level' }, { name: 'XP', value: 'xp' }))
+                .addIntegerOption(option =>
+                    option.setName('amount').setDescription('Amount to grant').setRequired(true)))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async autocomplete(interaction) {
@@ -171,6 +182,48 @@ module.exports = {
                     .addFields({ name: 'Granted By', value: interaction.user.tag })
                     .setFooter({ text: 'Thank you for your support!' });
                 try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
+
+                return embed;
+            };
+        } else if (subcommand === 'progress') {
+            const type = interaction.options.getString('type');
+            const amount = interaction.options.getInteger('amount');
+
+            confirmMessage = `Are you sure you want to grant **${amount} ${type}** to ${targetUser}?`;
+
+            executeAction = async () => {
+                if (type === 'xp') {
+                     // levelManager handles XP grant logic including level ups
+                     // We fake an interaction context or pass the current one
+                     // levelManager.grantXp calculates amount based on 'profit'/'loss'.
+                     // We need RAW grant.
+                     // db.addXp adds amount.
+                     // We should use db.addXp directly, but then we need to handle level up check.
+                     // The requirement: "If an admin grants multiple levels... send an individual DM for every single level earned".
+                     // If we grant XP, it might trigger multiple level ups.
+                     // We should verify how many levels are gained and loop manually if needed, or let handleLevelUp loop.
+                     // My `levelManager.js` `grantXp` calls `db.addXp`, which loops and updates level.
+                     // Then it checks `newUser.level > oldLevel` and calls `handleLevelUp`.
+                     // `handleLevelUp` loops `oldLevel + 1` to `newLevel`.
+                     // BUT it sends only ONE DM with a list of rewards.
+                     // Requirement 4 says: "send an individual DM for **every single level earned**... must not skip...".
+                     // So I need to refactor `levelManager.js` first to support this.
+                     // Assuming I will refactor `levelManager.js` in next step, here I just call a raw add helper?
+                     // I'll call `levelManager.adminGrantXp(userId, amount, interaction)` which I will add.
+
+                     await levelManager.adminGrantXp(userId, amount, interaction);
+
+                } else if (type === 'level') {
+                     await levelManager.adminGrantLevels(userId, amount, interaction);
+                }
+
+                const newData = db.getUser(targetUser.id);
+
+                const embed = new EmbedBuilder()
+                    .setTitle('Progress Granted')
+                    .setDescription(`Successfully granted **${amount} ${type}** to ${targetUser}.`)
+                    .addFields({ name: 'New Stats', value: `Level: ${newData.level} | XP: ${newData.xp}` })
+                    .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 return embed;
             };

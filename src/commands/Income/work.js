@@ -477,6 +477,20 @@ module.exports = {
 
         if (freshUser.shifts_completed_today === 10) {
             db.addPromotion(userId);
+
+            // Promotion Notification
+            const promoEmbed = new EmbedBuilder()
+                .setTitle('Promotion!')
+                .setDescription('You have received a promotion for your hard work! Keep it up to earn stars.')
+                .setColor(0x00FF00)
+                .setFooter({ text: 'Hard work pays off' });
+
+            try {
+                await interaction.user.send({ embeds: [promoEmbed] });
+            } catch (e) {
+                // Fallback handled implicitly or we can ignore
+            }
+
             if (freshUser.promotions + 1 >= 10) {
                 try {
                     // Placeholder for Star logic
@@ -500,9 +514,7 @@ module.exports = {
                 .setColor(0xFF0000)
                 .setFooter({ text: `Working as a ${job.name}` });
 
-            // XP Grant - Loss/Neutral (Partial salary is still technically profit in game terms, but "sub-par" implies loss of potential. Prompt: "Scenarios where a user earns money or items will grant 2 XP... interactions that yield nothing... grant 1 XP". Here user earns money. So Profit.)
-            // "Scenarios where a user earns money... grant 2 XP". Even if reduced salary, they earn money.
-            // So 'profit'.
+            // XP Grant - Profit (since money earned)
             await levelManager.grantXp(userId, 'profit', interaction);
         }
 

@@ -3,6 +3,7 @@ const items = require('../../config/items.json');
 const db = require('../../utils/db.js');
 const { checkAndUnlockBadges } = require('../../utils/badgeManager');
 const parseNumber = require('../../utils/numberParser.js');
+const levelManager = require('../../utils/levelManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -32,6 +33,16 @@ module.exports = {
                 .setDescription('Revoke premium status from a user.')
                 .addUserOption(option =>
                     option.setName('user').setDescription('The user to revoke from').setRequired(true)))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('progress')
+                .setDescription('Revoke Level or XP from a user.')
+                .addUserOption(option =>
+                    option.setName('user').setDescription('The user to revoke from').setRequired(true))
+                .addStringOption(option =>
+                    option.setName('type').setDescription('Level or XP').setRequired(true).addChoices({ name: 'Level', value: 'level' }, { name: 'XP', value: 'xp' }))
+                .addIntegerOption(option =>
+                    option.setName('amount').setDescription('Amount to revoke').setRequired(true)))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async autocomplete(interaction) {
@@ -155,6 +166,30 @@ module.exports = {
                     .setFooter({ text: 'Contact support if this is a mistake.' })
                     .setColor(0xFF0000);
                 try { await targetUser.send({ embeds: [notifyEmbed] }); } catch (e) {}
+
+                return embed;
+            };
+        } else if (subcommand === 'progress') {
+            const type = interaction.options.getString('type');
+            const amount = interaction.options.getInteger('amount');
+
+            confirmMessage = `Are you sure you want to revoke **${amount} ${type}** from ${targetUser}?`;
+
+            executeAction = async () => {
+                 if (type === 'xp') {
+                     await levelManager.adminRevokeXp(targetUser.id, amount);
+                 } else if (type === 'level') {
+                     await levelManager.adminRevokeLevels(targetUser.id, amount);
+                 }
+
+                 const newData = db.getUser(targetUser.id);
+
+                 const embed = new EmbedBuilder()
+                    .setTitle('Progress Revoked')
+                    .setDescription(`Successfully revoked **${amount} ${type}** from ${targetUser}.`)
+                    .addFields({ name: 'New Stats', value: `Level: ${newData.level} | XP: ${newData.xp}` })
+                    .setColor(0xFF0000)
+                    .setFooter({ text: `Developer Command | Today at ${new Date().toLocaleTimeString()}` });
 
                 return embed;
             };
