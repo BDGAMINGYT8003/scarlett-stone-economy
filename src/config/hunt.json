@@ -1,0 +1,62 @@
+{
+  "success_coin": [
+    "You went hunting but forgot your glasses. You found **֍ {amount}** on the ground though.",
+    "You tracked a deer for miles, lost it, but found a stash of **֍ {amount}**.",
+    "You shot at a bush and **֍ {amount}** fell out. Don't ask.",
+    "You went hunting and found a lost hiker's wallet with **֍ {amount}**.",
+    "You fell into a trap but found **֍ {amount}** at the bottom.",
+    "You scared away all the animals but found **֍ {amount}** dropped by a fleeing goblin.",
+    "You decided to hunt for treasure instead and found **֍ {amount}**.",
+    "You aimed at a rabbit, missed, and hit a money bag containing **֍ {amount}**.",
+    "You found **֍ {amount}** inside a hollow tree.",
+    "You sold the mud on your boots for **֍ {amount}**. Capitalism wins."
+  ],
+  "success_item": [
+    "You aimed carefully and bagged a **{item_emoji} {item_name}**!",
+    "Bang! You caught a **{item_emoji} {item_name}**.",
+    "You set a trap and caught a **{item_emoji} {item_name}**.",
+    "You tracked down a wild **{item_emoji} {item_name}**. Nice shooting!",
+    "You stumbled upon a sleeping **{item_emoji} {item_name}**. Easy catch.",
+    "You wrestled a **{item_emoji} {item_name}** with your bare hands (and rifle).",
+    "You utilized your stealth skills to catch a **{item_emoji} {item_name}**.",
+    "A **{item_emoji} {item_name}** ran right into your line of fire.",
+    "You returned from the woods with a **{item_emoji} {item_name}**.",
+    "Dinner is served! You caught a **{item_emoji} {item_name}**."
+  ],
+  "success_both": [
+    "You caught a **{item_emoji} {item_name}** and it had **֍ {amount}** in its pocket?",
+    "Double kill! You got a **{item_emoji} {item_name}** and found **֍ {amount}**.",
+    "You found **֍ {amount}** while skinning your **{item_emoji} {item_name}**.",
+    "A successful hunt! You got a **{item_emoji} {item_name}** and **֍ {amount}**.",
+    "You looted **֍ {amount}** from a **{item_emoji} {item_name}**. Video game logic.",
+    "You tripped over **֍ {amount}** while carrying your **{item_emoji} {item_name}**.",
+    "Bounty claimed! **{item_emoji} {item_name}** and **֍ {amount}**.",
+    "You caught a **{item_emoji} {item_name}** and won a bet for **֍ {amount}**.",
+    "Huzzah! A **{item_emoji} {item_name}** and **֍ {amount}** for your troubles.",
+    "The forest provided a **{item_emoji} {item_name}** and **֍ {amount}**."
+  ],
+  "fail": [
+    "You aimed at a deer and shot your own foot. Good job.",
+    "You sneezed and scared away every animal in a 5-mile radius.",
+    "You fell asleep in the deer stand. You woke up with nothing.",
+    "You saw a bear and ran away screaming. You caught nothing.",
+    "You forgot to load your rifle. Click.",
+    "You tracked a squirrel for 3 hours. It was a leaf.",
+    "You missed. You missed again. You fired, and you missed.",
+    "The animals are laughing at you. You go home empty-handed.",
+    "You got lost and had to be rescued. No loot for you.",
+    "You accidentally hunted a rock. It didn't die."
+  ],
+  "loot_table": [
+    { "id": "rabbit", "chance": 25 },
+    { "id": "duck", "chance": 20 },
+    { "id": "deer", "chance": 15 },
+    { "id": "boar", "chance": 12 },
+    { "id": "skunk", "chance": 10 },
+    { "id": "fox", "chance": 8 },
+    { "id": "bear", "chance": 5 },
+    { "id": "wolf", "chance": 4 },
+    { "id": "tiger", "chance": 1 },
+    { "id": "dragon", "chance": 2.5 }
+  ]
+}

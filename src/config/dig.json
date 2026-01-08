@@ -48,18 +48,16 @@
     "You found a buried sign that said 'Nothing here'. Helpful."
   ],
   "loot_table": [
-    { "id": "trash", "chance": 30 },
-    { "id": "apple", "chance": 15 },
-    { "id": "mouse", "chance": 5 },
-    { "id": "keyboard", "chance": 5 },
-    { "id": "camera", "chance": 2 },
-    { "id": "alcohol", "chance": 10 },
-    { "id": "pizza", "chance": 5 },
-    { "id": "adventure_ticket", "chance": 3 },
-    { "id": "bank_note", "chance": 3 },
-    { "id": "padlock", "chance": 3 },
+    { "id": "worm", "chance": 25 },
+    { "id": "trash", "chance": 20 },
+    { "id": "ant", "chance": 15 },
+    { "id": "ladybug", "chance": 10 },
+    { "id": "stickbug", "chance": 8 },
+    { "id": "spider", "chance": 7 },
+    { "id": "fossil", "chance": 5 },
+    { "id": "gold_nugget", "chance": 5 },
     { "id": "ancient_coin", "chance": 1 },
-    { "id": "meme_box", "chance": 0.5 },
-    { "id": "dank_box", "chance": 0.1 }
+    { "id": "mouse", "chance": 2 },
+    { "id": "alcohol", "chance": 2 }
   ]
 }
