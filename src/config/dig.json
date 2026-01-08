@@ -1,0 +1,65 @@
+{
+  "success_coin": [
+    "You dug a hole and found **֍ {amount}**! Not bad for playing in the dirt.",
+    "While digging for worms, you stumbled upon **֍ {amount}**. Lucky!",
+    "You dug up a buried time capsule containing **֍ {amount}**. Finders keepers!",
+    "You found **֍ {amount}** buried by a squirrel. Poor squirrel.",
+    "Diggy diggy hole! You found **֍ {amount}**.",
+    "You struck a small vein of coins! You collected **֍ {amount}**.",
+    "After hours of digging, you found **֍ {amount}**. Honest work.",
+    "You dug up a skeleton holding **֍ {amount}**. You took the money and ran.",
+    "You found a lost wallet buried in the sand with **֍ {amount}** inside.",
+    "You dug a hole to China and found **֍ {amount}** on the way."
+  ],
+  "success_item": [
+    "You dug up a **{item_emoji} {item_name}**! It's a bit dirty.",
+    "You found a **{item_emoji} {item_name}** buried in the backyard.",
+    "Look what you found! A shiny **{item_emoji} {item_name}**.",
+    "You struck something hard... it's a **{item_emoji} {item_name}**!",
+    "You uncovered a **{item_emoji} {item_name}**. Nice find!",
+    "You dug up an old chest containing a **{item_emoji} {item_name}**.",
+    "You found a **{item_emoji} {item_name}**. Mom will be so proud.",
+    "You discovered a **{item_emoji} {item_name}** hiding in the dirt.",
+    "You unearthed a **{item_emoji} {item_name}**. Clean it off before using it.",
+    "A wild **{item_emoji} {item_name}** appeared from the hole!"
+  ],
+  "success_both": [
+    "Jackpot! You found **֍ {amount}** and a **{item_emoji} {item_name}**!",
+    "You dug up a treasure trove: **֍ {amount}** and a **{item_emoji} {item_name}**.",
+    "Today is your lucky day! You got **֍ {amount}** and a **{item_emoji} {item_name}**.",
+    "You found **֍ {amount}** and a **{item_emoji} {item_name}**. Don't spend it all in one place.",
+    "Double trouble! You unearthed **֍ {amount}** and a **{item_emoji} {item_name}**.",
+    "You struck gold! Well, **֍ {amount}** and a **{item_emoji} {item_name}**.",
+    "You found a stash containing **֍ {amount}** and a **{item_emoji} {item_name}**.",
+    "You dug really deep and found **֍ {amount}** plus a **{item_emoji} {item_name}**!",
+    "You found **֍ {amount}** and a **{item_emoji} {item_name}**. Time to celebrate!",
+    "Amazing! You recovered **֍ {amount}** and a **{item_emoji} {item_name}**."
+  ],
+  "fail": [
+    "You dug a hole. You found nothing. You filled the hole back up.",
+    "You found absolutely nothing. Maybe try digging in a better spot?",
+    "You dug until your arms hurt and found... dirt. Just dirt.",
+    "You found a rock. Not a special rock, just a rock.",
+    "You dug a hole and fell in it. You found nothing but embarrassment.",
+    "You found a worm, but it ran away. You got nothing.",
+    "You dug up an old boot. It fell apart. You have nothing.",
+    "You found nothing. Maybe the real treasure was the friends we made along the way?",
+    "You dug for hours and found zilch. Nada. Zero.",
+    "You found a buried sign that said 'Nothing here'. Helpful."
+  ],
+  "loot_table": [
+    { "id": "trash", "chance": 30 },
+    { "id": "apple", "chance": 15 },
+    { "id": "mouse", "chance": 5 },
+    { "id": "keyboard", "chance": 5 },
+    { "id": "camera", "chance": 2 },
+    { "id": "alcohol", "chance": 10 },
+    { "id": "pizza", "chance": 5 },
+    { "id": "adventure_ticket", "chance": 3 },
+    { "id": "bank_note", "chance": 3 },
+    { "id": "padlock", "chance": 3 },
+    { "id": "ancient_coin", "chance": 1 },
+    { "id": "meme_box", "chance": 0.5 },
+    { "id": "dank_box", "chance": 0.1 }
+  ]
+}
