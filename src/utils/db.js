@@ -48,7 +48,8 @@ db.prepare(`
         prestige INTEGER DEFAULT 0,
         level INTEGER DEFAULT 0,
         dig_count INTEGER DEFAULT 0,
-        hunt_count INTEGER DEFAULT 0
+        hunt_count INTEGER DEFAULT 0,
+        fish_count INTEGER DEFAULT 0
     )
 `).run();
 
@@ -61,7 +62,7 @@ const columns = [
     'premium_expires_at', 'selected_title', 'commands_ran', 'items_used', 'shared_coins',
     'plants_harvested', 'slots_won_amount', 'slots_lost_amount', 'slots_played',
     'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played',
-    'god_mode_expires_at', 'prestige', 'level', 'xp', 'dig_count', 'hunt_count'
+    'god_mode_expires_at', 'prestige', 'level', 'xp', 'dig_count', 'hunt_count', 'fish_count'
 ];
 
 columns.forEach(col => {
@@ -334,7 +335,7 @@ const getEffectiveBankCapacity = (userId) => {
 const incrementStat = (userId, stat, amount = 1) => {
     getUser(userId);
     const validStats = [
-        'beg_count', 'search_count', 'crime_count', 'postmemes_count', 'dig_count', 'hunt_count',
+        'beg_count', 'search_count', 'crime_count', 'postmemes_count', 'dig_count', 'hunt_count', 'fish_count',
         'work_earnings', 'slots_wins', 'highlow_wins', 'snakeeyes_wins',
         'rob_coins', 'patreon_months', 'used_2025_last_day',
         'commands_ran', 'items_used', 'shared_coins', 'plants_harvested',
