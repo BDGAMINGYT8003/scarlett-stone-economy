@@ -19,6 +19,7 @@ const categories = {
         { name: '/highlow', description: 'Guess if the secret number is higher or lower!' },
         { name: '/postmemes', description: 'Post a meme to earn money (requires a Laptop).' },
         { name: '/work', description: 'Work shifts to earn money and unlock better jobs.' },
+        { name: '/trivia', description: 'Play a game of trivia for coins and prizes.' },
         { name: '/multipliers', description: 'Check your current coin multipliers.' },
         { name: '/achievements', description: 'View your achievements progress.' },
         { name: '/badges', description: 'View and manage your badges.' },

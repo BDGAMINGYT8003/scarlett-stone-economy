@@ -5,6 +5,7 @@ const commandHandler = require('./handlers/commandHandler');
 const eventHandler = require('./handlers/eventHandler');
 const { startCron } = require('./utils/cron');
 const { startPremiumScheduler } = require('./utils/premiumScheduler');
+const { startTriviaScheduler } = require('./utils/triviaManager');
 
 const client = new Client({
     intents: [
@@ -34,6 +35,7 @@ eventHandler(client);
         // Start Cron Jobs
         startCron();
         startPremiumScheduler(client);
+        startTriviaScheduler();
 
     } catch (error) {
         log(error.message, 'error');

@@ -62,7 +62,7 @@ const columns = [
     'premium_expires_at', 'selected_title', 'commands_ran', 'items_used', 'shared_coins',
     'plants_harvested', 'slots_won_amount', 'slots_lost_amount', 'slots_played',
     'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played',
-    'god_mode_expires_at', 'prestige', 'level', 'xp', 'dig_count', 'hunt_count', 'fish_count'
+    'god_mode_expires_at', 'prestige', 'level', 'xp', 'dig_count', 'hunt_count', 'fish_count', 'trivia_wins'
 ];
 
 columns.forEach(col => {
@@ -340,7 +340,8 @@ const incrementStat = (userId, stat, amount = 1) => {
         'rob_coins', 'patreon_months', 'used_2025_last_day',
         'commands_ran', 'items_used', 'shared_coins', 'plants_harvested',
         'slots_won_amount', 'slots_lost_amount', 'slots_played',
-        'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played'
+        'snakeeyes_won_amount', 'snakeeyes_lost_amount', 'snakeeyes_played',
+        'trivia_wins'
     ];
     if (validStats.includes(stat)) {
         db.prepare(`UPDATE users SET ${stat} = ${stat} + ? WHERE id = ?`).run(amount, userId);

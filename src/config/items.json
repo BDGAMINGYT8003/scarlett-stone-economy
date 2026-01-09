@@ -701,4 +701,18 @@
     "usable": false,
     "usage_info": "Caught while fishing."
   }
+,
+  {
+    "id": "trivia_trophy",
+    "name": "Trivia Trophy",
+    "description": "Awarded for winning trivia games.",
+    "emoji": "<:TriviaTrophy:1033824245077262386>",
+    "type": "Collectable",
+    "rarity": "Common",
+    "buy_price": 0,
+    "sell_price": 500,
+    "net_value": 1000,
+    "usable": false,
+    "usage_info": "Just a shiny trophy."
+  }
 ]
