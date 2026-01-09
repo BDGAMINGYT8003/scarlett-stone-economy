@@ -61,7 +61,8 @@ module.exports = {
                     desc += `${REPLY_CONT} <t:${timestampUnix}:R>\n`;
 
                     if (hasAmount) {
-                        const finalAmountStr = log.amount >= 0 ? `֍ ${log.amount.toLocaleString()}` : `- ֍ ${Math.abs(log.amount).toLocaleString()}`;
+                        const amountVal = log.amount ?? 0;
+                        const finalAmountStr = amountVal >= 0 ? `֍ ${amountVal.toLocaleString()}` : `- ֍ ${Math.abs(amountVal).toLocaleString()}`;
                         // Use REPLY_CONT if items follow, else REPLY
                         const amountEmoji = hasItems ? REPLY_CONT : REPLY;
                         desc += `${amountEmoji} ${finalAmountStr}\n`;
@@ -71,17 +72,10 @@ module.exports = {
                         logItems.forEach((item, index) => {
                             // Use REPLY if it's the last item, else REPLY_CONT
                             const itemEmoji = index === logItems.length - 1 ? REPLY : REPLY_CONT;
-                            // Check if item has a custom emoji, else use default or name
-                            // item structure: { id, name, quantity, emoji }
-                            // If emoji is missing, we might need to lookup, but ideally it's stored.
-                            // If stored emoji is just ID, formatting needed?
-                            // Usually logTransaction callers should store full emoji string or ID.
-                            // Let's assume the caller stores the full emoji string or we format it if we can.
-                            // However, db.logTransaction just stores what passes.
-                            // Best practice: store { name, quantity, emoji: '<:ID:...>' }
 
                             const displayEmoji = item.emoji || '📦';
-                            desc += `${itemEmoji} ${item.quantity.toLocaleString()}x ${displayEmoji} **${item.name}**\n`;
+                            const qty = item.quantity ?? 1;
+                            desc += `${itemEmoji} ${qty.toLocaleString()}x ${displayEmoji} **${item.name}**\n`;
                         });
                     }
 
@@ -114,10 +108,10 @@ module.exports = {
         const response = await interaction.reply({
             embeds: [generateEmbed()],
             components: getComponents(),
-            fetchReply: true
+            withResponse: true
         });
 
-        const collector = response.createMessageComponentCollector({
+        const collector = response.resource.message.createMessageComponentCollector({
             componentType: ComponentType.Button,
             time: 60000
         });
