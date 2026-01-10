@@ -100,15 +100,6 @@ module.exports = {
                     components: [row1, row2]
                 });
             }
-            else if (i.customId.startsWith('equip_')) {
-                const itemId = i.customId.replace('equip_', '');
-                if (session.equipped.includes(itemId)) {
-                    session.equipped = session.equipped.filter(id => id !== itemId);
-                } else {
-                    session.equipped.push(itemId);
-                }
-                await updateItemSelection(i, session);
-            }
             else if (i.customId === 'equip_start') {
                 try {
                     // Start Adventure Loop
@@ -131,6 +122,15 @@ module.exports = {
                     console.error("Error starting adventure:", e);
                     await i.followUp({ content: "An error occurred while starting the adventure.", flags: MessageFlags.Ephemeral });
                 }
+            }
+            else if (i.customId.startsWith('adv_item_')) {
+                const itemId = i.customId.replace('adv_item_', '');
+                if (session.equipped.includes(itemId)) {
+                    session.equipped = session.equipped.filter(id => id !== itemId);
+                } else {
+                    session.equipped.push(itemId);
+                }
+                await updateItemSelection(i, session);
             }
             else if (i.customId === 'adventure_next') {
                 session.nodeIndex++;
@@ -164,7 +164,7 @@ module.exports = {
 
                 if (item) {
                     const btn = new ButtonBuilder()
-                        .setCustomId(`equip_${itemId}`)
+                        .setCustomId(`adv_item_${itemId}`)
                         .setEmoji(item.emoji)
                         .setStyle(session.equipped.includes(itemId) ? ButtonStyle.Primary : ButtonStyle.Secondary)
                         .setDisabled(count === 0);
