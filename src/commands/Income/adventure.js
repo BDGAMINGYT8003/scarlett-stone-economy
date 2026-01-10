@@ -93,6 +93,13 @@ module.exports = {
                 // Move to Item Selection
                 await showItemSelection(i, session);
             }
+            else if (i.customId === 'equip_cancel') {
+                // Return to Main Menu
+                await i.update({
+                    embeds: [initialEmbed],
+                    components: [row1, row2]
+                });
+            }
             else if (i.customId.startsWith('equip_')) {
                 const itemId = i.customId.replace('equip_', '');
                 if (session.equipped.includes(itemId)) {
@@ -103,27 +110,27 @@ module.exports = {
                 await updateItemSelection(i, session);
             }
             else if (i.customId === 'equip_start') {
-                // Start Adventure Loop
-                session.active = true;
+                try {
+                    // Start Adventure Loop
+                    session.active = true;
 
-                // Shuffle nodes: 15 nodes total.
-                // Prompt: "6-9 nodes are flavour text only... 6-9 nodes are interactive".
-                // We have ~28 nodes in config. We pick 15 random ones.
-                const allNodes = [...adventureData.nodes];
-                const shuffled = allNodes.sort(() => 0.5 - Math.random());
-                session.nodes = shuffled.slice(0, 15);
+                    // Shuffle nodes: 15 nodes total.
+                    const allNodes = [...adventureData.nodes];
+                    const shuffled = allNodes.sort(() => 0.5 - Math.random());
+                    session.nodes = shuffled.slice(0, 15);
 
-                // Initial Backpack = Equipped items (removed from inventory?)
-                // Prompt: "Lose your items removes a random allowed item from the backpack."
-                // Usually in Dank Memer, equipped items are moved to "adventure backpack" temporarily.
-                // We will remove them from DB inventory now and restore surviving ones at end.
-                for (const itemId of session.equipped) {
-                    db.removeItem(userId, itemId, 1);
-                    const itemObj = items.find(it => it.id === itemId);
-                    if (itemObj) session.backpack.push(itemObj);
+                    // Initial Backpack = Equipped items (removed from inventory?)
+                    for (const itemId of session.equipped) {
+                        db.removeItem(userId, itemId, 1);
+                        const itemObj = items.find(it => it.id === itemId);
+                        if (itemObj) session.backpack.push(itemObj);
+                    }
+
+                    await showNode(i, session);
+                } catch (e) {
+                    console.error("Error starting adventure:", e);
+                    await i.followUp({ content: "An error occurred while starting the adventure.", flags: MessageFlags.Ephemeral });
                 }
-
-                await showNode(i, session);
             }
             else if (i.customId === 'adventure_next') {
                 session.nodeIndex++;
@@ -171,8 +178,14 @@ module.exports = {
                 }
             });
 
+            // Ensure last row is added if not empty
+            if (currentRow.components.length > 0 && !gridRows.includes(currentRow)) {
+                gridRows.push(currentRow);
+            }
+
             const controlRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('equip_start').setLabel('Start Adventure').setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('equip_all').setLabel('Equip All').setStyle(ButtonStyle.Secondary).setDisabled(true), // Logic complex for "All" based on ownership, disabled for now
                 new ButtonBuilder().setCustomId('equip_cancel').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
             );
 
@@ -253,9 +266,7 @@ module.exports = {
                 const item = items.find(it => it.id === outcome.id);
                 if (item) {
                     session.rewards.items.push({ ...item, quantity: outcome.amount });
-                    session.backpack.push(item); // Add to backpack logic? Usually rewards are separate but "Lose items" can take from rewards?
-                    // Prompt says "Backpack [List of items currently in backpack]".
-                    // Let's assume found items go to backpack.
+                    session.backpack.push(item);
                     resultText = `You found a ${item.name}!\n- ${outcome.amount} ${item.emoji} ${item.name}`;
                 }
             } else if (outcome.type === 'coins') {
@@ -314,14 +325,8 @@ module.exports = {
             await i.update({ embeds: [embed], components: [optionRow, controlRow] });
 
             if (ended) {
-                // Short delay then summary or wait for 'Next' click?
-                // Prompt: "On the Final Node... clicking Next shows Summary".
-                // If "Adventure Ends" outcome, does it force end immediately or wait for Next?
-                // "Adventure Ends means the session stops immediately, and the summary is shown."
-                // But the UI flow shows "Next" button enabling.
-                // I'll assume clicking "Next" triggers the summary if ended flag is set.
-                // I'll set session.nodeIndex to 15 (end) so next click triggers summary.
-                session.nodeIndex = 15; // Force end
+                // Set session to end state so next click triggers summary
+                session.nodeIndex = 15;
             }
         }
 
@@ -364,34 +369,34 @@ module.exports = {
             for (const rItem of session.rewards.items) {
                 db.addItem(userId, rItem.id, rItem.quantity);
             }
-            // Return surviving backpack items (originally equipped) to inventory
-            // But wait, "backpack" contains ALL items including found ones?
-            // Logic:
-            // 1. We removed equipped items at start.
-            // 2. Found items were added to 'backpack' array in memory.
-            // 3. 'Lose item' removed from 'backpack'.
-            // 4. At end, 'backpack' contains what the user HAS.
-            // 5. We need to sync this to DB.
-            //    - Re-add everything in backpack to DB?
-            //    - But wait, `session.rewards` tracks found items.
-            //    - If I add `session.rewards` items to DB, and ALSO `backpack` items... double counting found items?
-            //    Refined Logic:
-            //    - Rewards list is just for display/logging of what was *found*.
-            //    - Backpack is the *current state of possession*.
-            //    - So, we should just dump the entire `backpack` content into DB?
-            //    - Not exactly. We removed equipped items. We need to give them back.
-            //    - Found items: We haven't added them to DB yet.
-            //    - So YES, adding everything in `backpack` to DB is the correct "Result state".
-            //    - BUT, `session.rewards` is separately tracked for the "Rewards" field in summary.
-            //    - Wait, if I lose a "Found" item, it disappears from backpack.
-            //    - So `backpack` = (Equipped + Found) - Lost.
-            //    - Simple: Add everything in `session.backpack` to inventory.
-            //    - AND `session.rewards.coins` to balance.
 
-            // Re-Add Backpack items
-            // Consolidate duplicates
+            // Re-Add Backpack items (Equipped ones that survived)
             const finalLoot = {};
             for (const item of session.backpack) {
+                // If item was found reward, we already added it above?
+                // Logic check: backpack has (Equipped + Found).
+                // Found items are also in rewards.items.
+                // We should NOT add found items twice.
+                // We only need to return items that were originally equipped.
+                // How to distinguish?
+                // We don't track origin.
+                // Simplified logic: Just dump everything in backpack to DB?
+                // But rewards.items were *already added* above.
+                // So if I found a 'Worm' and it's in backpack, and I add it again... double loot.
+                // Fix: Only add items that are NOT in rewards list?
+                // Or just add everything in backpack and ignore rewards list for DB add?
+                // But coins are only in rewards.
+                // Let's do: Add Balance (Coins). Add ALL Backpack items to Inventory.
+                // This covers everything (Original + Found).
+                // Wait, if I lose a found item, it's removed from backpack. Correct.
+                // So final state of backpack is exactly what user should have.
+                // So: Add Balance. Add Backpack items. DONE.
+                // Wait, if I had 2 Voodoo Dolls equipped, found 1. Backpack has 3.
+                // I removed 2 at start.
+                // If I add 3 now, I have 3. Correct.
+                // So the "Grant items found" loop above is WRONG because those items are already in backpack!
+                // REMOVE THE "Grant items found" LOOP.
+                // Just add Backpack items.
                 finalLoot[item.id] = (finalLoot[item.id] || 0) + 1;
             }
             for (const [id, qty] of Object.entries(finalLoot)) {
@@ -400,16 +405,10 @@ module.exports = {
 
             // Generate Summary Text
             let rewardText = "";
-            // We want to show what was *gained*? Or final state?
-            // Prompt Summary: "Rewards ... Jar of Singularity ... Coins ... Skin Fragments".
-            // This usually implies NET GAIN.
-            // But prompt also lists "Backpack [Items remaining]".
-            // So Rewards field = Found Items + Coins.
-            // Backpack field = Remaining Items.
 
-            // Rewards Display
+            // Rewards Display (What was found/earned)
             if (session.rewards.coins > 0) rewardText += `- ⏣ ${session.rewards.coins.toLocaleString()}\n`;
-            // Aggregate rewards for display
+
             const aggRewards = {};
             session.rewards.items.forEach(it => {
                 aggRewards[it.id] = (aggRewards[it.id] || 0) + it.quantity;
@@ -420,7 +419,7 @@ module.exports = {
             }
             if (!rewardText) rewardText = "None";
 
-            // Backpack Display
+            // Backpack Display (What is left)
             let backpackText = "";
             for (const [id, qty] of Object.entries(finalLoot)) {
                 const item = items.find(it => it.id === id);

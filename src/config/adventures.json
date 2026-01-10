@@ -901,6 +901,30 @@
             ]
           }
         ]
+      },
+      {
+        "id": "supernova",
+        "text": "In the distance, you see a supernova. Wow, it’s beautiful.",
+        "options": [
+          {
+            "label": "Continue",
+            "outcomes": [
+              { "type": "none", "text": "Nothing interesting happened", "chance": 100 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "moonman",
+        "text": "You met a moon man! Or a woman? Actually, let's just not assume either way.",
+        "options": [
+          {
+            "label": "Continue",
+            "outcomes": [
+              { "type": "none", "text": "Nothing interesting happened", "chance": 100 }
+            ]
+          }
+        ]
       }
     ]
   }
