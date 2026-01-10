@@ -173,7 +173,7 @@ module.exports = {
 
             const controlRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('equip_start').setLabel('Start Adventure').setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId('equip_cancel').setLabel('Cancel').setStyle(ButtonStyle.Secondary).setDisabled(true) // Not impl
+                new ButtonBuilder().setCustomId('equip_cancel').setLabel('Cancel').setStyle(ButtonStyle.Secondary)
             );
 
             const embed = new EmbedBuilder()
