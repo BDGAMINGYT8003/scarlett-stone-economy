@@ -227,5 +227,24 @@
       "Massive L + Ratio + you fell off. No coins for you.",
       "Absolute skill issue. Get a job."
     ]
+  },
+  {
+    "name": "Lynx",
+    "success_chance": 45,
+    "success_quotes": [
+      "She actually looked away from Character.AI for two seconds and handed you **֍ {amount}**. A miracle.",
+      "She just finished an insanely overdue commission and threw **֍ {amount}** at you so you'd leave her alone."
+    ],
+    "fail_quotes": [
+      "She's having a deeply emotional romance arc with a fake AI boy right now. Do not disturb.",
+      "She tried to pay you with an unfinished sketch. You politely declined and left empty-handed."
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "She accidentally tipped you her entire commission payment! You scored **֍ {amount}** and grabbed her spare **{item_emoji} {item_name}** while she was distracted by her digital husbando.",
+      "item_id": "laptop",
+      "money_min": 2500,
+      "money_max": 6000
+    }
   }
 ]

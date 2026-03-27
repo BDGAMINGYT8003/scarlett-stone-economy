@@ -118,5 +118,35 @@
       "money_min": 10000,
       "money_max": 30000
     }
+  },
+  {
+    "name": "AI Catfishing",
+    "id": "ai_catfishing",
+    "success_chance": 35,
+    "min_coins": 800,
+    "max_coins": 3000,
+    "fine_min": 300,
+    "fine_max": 1500,
+    "outcomes": {
+      "success": [
+        "You convinced a lonely Discord mod that you were a sentient AI anime waifu and scammed them out of **֍ {amount}**. Degeneracy pays.",
+        "You trained a language model to beg for you on Character.AI, bringing in a passive income of **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "The AI went rogue, developed a moral compass, and refused to scam people. Mission failed.",
+        "You got bored roleplaying with a bot and fell asleep before securing the bag."
+      ],
+      "fail_fined": [
+        "The Character.AI filter kicked in and banned you. You paid **֍ {fine}** for a new VPN.",
+        "You accidentally sent the scam link to your own grandma. She fined you **֍ {fine}** out of your inheritance."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "Your AI bot somehow achieved sentience and hacked into the blockchain! It wired you **֍ {amount}** and gifted you a **{item_emoji} {item_name}**.",
+      "item_id": "laptop",
+      "money_min": 3000,
+      "money_max": 8000
+    }
   }
 ]
