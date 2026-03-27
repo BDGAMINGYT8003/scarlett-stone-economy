@@ -7,17 +7,17 @@
     "max_coins": 1000,
     "outcomes": {
       "success": [
-        "You found **֍ {amount}** hidden in the spoiler tags!",
-        "A developer dropped **֍ {amount}** while pushing a commit."
+        "You dug through three layers of NSFW spoiler tags and found **֍ {amount}**. Don't ask what else you saw.",
+        "A rogue mod got demoted and dropped **֍ {amount}** in the general chat. Finders keepers, nerds."
       ],
       "fail": [
-        "You got banned from the server before you could find anything.",
-        "Wumpus chased you away."
+        "You got banned for posting a meme in #general. Touch grass.",
+        "Wumpus smelled your desperation and chased you out of the server."
       ]
     },
     "special_outcome": {
       "chance": 1,
-      "message": "You found a bug bounty! You earned **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You reported a server-crashing bug and actually got paid! You earned **֍ {amount}** and snatched a **{item_emoji} {item_name}**.",
       "item_id": "mouse",
       "money_min": 1000,
       "money_max": 2000
@@ -31,17 +31,17 @@
     "max_coins": 400,
     "outcomes": {
       "success": [
-        "You dug deep into the cushions and found **֍ {amount}**!",
-        "Grandma's loose change! You found **֍ {amount}**."
+        "You reached into the forbidden cushion void and fished out **֍ {amount}**. Smells like stale Doritos.",
+        "You found **֍ {amount}** stuck to a questionable stain. Money is money, right?"
       ],
       "fail": [
-        "You touched something sticky... gross. No coins found.",
-        "You found a spider instead of money. You ran away."
+        "You touched something wet and immediately regretted your life choices. No coins here.",
+        "A family of spiders claimed the couch. You ran away screaming."
       ]
     },
     "special_outcome": {
       "chance": 2,
-      "message": "Jackpot! You stumbled upon **֍ {amount}** and a **{item_emoji} {item_name}** hidden under the old bookshelf. Luck’s on your side!",
+      "message": "You lifted the cushion and found an ancient treasure trove! Take your **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "ancient_coin",
       "money_min": 2500,
       "money_max": 5000
@@ -55,17 +55,17 @@
     "max_coins": 1500,
     "outcomes": {
       "success": [
-        "You found a wallet on the ground containing **֍ {amount}**. Finders keepers!",
-        "A busker gave you **֍ {amount}** for listening to their bad music."
+        "You wrestled a pigeon for a dropped wallet and scored **֍ {amount}**. Alpha male behavior.",
+        "You did a backflip in front of a hipster, and they tipped you **֍ {amount}** out of sheer confusion."
       ],
       "fail": [
-        "You got mugged. Better luck next time.",
-        "It started raining and you ran home empty-handed."
+        "Some middle schoolers called you broke and stole your shoes. Absolute L.",
+        "You stepped in a massive puddle and went home to cry."
       ]
     },
     "special_outcome": {
       "chance": 2,
-      "message": "You found a stash on the street! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You dug through a suspiciously clean dumpster and found **֍ {amount}** alongside a **{item_emoji} {item_name}**.",
       "item_id": "trash",
       "money_min": 100,
       "money_max": 500
@@ -79,12 +79,12 @@
     "max_coins": 100,
     "outcomes": {
       "success": [
-        "Oh look, you forgot you had **֍ {amount}** in there.",
-        "Washed jeans money! You found **֍ {amount}**."
+        "You checked your crusty old jeans and found **֍ {amount}**. Laundry day pays off.",
+        "You pulled out **֍ {amount}** and a lint ball. At least one of them is useful."
       ],
       "fail": [
-        "Just lint.",
-        "There's a hole in your pocket..."
+        "Your pockets are as empty as your DMs.",
+        "You pushed too hard and tore a hole in your pocket. Smooth brain move."
       ]
     }
   },
@@ -96,17 +96,17 @@
     "max_coins": 3000,
     "outcomes": {
       "success": [
-        "You found a rare antique worth **֍ {amount}**!",
-        "Grandpa's secret stash! You found **֍ {amount}**."
+        "You sold your grandpa's haunted urn for **֍ {amount}**. The ghost is someone else's problem now.",
+        "You found a mint-condition comic book and pawned it for **֍ {amount}**. Capitalism wins again."
       ],
       "fail": [
-        "It's just full of dust and disappointment.",
-        "A raccoon attacked you. You fled."
+        "You sneezed so hard from the dust that you fell down the stairs.",
+        "A feral raccoon claimed the attic. You are not the alpha here."
       ]
     },
     "special_outcome": {
       "chance": 1,
-      "message": "You found a hidden safe in the attic! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You cracked open a creepy hidden safe! Inside was **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "camera",
       "money_min": 2000,
       "money_max": 5000
@@ -120,20 +120,44 @@
     "max_coins": 2000,
     "outcomes": {
       "success": [
-        "Pennywise wasn't home, so you stole **֍ {amount}**.",
-        "You found a bag of waterproof cash containing **֍ {amount}**."
+        "You mugged a mutated rat and took its **֍ {amount}**. Survival of the fittest.",
+        "You fished **֍ {amount}** out of some questionable sludge. Wash your hands, dude."
       ],
       "fail": [
-        "It smells terrible and you found nothing.",
-        "You saw a red balloon and noped out of there."
+        "The smell alone dealt psychic damage. You passed out.",
+        "A clown offered you a balloon, and you sprinted out in absolute terror."
       ]
     },
     "special_outcome": {
       "chance": 1,
-      "message": "You found a mutant turtle's stash! **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You found a secret ninja hideout! You swiped **֍ {amount}** and a fresh **{item_emoji} {item_name}**.",
       "item_id": "pizza",
       "money_min": 500,
       "money_max": 1500
+    }
+  },
+  {
+    "name": "Lynx's Home",
+    "id": "lynxs_home",
+    "success_chance": 40,
+    "min_coins": 500,
+    "max_coins": 2000,
+    "outcomes": {
+      "success": [
+        "You quietly swiped **֍ {amount}** from her art commission stash while she was too busy designing a new OC.",
+        "She paid you **֍ {amount}** just to listen to her infodump about an indie movie. Easy money."
+      ],
+      "fail": [
+        "You tried to sneak around, but she threw a stylus at your head. Total critical hit.",
+        "She was too busy having a deeply emotional romance arc with a character.ai bot to notice you, but you tripped over her drawing tablet and had to flee."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You somehow survived the sheer chaos of her room and found **֍ {amount}** plus a **{item_emoji} {item_name}**. An absolute cinematic masterpiece of a heist.",
+      "item_id": "laptop",
+      "money_min": 2000,
+      "money_max": 5000
     }
   }
 ]

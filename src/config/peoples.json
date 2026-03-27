@@ -3,16 +3,16 @@
     "name": "Elon Musk",
     "success_chance": 30,
     "success_quotes": [
-      "Fine, take **֍ {amount}**. Don't spend it all on Dogecoin.",
-      "I'm feeling generous today. Have **֍ {amount}** and go to Mars."
+      "Whatever, take **֍ {amount}**. Just don't spend it all on some shitcoin.",
+      "I'm feeling magnanimous. Have **֍ {amount}** and a one-way ticket to Mars."
     ],
     "fail_quotes": [
-      "I'm too busy tweeting to give you money.",
-      "Crypto is down, ask me later."
+      "I'm too busy shitposting on X to give you a dime.",
+      "Doge is down. My net worth is ruined. Ask me later."
     ],
     "special_outcome": {
       "chance": 1,
-      "message": "Elon Musk liked your meme! He gave you **֍ {amount}** and a **{item_emoji} {item_name}** he found in his rocket.",
+      "message": "Elon replied '!' to your meme! He wired you **֍ {amount}** and threw in a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
       "money_min": 1000,
       "money_max": 5000
@@ -22,28 +22,28 @@
     "name": "The Rock",
     "success_chance": 50,
     "success_quotes": [
-      "It doesn't matter what you want! But here is **֍ {amount}** anyway.",
-      "I see you working hard. Take **֍ {amount}**."
+      "It doesn't matter what your sob story is! But take this **֍ {amount}** anyway.",
+      "I respect the hustle. Here is **֍ {amount}**, now go hit the gym."
     ],
     "fail_quotes": [
-      "Can you smell what The Rock is cooking? It's rejection.",
-      "Focus and drive. Earn your own money."
+      "Can you smell what The Rock is cooking? Yeah, it's utter rejection.",
+      "You lack drive. You lack power. Stay broke."
     ]
   },
   {
     "name": "Your Mom",
     "success_chance": 90,
     "success_quotes": [
-      "Oh honey, of course! Here is **֍ {amount}** for ice cream.",
-      "Don't tell your father I gave you **֍ {amount}**."
+      "Oh sweetie, of course! Here's **֍ {amount}** for your little video games.",
+      "Take **֍ {amount}**, but don't tell your dad. He thinks you need a job."
     ],
     "fail_quotes": [
-      "We have food at home.",
-      "Go clean your room first."
+      "We literally have food at home. Stop asking for UberEats money.",
+      "Go clean your depression room first, then we'll talk."
     ],
     "special_outcome": {
       "chance": 2,
-      "message": "Mom loves you! She gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "Mom says you're handsome! She slipped you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "apple",
       "money_min": 500,
       "money_max": 2000
@@ -53,16 +53,16 @@
     "name": "Gordon Ramsay",
     "success_chance": 20,
     "success_quotes": [
-      "Finally, some good begging. Take **֍ {amount}** and get out.",
-      "Here is **֍ {amount}**. Now don't be an idiot sandwich."
+      "Finally, a beggar with some actual finesse. Take **֍ {amount}** and piss off.",
+      "Here is **֍ {amount}**. Now stop acting like an absolute donkey."
     ],
     "fail_quotes": [
-      "THIS BEGGING IS RAW!",
-      "Get out of my kitchen!"
+      "YOUR BEGGING IS RAW! YOU ABSOLUTE DONUT!",
+      "Get the f*** out of my kitchen! You're a disgrace!"
     ],
     "special_outcome": {
       "chance": 1,
-      "message": "Gordon Ramsay loved your dish! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "Gordon actually liked your cooking! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
       "money_min": 1000,
       "money_max": 3000
@@ -72,28 +72,28 @@
     "name": "Shrek",
     "success_chance": 60,
     "success_quotes": [
-      "Get out of my swamp! But take **֍ {amount}** with you.",
-      "Better out than in, I always say. Have **֍ {amount}**."
+      "Get out of my swamp! But take **֍ {amount}** for the road.",
+      "Ogres have layers, and so does my wallet. Have **֍ {amount}**."
     ],
     "fail_quotes": [
-      "This is my swamp.",
-      "Donkey, get him out of here."
+      "What are you doing in my swamp?! Leave!",
+      "Donkey! Get this broke weirdo away from me."
     ]
   },
   {
     "name": "Santa Claus",
     "success_chance": 70,
     "success_quotes": [
-      "You've been good this year. Ho ho ho, take **֍ {amount}**!",
-      "Here is **֍ {amount}** from my sack."
+      "You've been mildly adequate this year. Ho ho ho, take **֍ {amount}**!",
+      "I found **֍ {amount}** at the bottom of my sack. Enjoy, kiddo."
     ],
     "fail_quotes": [
-      "You're on the naughty list.",
-      "Coal for you."
+      "I saw your search history. You're definitely on the naughty list.",
+      "You're getting coal, and frankly, you deserve it."
     ],
     "special_outcome": {
       "chance": 2,
-      "message": "Santa checked his list twice! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "Santa felt pity for your pathetic life! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "beggars_bowl",
       "money_min": 2500,
       "money_max": 5000
@@ -103,16 +103,16 @@
     "name": "MrBeast",
     "success_chance": 40,
     "success_quotes": [
-      "I just bought this Discord server! Here, have **֍ {amount}**.",
-      "First person to touch this message gets **֍ {amount}**!"
+      "I just bought the entire economy! Here, have **֍ {amount}** for no reason.",
+      "First person to blink gets **֍ {amount}**! You win!"
     ],
     "fail_quotes": [
-      "Subscribe to my channel first.",
-      "I gave away all my money in the last video."
+      "You forgot to use code Beast at checkout. No money for you.",
+      "I just gave my last million to a random toddler. Sorry."
     ],
     "special_outcome": {
       "chance": 0.5,
-      "message": "You won the challenge! MrBeast gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You survived 100 days in a circle! MrBeast handed you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
       "money_min": 10000,
       "money_max": 50000
@@ -122,40 +122,40 @@
     "name": "Wendy's",
     "success_chance": 35,
     "success_quotes": [
-      "Roasted you on Twitter, so here is **֍ {amount}** as compensation.",
-      "Fresh, never frozen coins. **֍ {amount}** for you."
+      "We ratioed you so hard on Twitter we actually felt bad. Here is **֍ {amount}**.",
+      "Fresh, never frozen, and neither is our cash flow. Take **֍ {amount}**."
     ],
     "fail_quotes": [
-      "Sir, this is a Wendy's.",
-      "Go to McDonald's if you want cheap handouts."
+      "Sir, this is literally a Wendy's. Stop begging at the drive-thru.",
+      "Go cry to McDonald's if you want cheap handouts."
     ]
   },
   {
     "name": "Rick Astley",
     "success_chance": 100,
     "success_quotes": [
-      "Never gonna give you up, but I will give you **֍ {amount}**.",
-      "I just want to tell you how I'm feeling. Have **֍ {amount}**."
+      "Never gonna give you up, but I will give you **֍ {amount}**. Enjoy the meme.",
+      "I know the rules, and so do you. Have **֍ {amount}**."
     ],
     "fail_quotes": [
-      "Never gonna let you down (except right now).",
-      "I wouldn't give you up, but I won't give you cash."
+      "Never gonna let you down... except right now. You get nothing.",
+      "I wouldn't give you up, but I sure won't give you my cash."
     ]
   },
   {
     "name": "Batman",
     "success_chance": 25,
     "success_quotes": [
-      "I'm rich. **֍ {amount}** is nothing to me.",
-      "Justice isn't free, but here is **֍ {amount}**."
+      "I'm a billionaire. **֍ {amount}** is basically pocket lint to me.",
+      "Justice isn't free, but I guess I can spare **֍ {amount}**."
     ],
     "fail_quotes": [
-      "I work alone.",
-      "WHERE IS SHE? (Also, no money for you)"
+      "I work alone. Stop asking me for child support.",
+      "WHERE ARE THE DRUGS?! Also, I'm not giving you money."
     ],
     "special_outcome": {
       "chance": 1,
-      "message": "Batman needs help! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "Batman accidentally dropped his utility belt! You scored **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "padlock",
       "money_min": 2000,
       "money_max": 4000
@@ -165,16 +165,16 @@
     "name": "SpongeBob",
     "success_chance": 80,
     "success_quotes": [
-      "I'm ready! To give you **֍ {amount}**!",
-      "It's the best day ever! Take **֍ {amount}**."
+      "I'm ready! I'm ready! To hand you **֍ {amount}**!",
+      "It's the best day ever! Have some of Mr. Krabs' money: **֍ {amount}**."
     ],
     "fail_quotes": [
-      "I need these for Gary's food.",
-      "Barnacles! I'm broke."
+      "I spent it all on snail food for Gary. Sorry!",
+      "Barnacles! I'm completely broke."
     ],
     "special_outcome": {
       "chance": 2,
-      "message": "Oh hey, here’s something for you, take **֍ {amount}** and this **{item_emoji} {item_name}**. Don’t spend it all on candy!",
+      "message": "SpongeBob found a secret formula! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "beggars_bowl",
       "money_min": 1500,
       "money_max": 3000
@@ -184,48 +184,48 @@
     "name": "Deadpool",
     "success_chance": 50,
     "success_quotes": [
-      "Maximum effort! Here is **֍ {amount}**.",
-      "Did I leave the stove on? Anyway, take **֍ {amount}**."
+      "Maximum effort! Here is **֍ {amount}** to cover your therapy bills.",
+      "Did I leave the stove on? Who cares, take **֍ {amount}**."
     ],
     "fail_quotes": [
-      "I spent it all on chimichangas.",
-      "Fourth wall break: The dev said no."
+      "I blew my entire budget on chimichangas and baby oil.",
+      "Fourth wall break: the developer specifically coded me to say no."
     ]
   },
   {
     "name": "Thanos",
     "success_chance": 50,
     "success_quotes": [
-      "Perfectly balanced, as all things should be. Have **֍ {amount}**.",
-      "I ignored my destiny once to give you **֍ {amount}**."
+      "Perfectly balanced, as all things should be. Have exactly **֍ {amount}**.",
+      "I ignored my destiny for five seconds just to give you **֍ {amount}**."
     ],
     "fail_quotes": [
-      "Reality is often disappointing.",
-      "You should have gone for the head."
+      "Reality is often disappointing. Especially your bank account.",
+      "You should have gone for the head. Instead, you get nothing."
     ]
   },
   {
     "name": "Karen",
     "success_chance": 10,
     "success_quotes": [
-      "I spoke to the manager and got a refund. Here is **֍ {amount}**.",
-      "Fine! Take **֍ {amount}** and leave me alone!"
+      "I screamed at the manager until they gave me a refund. Here is **֍ {amount}**.",
+      "Fine! Take **֍ {amount}** and stop recording me for TikTok!"
     ],
     "fail_quotes": [
-      "I want to speak to your manager.",
-      "I'm calling the police."
+      "I am calling the HOA, the police, and your mother.",
+      "Where is the manager of this Discord server?!"
     ]
   },
   {
     "name": "Dank Memer",
     "success_chance": 15,
     "success_quotes": [
-      "I'm the OG. Take **֍ {amount}**.",
-      "Pls beg... wait, that's old school. Here's **֍ {amount}**."
+      "I'm the OG bot around here. Take **֍ {amount}** and put some respect on my name.",
+      "You're lucky I'm not making you type `pls beg`. Here is **֍ {amount}**."
     ],
     "fail_quotes": [
-      "L + Ratio.",
-      "Skill issue."
+      "Massive L + Ratio + you fell off. No coins for you.",
+      "Absolute skill issue. Get a job."
     ]
   }
 ]

@@ -9,21 +9,21 @@
     "fine_max": 1000,
     "outcomes": {
       "success": [
-        "You successfully filed your taxes as a 'sovereign citizen' and saved **֍ {amount}**.",
-        "The IRS was too busy auditing a lemonade stand, so you kept **֍ {amount}**."
+        "You claimed your 14 fictional children as dependents and kept **֍ {amount}**. Take that, government.",
+        "The IRS was too busy investigating a Twitch streamer. You successfully hid **֍ {amount}** in an offshore account."
       ],
       "fail_safe": [
-        "You got scared of an audit and paid your taxes normally.",
-        "Your accountant advised against it."
+        "You remembered Al Capone went to jail for taxes and chickened out. You paid in full.",
+        "Your accountant yelled at you for trying to write off V-Bucks. Mission aborted."
       ],
       "fail_fined": [
-        "The IRS caught you and you had to pay **֍ {fine}** in back taxes.",
-        "You got audited and fined **֍ {fine}** for claiming your cat as a dependent."
+        "The IRS kicked down your door and forced you to pay **֍ {fine}** in back taxes. Huge L.",
+        "You got audited for claiming a houseplant as a business expense and lost **֍ {fine}**."
       ]
     },
     "special_outcome": {
       "chance": 2,
-      "message": "You found **֍ {amount}** after robbing poor people begging on the highway and also found a **{item_emoji} {item_name}**!",
+      "message": "You completely bamboozled the IRS and stole **֍ {amount}** straight from their budget! They even sent you a **{item_emoji} {item_name}** by mistake.",
       "item_id": "beggars_bowl",
       "money_min": 1000,
       "money_max": 2000
@@ -39,21 +39,21 @@
     "fine_max": 400,
     "outcomes": {
       "success": [
-        "You stole a candy bar and sold it on the black market for **֍ {amount}**.",
-        "You walked out with a new TV under your shirt. Sold it for **֍ {amount}**."
+        "You slipped a PS5 into your overly baggy pants and sold it for **֍ {amount}**. Stealth 100.",
+        "You simply walked out with an entire display rack. Nobody noticed, and you fenced it for **֍ {amount}**."
       ],
       "fail_safe": [
-        "The store manager glared at you, so you put the item back.",
-        "Your conscience got the better of you."
+        "The elderly greeter stared directly into your soul. You put the items back.",
+        "You felt a sudden wave of guilt and left the store empty-handed."
       ],
       "fail_fined": [
-        "Security tackled you. You paid **֍ {fine}** to avoid jail.",
-        "You were caught on camera and fined **֍ {fine}**."
+        "Paul Blart tackled you into a pyramid of soup cans. You paid **֍ {fine}** to avoid jail time.",
+        "You set off the alarm and got publically shamed. Hand over **֍ {fine}**."
       ]
     },
     "special_outcome": {
       "chance": 2,
-      "message": "You raided the store and found **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You accidentally walked into the backroom and found the manager's secret stash! You snagged **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
       "money_min": 500,
       "money_max": 1500
@@ -69,21 +69,21 @@
     "fine_max": 2500,
     "outcomes": {
       "success": [
-        "You stole a developer's identity and gave yourself **֍ {amount}**.",
-        "You became a Nigerian Prince for a day and earned **֍ {amount}**."
+        "You catfished a lonely billionaire and scammed them out of **֍ {amount}**. Absolutely ruthless.",
+        "You posed as the CEO and authorized a **֍ {amount}** bonus for yourself. Corporate espionage pays off."
       ],
       "fail_safe": [
-        "You couldn't guess their password: 'password123' was wrong.",
-        "You felt bad and logged out."
+        "They used 2FA. Your hacker dreams are ruined.",
+        "You couldn't guess their security question: 'Name of your first pet'. Who even remembers that?"
       ],
       "fail_fined": [
-        "You hacked into your own router and fined yourself **֍ {fine}** for stupidity.",
-        "The cyber police backtraced you. You paid **֍ {fine}** in legal fees."
+        "You accidentally stole the identity of an undercover FBI agent. You had to pay **֍ {fine}** for a lawyer.",
+        "You downloaded a 'free RAM' virus and hacked yourself. You lost **֍ {fine}** fixing your PC."
       ]
     },
     "special_outcome": {
       "chance": 1,
-      "message": "You stole someone's identity completely! You got **֍ {amount}** and their **{item_emoji} {item_name}**.",
+      "message": "You successfully stole a celebrity's verified Twitter account! You extorted them for **֍ {amount}** and forced them to mail you a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
       "money_min": 2000,
       "money_max": 5000
@@ -99,21 +99,21 @@
     "fine_max": 8000,
     "outcomes": {
       "success": [
-        "You cracked the vault and ran away with **֍ {amount}**!",
-        "The teller was asleep. Easy **֍ {amount}**."
+        "You pulled off an Ocean's 11 level heist and escaped with **֍ {amount}**. Smooth criminal.",
+        "You literally just asked the teller nicely and they handed you **֍ {amount}**. Speech level 100."
       ],
       "fail_safe": [
-        "The bank was closed. You went home.",
-        "You forgot your mask and decided to abort the mission."
+        "Your getaway driver overslept. Mission compromised.",
+        "You forgot the vault code and stood there awkwardly until closing time."
       ],
       "fail_fined": [
-        "You tripped over a laser and had to pay **֍ {fine}** for damages.",
-        "You attempted a high level heist but tripped over your own shoelaces and had to pay **֍ {fine}** in fines for public clumsiness."
+        "You sneezed while cutting the laser grid and triggered the alarm. You paid **֍ {fine}** in fines.",
+        "You got stuck in the air vents like a complete idiot. The extraction crew charged you **֍ {fine}**."
       ]
     },
     "special_outcome": {
       "chance": 0.5,
-      "message": "Jackpot! You cleaned out the vault! You got **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "message": "You bypassed the lasers, cracked the ultimate safe, and became a legend! You stole **֍ {amount}** and the mythical **{item_emoji} {item_name}**.",
       "item_id": "bank_note",
       "money_min": 10000,
       "money_max": 30000
