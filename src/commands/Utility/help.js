@@ -69,7 +69,7 @@ module.exports = {
                 .setFooter({ text: `Page ${page + 1} of ${maxPages}` });
 
             currentCommands.forEach(cmd => {
-                embed.addFields({ name: cmd.name, value: cmd.description });
+                embed.addFields({ name: cmd.name, value: '-# ' + cmd.description });
             });
 
             return embed;
