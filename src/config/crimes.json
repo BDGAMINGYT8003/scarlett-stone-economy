@@ -3,10 +3,10 @@
     "name": "Tax Evasion",
     "id": "tax_evasion",
     "success_chance": 45,
-    "min_coins": 500,
-    "max_coins": 2000,
-    "fine_min": 200,
-    "fine_max": 1000,
+    "min_coins": 2458,
+    "max_coins": 4958,
+    "fine_min": 916,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You successfully filed your taxes as a 'sovereign citizen' and saved **\u058d {amount}**.",
@@ -25,18 +25,18 @@
       "chance": 2,
       "message": "You found **\u058d {amount}** after robbing poor people begging on the highway and also found a **{item_emoji} {item_name}**!",
       "item_id": "beggars_bowl",
-      "money_min": 1000,
-      "money_max": 2000
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Shoplifting",
     "id": "shoplifting",
     "success_chance": 55,
-    "min_coins": 100,
-    "max_coins": 800,
-    "fine_min": 50,
-    "fine_max": 400,
+    "min_coins": 2041,
+    "max_coins": 4542,
+    "fine_min": 1083,
+    "fine_max": 2375,
     "outcomes": {
       "success": [
         "You stole a candy bar and sold it on the black market for **\u058d {amount}**.",
@@ -55,18 +55,18 @@
       "chance": 2,
       "message": "You raided the store and found **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 500,
-      "money_max": 1500
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Identity Theft",
     "id": "identity_theft",
     "success_chance": 30,
-    "min_coins": 1000,
-    "max_coins": 4000,
-    "fine_min": 500,
-    "fine_max": 2500,
+    "min_coins": 3083,
+    "max_coins": 5583,
+    "fine_min": 666,
+    "fine_max": 1750,
     "outcomes": {
       "success": [
         "You stole a developer's identity and gave yourself **\u058d {amount}**.",
@@ -85,18 +85,18 @@
       "chance": 1,
       "message": "You stole someone's identity completely! You got **\u058d {amount}** and their **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Bank Heist",
     "id": "bank_heist",
     "success_chance": 20,
-    "min_coins": 5000,
-    "max_coins": 15000,
-    "fine_min": 2000,
-    "fine_max": 8000,
+    "min_coins": 3500,
+    "max_coins": 6000,
+    "fine_min": 500,
+    "fine_max": 1501,
     "outcomes": {
       "success": [
         "You cracked the vault and ran away with **\u058d {amount}**!",
@@ -115,18 +115,18 @@
       "chance": 0.5,
       "message": "Jackpot! You cleaned out the vault! You got **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "bank_note",
-      "money_min": 10000,
-      "money_max": 30000
+      "money_min": 15000,
+      "money_max": 25000
     }
   },
   {
     "name": "Jaywalking",
     "id": "jaywalking",
     "success_chance": 53,
-    "min_coins": 556,
-    "max_coins": 3587,
-    "fine_min": 363,
-    "fine_max": 1853,
+    "min_coins": 2125,
+    "max_coins": 4625,
+    "fine_min": 1050,
+    "fine_max": 2325,
     "outcomes": {
       "success": [
         "You successfully crossed the street and found **\u058d {amount}** on the asphalt.",
@@ -145,18 +145,18 @@
       "chance": 0.5606404122070011,
       "message": "You caused a 10-car pileup! You looted **\u058d {amount}** and a **{item_emoji} {item_name}** from the wreckage.",
       "item_id": "trash",
-      "money_min": 3244,
-      "money_max": 9049
+      "money_min": 14636,
+      "money_max": 24596
     }
   },
   {
     "name": "Pirating Movies",
     "id": "pirating_movies",
     "success_chance": 21,
-    "min_coins": 938,
-    "max_coins": 1761,
-    "fine_min": 499,
-    "fine_max": 1556,
+    "min_coins": 3458,
+    "max_coins": 5958,
+    "fine_min": 516,
+    "fine_max": 1525,
     "outcomes": {
       "success": [
         "You seeded a torrent and made **\u058d {amount}** in crypto donations.",
@@ -175,18 +175,18 @@
       "chance": 1.3602130479520977,
       "message": "You stole the only copy of a blockbuster! You sold it for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3254,
-      "money_max": 8814
+      "money_min": 9839,
+      "money_max": 19271
     }
   },
   {
     "name": "NFT Heist",
     "id": "nft_heist",
     "success_chance": 31,
-    "min_coins": 334,
-    "max_coins": 2106,
-    "fine_min": 53,
-    "fine_max": 1777,
+    "min_coins": 3041,
+    "max_coins": 5541,
+    "fine_min": 683,
+    "fine_max": 1775,
     "outcomes": {
       "success": [
         "You successfully screenshotted a monkey and sold it for **\u058d {amount}**.",
@@ -205,18 +205,18 @@
       "chance": 1.7686032450737337,
       "message": "You rugged the entire project! You escaped with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2820,
-      "money_max": 6019
+      "money_min": 7389,
+      "money_max": 16551
     }
   },
   {
     "name": "Stealing Memes",
     "id": "stealing_memes",
     "success_chance": 23,
-    "min_coins": 411,
-    "max_coins": 3090,
-    "fine_min": 493,
-    "fine_max": 1679,
+    "min_coins": 3375,
+    "max_coins": 5875,
+    "fine_min": 550,
+    "fine_max": 1575,
     "outcomes": {
       "success": [
         "You reposted a meme to Instagram and made **\u058d {amount}** in ad revenue.",
@@ -235,18 +235,18 @@
       "chance": 1.193481619781498,
       "message": "You became a professional meme account! You earn **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2048,
-      "money_max": 8435
+      "money_min": 10839,
+      "money_max": 20381
     }
   },
   {
     "name": "Discord Nitro Fraud",
     "id": "nitro_fraud",
     "success_chance": 20,
-    "min_coins": 756,
-    "max_coins": 1535,
-    "fine_min": 486,
-    "fine_max": 1355,
+    "min_coins": 3500,
+    "max_coins": 6000,
+    "fine_min": 500,
+    "fine_max": 1501,
     "outcomes": {
       "success": [
         "You scammed a kid with a fake Nitro link and made **\u058d {amount}**.",
@@ -265,18 +265,18 @@
       "chance": 0.5132924910382425,
       "message": "You hacked the Discord mainframe! You spawned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2951,
-      "money_max": 6867
+      "money_min": 14920,
+      "money_max": 24911
     }
   },
   {
     "name": "DDoS Attack",
     "id": "ddos_attack",
     "success_chance": 40,
-    "min_coins": 928,
-    "max_coins": 3238,
-    "fine_min": 349,
-    "fine_max": 1637,
+    "min_coins": 2666,
+    "max_coins": 5167,
+    "fine_min": 833,
+    "fine_max": 2000,
     "outcomes": {
       "success": [
         "You knocked a Minecraft server offline and extorted them for **\u058d {amount}**.",
@@ -295,18 +295,18 @@
       "chance": 1.5691427250036254,
       "message": "You took down the entire internet! You held it ransom for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2977,
-      "money_max": 9224
+      "money_min": 8585,
+      "money_max": 17880
     }
   },
   {
     "name": "Selling Bathwater",
     "id": "selling_bathwater",
     "success_chance": 28,
-    "min_coins": 839,
-    "max_coins": 2405,
-    "fine_min": 323,
-    "fine_max": 1592,
+    "min_coins": 3166,
+    "max_coins": 5666,
+    "fine_min": 633,
+    "fine_max": 1700,
     "outcomes": {
       "success": [
         "You bottled tap water, claimed it was yours, and made **\u058d {amount}**.",
@@ -325,18 +325,18 @@
       "chance": 1.6143454623681985,
       "message": "You started a massive bathwater empire! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 3651,
-      "money_max": 5056
+      "money_min": 8314,
+      "money_max": 17579
     }
   },
   {
     "name": "Scalping PS5s",
     "id": "scalping_ps5s",
     "success_chance": 43,
-    "min_coins": 991,
-    "max_coins": 3898,
-    "fine_min": 383,
-    "fine_max": 1550,
+    "min_coins": 2541,
+    "max_coins": 5042,
+    "fine_min": 883,
+    "fine_max": 2075,
     "outcomes": {
       "success": [
         "You bought 10 consoles and resold them for **\u058d {amount}**.",
@@ -355,18 +355,18 @@
       "chance": 1.549949250494643,
       "message": "You controlled the entire supply chain! You made **\u058d {amount}** and kept a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3477,
-      "money_max": 8976
+      "money_min": 8701,
+      "money_max": 18008
     }
   },
   {
     "name": "Stream Sniping",
     "id": "stream_sniping",
     "success_chance": 26,
-    "min_coins": 948,
-    "max_coins": 1697,
-    "fine_min": 304,
-    "fine_max": 987,
+    "min_coins": 3250,
+    "max_coins": 5750,
+    "fine_min": 600,
+    "fine_max": 1650,
     "outcomes": {
       "success": [
         "You killed a famous streamer and got paid **\u058d {amount}** to leave them alone.",
@@ -385,18 +385,18 @@
       "chance": 1.3822368180355147,
       "message": "You sniped the biggest streamer in the world! You gained fame, **\u058d {amount}**, and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2043,
-      "money_max": 6685
+      "money_min": 9707,
+      "money_max": 19124
     }
   },
   {
     "name": "Cyberbullying",
     "id": "cyberbullying",
     "success_chance": 20,
-    "min_coins": 515,
-    "max_coins": 3506,
-    "fine_min": 50,
-    "fine_max": 1665,
+    "min_coins": 3500,
+    "max_coins": 6000,
+    "fine_min": 500,
+    "fine_max": 1501,
     "outcomes": {
       "success": [
         "You trolled someone so hard they paid you **\u058d {amount}** to stop.",
@@ -415,18 +415,18 @@
       "chance": 1.9494416032904764,
       "message": "You became the ultimate menace! You extorted **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3076,
-      "money_max": 8690
+      "money_min": 6304,
+      "money_max": 15347
     }
   },
   {
     "name": "Stealing Wi-Fi",
     "id": "stealing_wifi",
     "success_chance": 26,
-    "min_coins": 503,
-    "max_coins": 3766,
-    "fine_min": 447,
-    "fine_max": 1885,
+    "min_coins": 3250,
+    "max_coins": 5750,
+    "fine_min": 600,
+    "fine_max": 1650,
     "outcomes": {
       "success": [
         "You hacked your neighbor's Wi-Fi and mined crypto for **\u058d {amount}**.",
@@ -445,18 +445,18 @@
       "chance": 1.716763266873666,
       "message": "You hijacked the entire neighborhood's internet! You made **\u058d {amount}** and got a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2636,
-      "money_max": 6537
+      "money_min": 7700,
+      "money_max": 16897
     }
   },
   {
     "name": "Fake Giveaway",
     "id": "fake_giveaway",
     "success_chance": 35,
-    "min_coins": 221,
-    "max_coins": 3332,
-    "fine_min": 486,
-    "fine_max": 1193,
+    "min_coins": 2875,
+    "max_coins": 5375,
+    "fine_min": 750,
+    "fine_max": 1875,
     "outcomes": {
       "success": [
         "You hosted a fake iPhone giveaway and farmed **\u058d {amount}** in ad revenue.",
@@ -475,18 +475,18 @@
       "chance": 1.0616859630940447,
       "message": "You pulled off the biggest scam in history! You stole **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2841,
-      "money_max": 6183
+      "money_min": 11630,
+      "money_max": 21259
     }
   },
   {
     "name": "Botting Followers",
     "id": "botting_followers",
     "success_chance": 36,
-    "min_coins": 874,
-    "max_coins": 3797,
-    "fine_min": 448,
-    "fine_max": 1569,
+    "min_coins": 2833,
+    "max_coins": 5333,
+    "fine_min": 766,
+    "fine_max": 1900,
     "outcomes": {
       "success": [
         "You botted your Instagram and got a brand deal worth **\u058d {amount}**.",
@@ -505,18 +505,18 @@
       "chance": 1.2634814217066266,
       "message": "You became a fake influencer! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3510,
-      "money_max": 9529
+      "money_min": 10419,
+      "money_max": 19915
     }
   },
   {
     "name": "Embezzlement",
     "id": "embezzlement",
     "success_chance": 33,
-    "min_coins": 486,
-    "max_coins": 1974,
-    "fine_min": 153,
-    "fine_max": 1541,
+    "min_coins": 2958,
+    "max_coins": 5458,
+    "fine_min": 716,
+    "fine_max": 1825,
     "outcomes": {
       "success": [
         "You siphoned company funds into your offshore account, making **\u058d {amount}**.",
@@ -535,18 +535,18 @@
       "chance": 1.6627955061947548,
       "message": "You successfully robbed a Fortune 500 company! You escaped with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2376,
-      "money_max": 9934
+      "money_min": 8024,
+      "money_max": 17256
     }
   },
   {
     "name": "Stealing Emojis",
     "id": "stealing_emojis",
     "success_chance": 58,
-    "min_coins": 465,
-    "max_coins": 3149,
-    "fine_min": 178,
-    "fine_max": 998,
+    "min_coins": 1916,
+    "max_coins": 4417,
+    "fine_min": 1133,
+    "fine_max": 2450,
     "outcomes": {
       "success": [
         "You stole premium emojis and sold them on the black market for **\u058d {amount}**.",
@@ -565,18 +565,18 @@
       "chance": 0.9668523870858947,
       "message": "You monopolized all the good emojis! You made **\u058d {amount}** and got a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3954,
-      "money_max": 6788
+      "money_min": 12199,
+      "money_max": 21891
     }
   },
   {
     "name": "Rigging Polls",
     "id": "rigging_polls",
     "success_chance": 40,
-    "min_coins": 771,
-    "max_coins": 1656,
-    "fine_min": 227,
-    "fine_max": 1483,
+    "min_coins": 2666,
+    "max_coins": 5167,
+    "fine_min": 833,
+    "fine_max": 2000,
     "outcomes": {
       "success": [
         "You botted a Twitter poll and won a bet for **\u058d {amount}**.",
@@ -595,18 +595,18 @@
       "chance": 0.5885708112323323,
       "message": "You rigged a national election! You were bribed with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3234,
-      "money_max": 6794
+      "money_min": 14468,
+      "money_max": 24410
     }
   },
   {
     "name": "Stealing Sweetrolls",
     "id": "stealing_sweetrolls",
     "success_chance": 51,
-    "min_coins": 122,
-    "max_coins": 3303,
-    "fine_min": 459,
-    "fine_max": 1147,
+    "min_coins": 2208,
+    "max_coins": 4708,
+    "fine_min": 1016,
+    "fine_max": 2275,
     "outcomes": {
       "success": [
         "You stole a sweetroll and sold it to a fence for **\u058d {amount}**.",
@@ -625,18 +625,18 @@
       "chance": 1.0856810551779212,
       "message": "You became the leader of the Thieves Guild! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 2439,
-      "money_max": 6889
+      "money_min": 11486,
+      "money_max": 21099
     }
   },
   {
     "name": "Downloading RAM",
     "id": "downloading_ram",
     "success_chance": 59,
-    "min_coins": 639,
-    "max_coins": 3900,
-    "fine_min": 415,
-    "fine_max": 933,
+    "min_coins": 1875,
+    "max_coins": 4375,
+    "fine_min": 1150,
+    "fine_max": 2475,
     "outcomes": {
       "success": [
         "You actually found a website that works and sold the RAM for **\u058d {amount}**.",
@@ -655,18 +655,18 @@
       "chance": 1.2088740293027018,
       "message": "You broke the laws of physics! You gained **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3883,
-      "money_max": 5054
+      "money_min": 10747,
+      "money_max": 20279
     }
   },
   {
     "name": "Trolling on Twitter",
     "id": "trolling_twitter",
     "success_chance": 39,
-    "min_coins": 446,
-    "max_coins": 1562,
-    "fine_min": 413,
-    "fine_max": 671,
+    "min_coins": 2708,
+    "max_coins": 5208,
+    "fine_min": 816,
+    "fine_max": 1975,
     "outcomes": {
       "success": [
         "You baited a massive fanbase and monetized the thread for **\u058d {amount}**.",
@@ -685,18 +685,18 @@
       "chance": 0.5197004124001096,
       "message": "You became the CEO of trolling! You extorted **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2564,
-      "money_max": 5926
+      "money_min": 14881,
+      "money_max": 24868
     }
   },
   {
     "name": "Faking Speedruns",
     "id": "faking_speedruns",
     "success_chance": 47,
-    "min_coins": 982,
-    "max_coins": 2031,
-    "fine_min": 421,
-    "fine_max": 1986,
+    "min_coins": 2375,
+    "max_coins": 4875,
+    "fine_min": 950,
+    "fine_max": 2175,
     "outcomes": {
       "success": [
         "You spliced a run perfectly and won the **\u058d {amount}** bounty.",
@@ -715,18 +715,18 @@
       "chance": 1.8825542604327423,
       "message": "You manipulated the entire speedrun community! You made **\u058d {amount}** and stole a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2667,
-      "money_max": 6064
+      "money_min": 6705,
+      "money_max": 15793
     }
   },
   {
     "name": "Bypassing Paywalls",
     "id": "bypassing_paywalls",
     "success_chance": 28,
-    "min_coins": 396,
-    "max_coins": 3936,
-    "fine_min": 238,
-    "fine_max": 1037,
+    "min_coins": 3166,
+    "max_coins": 5666,
+    "fine_min": 633,
+    "fine_max": 1700,
     "outcomes": {
       "success": [
         "You bypassed a news paywall and sold the article for **\u058d {amount}**.",
@@ -745,18 +745,18 @@
       "chance": 0.7906546057386461,
       "message": "You liberated all internet content! People donated **\u058d {amount}** and a **{item_emoji} {item_name}** to you.",
       "item_id": "laptop",
-      "money_min": 2577,
-      "money_max": 9300
+      "money_min": 13256,
+      "money_max": 23064
     }
   },
   {
     "name": "Selling V-Bucks",
     "id": "selling_vbucks",
     "success_chance": 43,
-    "min_coins": 417,
-    "max_coins": 2532,
-    "fine_min": 211,
-    "fine_max": 1666,
+    "min_coins": 2541,
+    "max_coins": 5042,
+    "fine_min": 883,
+    "fine_max": 2075,
     "outcomes": {
       "success": [
         "You ran a fake V-Buck generator and scammed kids for **\u058d {amount}**.",
@@ -775,18 +775,18 @@
       "chance": 1.4833590286374772,
       "message": "You took down Epic Games! You stole **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2334,
-      "money_max": 6074
+      "money_min": 9100,
+      "money_max": 18451
     }
   },
   {
     "name": "Spoiling Endgame",
     "id": "spoiling_endgame",
     "success_chance": 44,
-    "min_coins": 534,
-    "max_coins": 2256,
-    "fine_min": 137,
-    "fine_max": 905,
+    "min_coins": 2500,
+    "max_coins": 5000,
+    "fine_min": 900,
+    "fine_max": 2100,
     "outcomes": {
       "success": [
         "You threatened to spoil a movie and extorted someone for **\u058d {amount}**.",
@@ -805,18 +805,18 @@
       "chance": 1.5576508893173706,
       "message": "You ruined cinema for everyone! A supervillain rewarded you with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "trash",
-      "money_min": 3632,
-      "money_max": 6465
+      "money_min": 8654,
+      "money_max": 17956
     }
   },
   {
     "name": "Pinging Everyone",
     "id": "pinging_everyone",
     "success_chance": 48,
-    "min_coins": 469,
-    "max_coins": 3042,
-    "fine_min": 133,
-    "fine_max": 1685,
+    "min_coins": 2333,
+    "max_coins": 4833,
+    "fine_min": 966,
+    "fine_max": 2200,
     "outcomes": {
       "success": [
         "You pinged @everyone to buy your mixtape and made **\u058d {amount}**.",
@@ -835,18 +835,18 @@
       "chance": 1.7082128852651517,
       "message": "You pinged the entire internet! You extorted **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3395,
-      "money_max": 5404
+      "money_min": 7751,
+      "money_max": 16954
     }
   },
   {
     "name": "Leaking DMs",
     "id": "leaking_dms",
     "success_chance": 23,
-    "min_coins": 354,
-    "max_coins": 1981,
-    "fine_min": 79,
-    "fine_max": 672,
+    "min_coins": 3375,
+    "max_coins": 5875,
+    "fine_min": 550,
+    "fine_max": 1575,
     "outcomes": {
       "success": [
         "You blackmailed a celebrity with their DMs for **\u058d {amount}**.",
@@ -865,18 +865,18 @@
       "chance": 1.8195877849012336,
       "message": "You exposed the entire elite class! You were paid **\u058d {amount}** and a **{item_emoji} {item_name}** to keep quiet.",
       "item_id": "laptop",
-      "money_min": 3974,
-      "money_max": 9728
+      "money_min": 7083,
+      "money_max": 16212
     }
   },
   {
     "name": "Crypto Scam",
     "id": "crypto_scam",
     "success_chance": 47,
-    "min_coins": 976,
-    "max_coins": 3255,
-    "fine_min": 206,
-    "fine_max": 1755,
+    "min_coins": 2375,
+    "max_coins": 4875,
+    "fine_min": 950,
+    "fine_max": 2175,
     "outcomes": {
       "success": [
         "You created a rug pull coin and ran off with **\u058d {amount}**.",
@@ -895,18 +895,18 @@
       "chance": 0.5207999273838136,
       "message": "You became a crypto billionaire! You secured **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 3510,
-      "money_max": 9707
+      "money_min": 14875,
+      "money_max": 24861
     }
   },
   {
     "name": "Stealing Grandma Meds",
     "id": "stealing_grandma_meds",
     "success_chance": 38,
-    "min_coins": 277,
-    "max_coins": 3120,
-    "fine_min": 477,
-    "fine_max": 1947,
+    "min_coins": 2750,
+    "max_coins": 5250,
+    "fine_min": 800,
+    "fine_max": 1950,
     "outcomes": {
       "success": [
         "You sold her pills behind the Denny's for **\u058d {amount}**.",
@@ -925,18 +925,18 @@
       "chance": 0.5041003717319891,
       "message": "You discovered they were super soldier serums! You sold them for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 2828,
-      "money_max": 7642
+      "money_min": 14975,
+      "money_max": 24972
     }
   },
   {
     "name": "Streamer Swatting",
     "id": "streamer_swatting",
     "success_chance": 49,
-    "min_coins": 991,
-    "max_coins": 3306,
-    "fine_min": 54,
-    "fine_max": 694,
+    "min_coins": 2291,
+    "max_coins": 4792,
+    "fine_min": 983,
+    "fine_max": 2225,
     "outcomes": {
       "success": [
         "You successfully swatted someone and got paid **\u058d {amount}** by a troll.",
@@ -955,18 +955,18 @@
       "chance": 1.441251384715837,
       "message": "You took down the biggest streamer! You stole **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3400,
-      "money_max": 6291
+      "money_min": 9353,
+      "money_max": 18731
     }
   },
   {
     "name": "Fake ID",
     "id": "fake_id",
     "success_chance": 29,
-    "min_coins": 550,
-    "max_coins": 3644,
-    "fine_min": 311,
-    "fine_max": 1899,
+    "min_coins": 3125,
+    "max_coins": 5625,
+    "fine_min": 650,
+    "fine_max": 1725,
     "outcomes": {
       "success": [
         "You sold a McLovin ID to a high schooler for **\u058d {amount}**.",
@@ -985,18 +985,18 @@
       "chance": 0.5998485324929099,
       "message": "You created a perfect new identity! You stole **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2510,
-      "money_max": 6416
+      "money_min": 14400,
+      "money_max": 24335
     }
   },
   {
     "name": "Money Laundering",
     "id": "money_laundering",
     "success_chance": 59,
-    "min_coins": 986,
-    "max_coins": 2434,
-    "fine_min": 301,
-    "fine_max": 1245,
+    "min_coins": 1875,
+    "max_coins": 4375,
+    "fine_min": 1150,
+    "fine_max": 2475,
     "outcomes": {
       "success": [
         "You successfully washed your dirty money through a car wash, keeping **\u058d {amount}**.",
@@ -1015,18 +1015,18 @@
       "chance": 1.038886131868142,
       "message": "You became the kingpin of Albuquerque! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "bank_note",
-      "money_min": 3294,
-      "money_max": 7148
+      "money_min": 11767,
+      "money_max": 21411
     }
   },
   {
     "name": "Jaywalking",
     "id": "jaywalking",
     "success_chance": 60,
-    "min_coins": 100,
-    "max_coins": 500,
-    "fine_min": 50,
-    "fine_max": 300,
+    "min_coins": 1833,
+    "max_coins": 4334,
+    "fine_min": 1166,
+    "fine_max": 2500,
     "outcomes": {
       "success": [
         "You bravely crossed the street exactly three feet away from the crosswalk and found **\u058d {amount}**.",
@@ -1045,18 +1045,18 @@
       "chance": 1.5,
       "message": "You caused a massive, 10-car pileup! Amidst the chaos, you looted **\u058d {amount}** and a **{item_emoji} {item_name}** from the wreckage.",
       "item_id": "trash",
-      "money_min": 1000,
-      "money_max": 2000
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Pirating Movies",
     "id": "pirating_movies",
     "success_chance": 50,
-    "min_coins": 500,
-    "max_coins": 1500,
-    "fine_min": 300,
-    "fine_max": 1000,
+    "min_coins": 2250,
+    "max_coins": 4750,
+    "fine_min": 1000,
+    "fine_max": 2250,
     "outcomes": {
       "success": [
         "You seeded a massive torrent file and collected **\u058d {amount}** in anonymous crypto donations.",
@@ -1075,18 +1075,18 @@
       "chance": 1,
       "message": "You managed to leak the unreleased director's cut! Hackers rewarded you with **\u058d {amount}** and a powerful **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "NFT Heist",
     "id": "nft_heist",
     "success_chance": 35,
-    "min_coins": 1000,
-    "max_coins": 3000,
-    "fine_min": 500,
-    "fine_max": 2000,
+    "min_coins": 2875,
+    "max_coins": 5375,
+    "fine_min": 750,
+    "fine_max": 1875,
     "outcomes": {
       "success": [
         "You simply right-clicked, saved a very expensive digital monkey, and sold it back for **\u058d {amount}**.",
@@ -1105,18 +1105,18 @@
       "chance": 0.5,
       "message": "You completely rugged a massive multi-million dollar project! You escaped to the Bahamas with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 8000,
-      "money_max": 15000
+      "money_min": 15000,
+      "money_max": 25000
     }
   },
   {
     "name": "Stealing Memes",
     "id": "stealing_memes",
     "success_chance": 70,
-    "min_coins": 200,
-    "max_coins": 800,
-    "fine_min": 100,
-    "fine_max": 400,
+    "min_coins": 1416,
+    "max_coins": 3917,
+    "fine_min": 1333,
+    "fine_max": 2750,
     "outcomes": {
       "success": [
         "You shamelessly reposted a Reddit meme to Instagram and made **\u058d {amount}** in ad revenue.",
@@ -1135,18 +1135,18 @@
       "chance": 2,
       "message": "You became the biggest meme account on the entire internet! You now earn **\u058d {amount}** daily and own a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Discord Nitro Fraud",
     "id": "nitro_fraud",
     "success_chance": 45,
-    "min_coins": 500,
-    "max_coins": 1500,
-    "fine_min": 300,
-    "fine_max": 1000,
+    "min_coins": 2458,
+    "max_coins": 4958,
+    "fine_min": 916,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You sent a fake 'Free Nitro' link to a massive server and phished **\u058d {amount}** from gullible kids.",
@@ -1165,18 +1165,18 @@
       "chance": 1,
       "message": "You successfully breached the Discord mainframe! You granted yourself **\u058d {amount}** and a totally legit **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3000,
-      "money_max": 7000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "DDoS Attack",
     "id": "ddos_attack",
     "success_chance": 30,
-    "min_coins": 1500,
-    "max_coins": 4000,
-    "fine_min": 800,
-    "fine_max": 2500,
+    "min_coins": 3083,
+    "max_coins": 5583,
+    "fine_min": 666,
+    "fine_max": 1750,
     "outcomes": {
       "success": [
         "You knocked a massive Minecraft server offline and extorted the owner for **\u058d {amount}**.",
@@ -1195,18 +1195,18 @@
       "chance": 0.5,
       "message": "You managed to take down the entire global internet! Governments paid you a ransom of **\u058d {amount}** and a **{item_emoji} {item_name}** to stop.",
       "item_id": "laptop",
-      "money_min": 6000,
-      "money_max": 12000
+      "money_min": 15000,
+      "money_max": 25000
     }
   },
   {
     "name": "Selling Bathwater",
     "id": "selling_bathwater",
     "success_chance": 55,
-    "min_coins": 400,
-    "max_coins": 1200,
-    "fine_min": 200,
-    "fine_max": 800,
+    "min_coins": 2041,
+    "max_coins": 4542,
+    "fine_min": 1083,
+    "fine_max": 2375,
     "outcomes": {
       "success": [
         "You literally just bottled tap water, claimed it was your bathwater, and scammed simps out of **\u058d {amount}**.",
@@ -1225,18 +1225,18 @@
       "chance": 1.5,
       "message": "You started a massive, international bathwater empire! You earned **\u058d {amount}** and shipped your product in a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Scalping PS5s",
     "id": "scalping_ps5s",
     "success_chance": 40,
-    "min_coins": 1000,
-    "max_coins": 2500,
-    "fine_min": 500,
-    "fine_max": 1500,
+    "min_coins": 2666,
+    "max_coins": 5167,
+    "fine_min": 833,
+    "fine_max": 2000,
     "outcomes": {
       "success": [
         "You used a custom checkout bot to buy 10 consoles, reselling them for a hefty profit of **\u058d {amount}**.",
@@ -1255,18 +1255,18 @@
       "chance": 1,
       "message": "You monopolized the entire global supply chain! You forced people to pay **\u058d {amount}** and give you a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 4000,
-      "money_max": 8000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Stream Sniping",
     "id": "stream_sniping",
     "success_chance": 65,
-    "min_coins": 200,
-    "max_coins": 900,
-    "fine_min": 150,
-    "fine_max": 600,
+    "min_coins": 1625,
+    "max_coins": 4125,
+    "fine_min": 1250,
+    "fine_max": 2625,
     "outcomes": {
       "success": [
         "You repeatedly killed a famous streamer until they literally paid you **\u058d {amount}** to leave the lobby.",
@@ -1285,18 +1285,18 @@
       "chance": 1.5,
       "message": "You managed to snipe the biggest streamer in the world! You leeched off their fame, gaining **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 4500
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Cyberbullying",
     "id": "cyberbullying",
     "success_chance": 50,
-    "min_coins": 300,
-    "max_coins": 1000,
-    "fine_min": 200,
-    "fine_max": 700,
+    "min_coins": 2250,
+    "max_coins": 4750,
+    "fine_min": 1000,
+    "fine_max": 2250,
     "outcomes": {
       "success": [
         "You relentlessly trolled a kid on Twitter until they sent you **\u058d {amount}** just to stop.",
@@ -1315,18 +1315,18 @@
       "chance": 1,
       "message": "You became the most feared menace on the internet! People collectively pay you **\u058d {amount}** and a **{item_emoji} {item_name}** to leave them alone.",
       "item_id": "laptop",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Stealing Wi-Fi",
     "id": "stealing_wifi",
     "success_chance": 75,
-    "min_coins": 100,
-    "max_coins": 600,
-    "fine_min": 50,
-    "fine_max": 400,
+    "min_coins": 1208,
+    "max_coins": 3709,
+    "fine_min": 1416,
+    "fine_max": 2875,
     "outcomes": {
       "success": [
         "You successfully hacked your neighbor's weak password and mined crypto using their bandwidth for **\u058d {amount}**.",
@@ -1345,18 +1345,18 @@
       "chance": 2,
       "message": "You hijacked the entire city's public internet grid! You siphoned off **\u058d {amount}** and a stolen **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1200,
-      "money_max": 3000
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Fake Giveaway",
     "id": "fake_giveaway",
     "success_chance": 45,
-    "min_coins": 600,
-    "max_coins": 2000,
-    "fine_min": 400,
-    "fine_max": 1200,
+    "min_coins": 2458,
+    "max_coins": 4958,
+    "fine_min": 916,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You hosted a completely fake iPhone giveaway on YouTube and farmed **\u058d {amount}** in pure ad revenue.",
@@ -1375,18 +1375,18 @@
       "chance": 1,
       "message": "You pulled off the biggest internet scam in history! You legally absconded with **\u058d {amount}** and a shiny **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3500,
-      "money_max": 7500
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Botting Followers",
     "id": "botting_followers",
     "success_chance": 60,
-    "min_coins": 400,
-    "max_coins": 1500,
-    "fine_min": 200,
-    "fine_max": 900,
+    "min_coins": 1833,
+    "max_coins": 4334,
+    "fine_min": 1166,
+    "fine_max": 2500,
     "outcomes": {
       "success": [
         "You botted your Instagram to 1 million followers and tricked a brand into paying you **\u058d {amount}**.",
@@ -1405,18 +1405,18 @@
       "chance": 1.5,
       "message": "You became the most famous fake influencer online! You secured a massive contract worth **\u058d {amount}** and a free **{item_emoji} {item_name}**.",
       "item_id": "camera",
-      "money_min": 2500,
-      "money_max": 5500
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Embezzlement",
     "id": "embezzlement",
     "success_chance": 25,
-    "min_coins": 2000,
-    "max_coins": 6000,
-    "fine_min": 1000,
-    "fine_max": 4000,
+    "min_coins": 3291,
+    "max_coins": 5791,
+    "fine_min": 583,
+    "fine_max": 1625,
     "outcomes": {
       "success": [
         "You siphoned company funds into a secretive offshore account, cleanly escaping with **\u058d {amount}**.",
@@ -1435,7 +1435,7 @@
       "chance": 0.5,
       "message": "You successfully robbed a Fortune 500 company completely blind! You retired to a private island with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "bank_note",
-      "money_min": 10000,
+      "money_min": 15000,
       "money_max": 25000
     }
   },
@@ -1443,10 +1443,10 @@
     "name": "Stealing Emojis",
     "id": "stealing_emojis",
     "success_chance": 80,
-    "min_coins": 50,
-    "max_coins": 300,
-    "fine_min": 20,
-    "fine_max": 150,
+    "min_coins": 1000,
+    "max_coins": 3501,
+    "fine_min": 1500,
+    "fine_max": 3000,
     "outcomes": {
       "success": [
         "You blatantly stole premium animated emojis and sold them on a black market Discord server for **\u058d {amount}**.",
@@ -1465,18 +1465,18 @@
       "chance": 2,
       "message": "You managed to monopolize every single good emoji on the internet! You made a passive income of **\u058d {amount}** and earned a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 800,
-      "money_max": 1500
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Jaywalking",
     "id": "jaywalking",
     "success_chance": 60,
-    "min_coins": 100,
-    "max_coins": 500,
-    "fine_min": 50,
-    "fine_max": 300,
+    "min_coins": 1833,
+    "max_coins": 4334,
+    "fine_min": 1166,
+    "fine_max": 2500,
     "outcomes": {
       "success": [
         "You bravely crossed the street exactly three feet away from the crosswalk and found **\u058d {amount}**.",
@@ -1495,18 +1495,18 @@
       "chance": 1.5,
       "message": "You caused a massive, 10-car pileup! Amidst the chaos, you looted **\u058d {amount}** and a **{item_emoji} {item_name}** from the wreckage.",
       "item_id": "half_eaten_burger",
-      "money_min": 1000,
-      "money_max": 2000
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Pirating Movies",
     "id": "pirating_movies",
     "success_chance": 50,
-    "min_coins": 500,
-    "max_coins": 1500,
-    "fine_min": 300,
-    "fine_max": 1000,
+    "min_coins": 2250,
+    "max_coins": 4750,
+    "fine_min": 1000,
+    "fine_max": 2250,
     "outcomes": {
       "success": [
         "You seeded a massive torrent file and collected **\u058d {amount}** in anonymous crypto donations.",
@@ -1525,18 +1525,18 @@
       "chance": 1,
       "message": "You managed to leak the unreleased director's cut! Hackers rewarded you with **\u058d {amount}** and a powerful **{item_emoji} {item_name}**.",
       "item_id": "mystery_box",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "NFT Heist",
     "id": "nft_heist",
     "success_chance": 35,
-    "min_coins": 1000,
-    "max_coins": 3000,
-    "fine_min": 500,
-    "fine_max": 2000,
+    "min_coins": 2875,
+    "max_coins": 5375,
+    "fine_min": 750,
+    "fine_max": 1875,
     "outcomes": {
       "success": [
         "You simply right-clicked, saved a very expensive digital monkey, and sold it back for **\u058d {amount}**.",
@@ -1555,18 +1555,18 @@
       "chance": 0.5,
       "message": "You completely rugged a massive multi-million dollar project! You escaped to the Bahamas with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "nft_receipt",
-      "money_min": 8000,
-      "money_max": 15000
+      "money_min": 15000,
+      "money_max": 25000
     }
   },
   {
     "name": "Stealing Memes",
     "id": "stealing_memes",
     "success_chance": 70,
-    "min_coins": 200,
-    "max_coins": 800,
-    "fine_min": 100,
-    "fine_max": 400,
+    "min_coins": 1416,
+    "max_coins": 3917,
+    "fine_min": 1333,
+    "fine_max": 2750,
     "outcomes": {
       "success": [
         "You shamelessly reposted a Reddit meme to Instagram and made **\u058d {amount}** in ad revenue.",
@@ -1585,18 +1585,18 @@
       "chance": 2,
       "message": "You became the biggest meme account on the entire internet! You now earn **\u058d {amount}** daily and own a **{item_emoji} {item_name}**.",
       "item_id": "reddit_gold",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Discord Nitro Fraud",
     "id": "nitro_fraud",
     "success_chance": 45,
-    "min_coins": 500,
-    "max_coins": 1500,
-    "fine_min": 300,
-    "fine_max": 1000,
+    "min_coins": 2458,
+    "max_coins": 4958,
+    "fine_min": 916,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You sent a fake 'Free Nitro' link to a massive server and phished **\u058d {amount}** from gullible kids.",
@@ -1615,18 +1615,18 @@
       "chance": 1,
       "message": "You successfully breached the Discord mainframe! You granted yourself **\u058d {amount}** and a totally legit **{item_emoji} {item_name}**.",
       "item_id": "ban_hammer",
-      "money_min": 3000,
-      "money_max": 7000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "DDoS Attack",
     "id": "ddos_attack",
     "success_chance": 30,
-    "min_coins": 1500,
-    "max_coins": 4000,
-    "fine_min": 800,
-    "fine_max": 2500,
+    "min_coins": 3083,
+    "max_coins": 5583,
+    "fine_min": 666,
+    "fine_max": 1750,
     "outcomes": {
       "success": [
         "You knocked a massive Minecraft server offline and extorted the owner for **\u058d {amount}**.",
@@ -1645,18 +1645,18 @@
       "chance": 0.5,
       "message": "You managed to take down the entire global internet! Governments paid you a ransom of **\u058d {amount}** and a **{item_emoji} {item_name}** to stop.",
       "item_id": "soundboard",
-      "money_min": 6000,
-      "money_max": 12000
+      "money_min": 15000,
+      "money_max": 25000
     }
   },
   {
     "name": "Selling Bathwater",
     "id": "selling_bathwater",
     "success_chance": 55,
-    "min_coins": 400,
-    "max_coins": 1200,
-    "fine_min": 200,
-    "fine_max": 800,
+    "min_coins": 2041,
+    "max_coins": 4542,
+    "fine_min": 1083,
+    "fine_max": 2375,
     "outcomes": {
       "success": [
         "You literally just bottled tap water, claimed it was your bathwater, and scammed simps out of **\u058d {amount}**.",
@@ -1675,18 +1675,18 @@
       "chance": 1.5,
       "message": "You started a massive, international bathwater empire! You earned **\u058d {amount}** and shipped your product in a **{item_emoji} {item_name}**.",
       "item_id": "used_bathwater",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Scalping PS5s",
     "id": "scalping_ps5s",
     "success_chance": 40,
-    "min_coins": 1000,
-    "max_coins": 2500,
-    "fine_min": 500,
-    "fine_max": 1500,
+    "min_coins": 2666,
+    "max_coins": 5167,
+    "fine_min": 833,
+    "fine_max": 2000,
     "outcomes": {
       "success": [
         "You used a custom checkout bot to buy 10 consoles, reselling them for a hefty profit of **\u058d {amount}**.",
@@ -1705,18 +1705,18 @@
       "chance": 1,
       "message": "You monopolized the entire global supply chain! You forced people to pay **\u058d {amount}** and give you a **{item_emoji} {item_name}**.",
       "item_id": "arcade_tickets",
-      "money_min": 4000,
-      "money_max": 8000
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Stream Sniping",
     "id": "stream_sniping",
     "success_chance": 65,
-    "min_coins": 200,
-    "max_coins": 900,
-    "fine_min": 150,
-    "fine_max": 600,
+    "min_coins": 1625,
+    "max_coins": 4125,
+    "fine_min": 1250,
+    "fine_max": 2625,
     "outcomes": {
       "success": [
         "You repeatedly killed a famous streamer until they literally paid you **\u058d {amount}** to leave the lobby.",
@@ -1735,18 +1735,18 @@
       "chance": 1.5,
       "message": "You managed to snipe the biggest streamer in the world! You leeched off their fame, gaining **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "clip_button",
-      "money_min": 2000,
-      "money_max": 4500
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Cyberbullying",
     "id": "cyberbullying",
     "success_chance": 50,
-    "min_coins": 300,
-    "max_coins": 1000,
-    "fine_min": 200,
-    "fine_max": 700,
+    "min_coins": 2250,
+    "max_coins": 4750,
+    "fine_min": 1000,
+    "fine_max": 2250,
     "outcomes": {
       "success": [
         "You relentlessly trolled a kid on Twitter until they sent you **\u058d {amount}** just to stop.",
@@ -1765,18 +1765,18 @@
       "chance": 1,
       "message": "You became the most feared menace on the internet! People collectively pay you **\u058d {amount}** and a **{item_emoji} {item_name}** to leave them alone.",
       "item_id": "troll_mask",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Stealing Wi-Fi",
     "id": "stealing_wifi",
     "success_chance": 75,
-    "min_coins": 100,
-    "max_coins": 600,
-    "fine_min": 50,
-    "fine_max": 400,
+    "min_coins": 1208,
+    "max_coins": 3709,
+    "fine_min": 1416,
+    "fine_max": 2875,
     "outcomes": {
       "success": [
         "You successfully hacked your neighbor's weak password and mined crypto using their bandwidth for **\u058d {amount}**.",
@@ -1795,18 +1795,18 @@
       "chance": 2,
       "message": "You hijacked the entire city's public internet grid! You siphoned off **\u058d {amount}** and a stolen **{item_emoji} {item_name}**.",
       "item_id": "glitched_code",
-      "money_min": 1200,
-      "money_max": 3000
+      "money_min": 6001,
+      "money_max": 15011
     }
   },
   {
     "name": "Fake Giveaway",
     "id": "fake_giveaway",
     "success_chance": 45,
-    "min_coins": 600,
-    "max_coins": 2000,
-    "fine_min": 400,
-    "fine_max": 1200,
+    "min_coins": 2458,
+    "max_coins": 4958,
+    "fine_min": 916,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You hosted a completely fake iPhone giveaway on YouTube and farmed **\u058d {amount}** in pure ad revenue.",
@@ -1825,18 +1825,18 @@
       "chance": 1,
       "message": "You pulled off the biggest internet scam in history! You legally absconded with **\u058d {amount}** and a shiny **{item_emoji} {item_name}**.",
       "item_id": "ring_light",
-      "money_min": 3500,
-      "money_max": 7500
+      "money_min": 12000,
+      "money_max": 21670
     }
   },
   {
     "name": "Botting Followers",
     "id": "botting_followers",
     "success_chance": 60,
-    "min_coins": 400,
-    "max_coins": 1500,
-    "fine_min": 200,
-    "fine_max": 900,
+    "min_coins": 1833,
+    "max_coins": 4334,
+    "fine_min": 1166,
+    "fine_max": 2500,
     "outcomes": {
       "success": [
         "You botted your Instagram to 1 million followers and tricked a brand into paying you **\u058d {amount}**.",
@@ -1855,18 +1855,18 @@
       "chance": 1.5,
       "message": "You became the most famous fake influencer online! You secured a massive contract worth **\u058d {amount}** and a free **{item_emoji} {item_name}**.",
       "item_id": "vip_badge",
-      "money_min": 2500,
-      "money_max": 5500
+      "money_min": 9000,
+      "money_max": 18340
     }
   },
   {
     "name": "Embezzlement",
     "id": "embezzlement",
     "success_chance": 25,
-    "min_coins": 2000,
-    "max_coins": 6000,
-    "fine_min": 1000,
-    "fine_max": 4000,
+    "min_coins": 3291,
+    "max_coins": 5791,
+    "fine_min": 583,
+    "fine_max": 1625,
     "outcomes": {
       "success": [
         "You siphoned company funds into a secretive offshore account, cleanly escaping with **\u058d {amount}**.",
@@ -1885,7 +1885,7 @@
       "chance": 0.5,
       "message": "You successfully robbed a Fortune 500 company completely blind! You retired to a private island with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "rug_pull_coin",
-      "money_min": 10000,
+      "money_min": 15000,
       "money_max": 25000
     }
   },
@@ -1893,10 +1893,10 @@
     "name": "Stealing Emojis",
     "id": "stealing_emojis",
     "success_chance": 80,
-    "min_coins": 50,
-    "max_coins": 300,
-    "fine_min": 20,
-    "fine_max": 150,
+    "min_coins": 1000,
+    "max_coins": 3501,
+    "fine_min": 1500,
+    "fine_max": 3000,
     "outcomes": {
       "success": [
         "You blatantly stole premium animated emojis and sold them on a black market Discord server for **\u058d {amount}**.",
@@ -1915,8 +1915,8 @@
       "chance": 2,
       "message": "You managed to monopolize every single good emoji on the internet! You made a passive income of **\u058d {amount}** and earned a **{item_emoji} {item_name}**.",
       "item_id": "kitten_ears",
-      "money_min": 800,
-      "money_max": 1500
+      "money_min": 6001,
+      "money_max": 15011
     }
   }
 ]

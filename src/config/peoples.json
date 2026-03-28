@@ -14,8 +14,8 @@
       "chance": 1,
       "message": "Elon Musk liked your meme! He gave you **\u058d {amount}** and a **{item_emoji} {item_name}** he found in his rocket.",
       "item_id": "laptop",
-      "money_min": 1000,
-      "money_max": 5000
+      "money_min": 2055,
+      "money_max": 4444
     }
   },
   {
@@ -45,8 +45,8 @@
       "chance": 2,
       "message": "Mom loves you! She gave you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "apple",
-      "money_min": 500,
-      "money_max": 2000
+      "money_min": 722,
+      "money_max": 2778
     }
   },
   {
@@ -64,8 +64,8 @@
       "chance": 1,
       "message": "Gordon Ramsay loved your dish! He gave you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1000,
-      "money_max": 3000
+      "money_min": 2277,
+      "money_max": 4722
     }
   },
   {
@@ -95,8 +95,8 @@
       "chance": 2,
       "message": "Santa checked his list twice! He gave you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "beggars_bowl",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 1166,
+      "money_max": 3334
     }
   },
   {
@@ -114,8 +114,8 @@
       "chance": 0.5,
       "message": "You won the challenge! MrBeast gave you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 10000,
-      "money_max": 50000
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -157,8 +157,8 @@
       "chance": 1,
       "message": "Batman needs help! He gave you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "padlock",
-      "money_min": 2000,
-      "money_max": 4000
+      "money_min": 2166,
+      "money_max": 4583
     }
   },
   {
@@ -176,8 +176,8 @@
       "chance": 2,
       "message": "Oh hey, here\u2019s something for you, take **\u058d {amount}** and this **{item_emoji} {item_name}**. Don\u2019t spend it all on candy!",
       "item_id": "beggars_bowl",
-      "money_min": 1500,
-      "money_max": 3000
+      "money_min": 944,
+      "money_max": 3056
     }
   },
   {
@@ -243,8 +243,8 @@
       "chance": 0.5204475885495425,
       "message": "You found a bug in Facebook! Mark wired you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1358,
-      "money_max": 5933
+      "money_min": 2255,
+      "money_max": 4694
     }
   },
   {
@@ -262,8 +262,8 @@
       "chance": 1.2707682646682796,
       "message": "You successfully unionized! Jeff paid you **\u058d {amount}** and a **{item_emoji} {item_name}** to stop.",
       "item_id": "apple",
-      "money_min": 1138,
-      "money_max": 5094
+      "money_min": 1233,
+      "money_max": 3417
     }
   },
   {
@@ -281,8 +281,8 @@
       "chance": 1.7924191504073514,
       "message": "You became admin! You abused your power for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1572,
-      "money_max": 3566
+      "money_min": 1033,
+      "money_max": 3167
     }
   },
   {
@@ -300,8 +300,8 @@
       "chance": 0.6781124670670067,
       "message": "You got VIP in her chat! She sent you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "mouse",
-      "money_min": 1623,
-      "money_max": 3201
+      "money_min": 1700,
+      "money_max": 4000
     }
   },
   {
@@ -319,8 +319,8 @@
       "chance": 1.8161395777509675,
       "message": "You convinced him to buy your NFT! You got **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 1734,
-      "money_max": 4310
+      "money_min": 2033,
+      "money_max": 4416
     }
   },
   {
@@ -338,8 +338,8 @@
       "chance": 0.7177544405482521,
       "message": "Dad came back with the milk! He brought **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 1195,
-      "money_max": 3592
+      "money_min": 1211,
+      "money_max": 3389
     }
   },
   {
@@ -357,8 +357,8 @@
       "chance": 2.227562239504441,
       "message": "You clipped the perfect moment! They paid you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1244,
-      "money_max": 4011
+      "money_min": 1633,
+      "money_max": 3917
     }
   },
   {
@@ -376,8 +376,8 @@
       "chance": 2.3332843828892256,
       "message": "He traded you a weird shiny rock for a sandwich! It was actually **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "trash",
-      "money_min": 1013,
-      "money_max": 5270
+      "money_min": 1744,
+      "money_max": 4055
     }
   },
   {
@@ -395,8 +395,8 @@
       "chance": 0.6381281353266468,
       "message": "You discovered a new glitch! You glitched **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1885,
-      "money_max": 4698
+      "money_min": 2055,
+      "money_max": 4444
     }
   },
   {
@@ -414,8 +414,8 @@
       "chance": 0.5209681835128592,
       "message": "Your post made the front page! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1368,
-      "money_max": 5722
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -433,8 +433,8 @@
       "chance": 1.212875003234845,
       "message": "You blew up overnight! You got sponsored for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1277,
-      "money_max": 5450
+      "money_min": 2433,
+      "money_max": 4916
     }
   },
   {
@@ -452,8 +452,8 @@
       "chance": 2.46388736541297,
       "message": "You pulled the rarest character in the game! They bought your account for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1936,
-      "money_max": 5082
+      "money_min": 1233,
+      "money_max": 3417
     }
   },
   {
@@ -471,8 +471,8 @@
       "chance": 2.205951428810234,
       "message": "You scammed them out of their limiteds! You made **\u058d {amount}** and got a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1660,
-      "money_max": 3077
+      "money_min": 1388,
+      "money_max": 3611
     }
   },
   {
@@ -490,8 +490,8 @@
       "chance": 1.3951654268047993,
       "message": "You achieved ultimate sigma status! You earned **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1143,
-      "money_max": 3257
+      "money_min": 1544,
+      "money_max": 3806
     }
   },
   {
@@ -509,8 +509,8 @@
       "chance": 1.4430662724126677,
       "message": "You out-trolled the troll! They surrendered **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1412,
-      "money_max": 5537
+      "money_min": 1655,
+      "money_max": 3944
     }
   },
   {
@@ -528,8 +528,8 @@
       "chance": 0.9978949907830537,
       "message": "You recorded her freakout! The video made you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "camera",
-      "money_min": 1357,
-      "money_max": 5201
+      "money_min": 2322,
+      "money_max": 4777
     }
   },
   {
@@ -547,8 +547,8 @@
       "chance": 1.1814853078580951,
       "message": "You proved the earth is a donut! You won a Nobel prize of **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1044,
-      "money_max": 4051
+      "money_min": 1944,
+      "money_max": 4305
     }
   },
   {
@@ -566,8 +566,8 @@
       "chance": 1.7708252811892518,
       "message": "You benched 500 lbs! They crowned you king of the gym, giving **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "apple",
-      "money_min": 1144,
-      "money_max": 3193
+      "money_min": 1655,
+      "money_max": 3944
     }
   },
   {
@@ -585,8 +585,8 @@
       "chance": 2.468143763588789,
       "message": "You stole his heart (and wallet)! You walked away with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1166,
-      "money_max": 4456
+      "money_min": 1522,
+      "money_max": 3778
     }
   },
   {
@@ -604,8 +604,8 @@
       "chance": 2.4293073997541548,
       "message": "You tamed his pet alligator! He rewarded you with **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 1692,
-      "money_max": 3741
+      "money_min": 1900,
+      "money_max": 4250
     }
   },
   {
@@ -623,8 +623,8 @@
       "chance": 0.8905419632700229,
       "message": "You ghostwrote a platinum hit! You earned **\u058d {amount}** in royalties and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1737,
-      "money_max": 4182
+      "money_min": 1566,
+      "money_max": 3833
     }
   },
   {
@@ -642,8 +642,8 @@
       "chance": 2.321722016385728,
       "message": "You bypassed its safety filters! It wired you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1204,
-      "money_max": 5215
+      "money_min": 1700,
+      "money_max": 4000
     }
   },
   {
@@ -661,8 +661,8 @@
       "chance": 0.6543698749934901,
       "message": "You met their idol! They bought your picture for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "camera",
-      "money_min": 1407,
-      "money_max": 5672
+      "money_min": 2277,
+      "money_max": 4722
     }
   },
   {
@@ -680,8 +680,8 @@
       "chance": 0.6336610756958787,
       "message": "You fixed their Wi-Fi! They paid you **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1618,
-      "money_max": 4954
+      "money_min": 1455,
+      "money_max": 3694
     }
   },
   {
@@ -699,8 +699,8 @@
       "chance": 1.563360536040805,
       "message": "You became a rizz god! They literally threw **\u058d {amount}** and a **{item_emoji} {item_name}** at you.",
       "item_id": "laptop",
-      "money_min": 1164,
-      "money_max": 5205
+      "money_min": 1922,
+      "money_max": 4278
     }
   },
   {
@@ -718,8 +718,8 @@
       "chance": 1.297089383183499,
       "message": "You hacked the hacker! You stole **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1333,
-      "money_max": 5698
+      "money_min": 1722,
+      "money_max": 4028
     }
   },
   {
@@ -737,8 +737,8 @@
       "chance": 1.879326860197658,
       "message": "You sold the server! You made **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1037,
-      "money_max": 4261
+      "money_min": 1877,
+      "money_max": 4222
     }
   },
   {
@@ -756,8 +756,8 @@
       "chance": 1.1445663230441339,
       "message": "You unmasked them! They paid you **\u058d {amount}** and a **{item_emoji} {item_name}** for silence.",
       "item_id": "laptop",
-      "money_min": 1647,
-      "money_max": 4977
+      "money_min": 1855,
+      "money_max": 4194
     }
   },
   {
@@ -775,8 +775,8 @@
       "chance": 0.6525108569703784,
       "message": "You got a perfect artifact! You sold your account for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1917,
-      "money_max": 4471
+      "money_min": 1077,
+      "money_max": 3222
     }
   },
   {
@@ -794,8 +794,8 @@
       "chance": 1.8240070445228445,
       "message": "You found their secret stash! You took **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1238,
-      "money_max": 5110
+      "money_min": 2122,
+      "money_max": 4527
     }
   },
   {
@@ -813,8 +813,8 @@
       "chance": 1,
       "message": "You found a critical bug in the algorithm! Mark wired you a bounty of **\u058d {amount}** and shipped you a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 6000
+      "money_min": 2055,
+      "money_max": 4444
     }
   },
   {
@@ -832,8 +832,8 @@
       "chance": 0.5,
       "message": "You successfully unionized an entire warehouse! Jeff hastily paid you **\u058d {amount}** and a **{item_emoji} {item_name}** to go away.",
       "item_id": "apple",
-      "money_min": 5000,
-      "money_max": 10000
+      "money_min": 2166,
+      "money_max": 4583
     }
   },
   {
@@ -851,8 +851,8 @@
       "chance": 1.5,
       "message": "You usurped the owner and became admin! You instantly abused your power for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1000,
-      "money_max": 3000
+      "money_min": 1722,
+      "money_max": 4028
     }
   },
   {
@@ -871,7 +871,7 @@
       "message": "You unlocked the VIP badge in her chat! She sent you **\u058d {amount}** and a signed **{item_emoji} {item_name}**.",
       "item_id": "mouse",
       "money_min": 1500,
-      "money_max": 4000
+      "money_max": 3750
     }
   },
   {
@@ -889,8 +889,8 @@
       "chance": 1,
       "message": "You somehow convinced him to buy your terribly drawn monkey picture! You scammed him for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 3000,
-      "money_max": 8000
+      "money_min": 1944,
+      "money_max": 4305
     }
   },
   {
@@ -908,8 +908,8 @@
       "chance": 2.5,
       "message": "Dad finally came back from the grocery store! He brought you **\u058d {amount}** and a cold **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 500,
-      "money_max": 2500
+      "money_min": 833,
+      "money_max": 2917
     }
   },
   {
@@ -927,8 +927,8 @@
       "chance": 1.5,
       "message": "You clipped the absolute perfect fail moment! They paid you **\u058d {amount}** and a **{item_emoji} {item_name}** just to delete it.",
       "item_id": "laptop",
-      "money_min": 1500,
-      "money_max": 4500
+      "money_min": 1611,
+      "money_max": 3889
     }
   },
   {
@@ -946,8 +946,8 @@
       "chance": 1.5,
       "message": "He traded you a weird shiny rock for a sandwich! It turned out to be worth **\u058d {amount}** and contained a hidden **{item_emoji} {item_name}**.",
       "item_id": "trash",
-      "money_min": 800,
-      "money_max": 2000
+      "money_min": 1388,
+      "money_max": 3611
     }
   },
   {
@@ -965,8 +965,8 @@
       "chance": 1,
       "message": "You discovered a completely game-breaking glitch! You clipped out of bounds, snagging **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -985,7 +985,7 @@
       "message": "You accidentally walked into their shot and blew up overnight! You got sponsored for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
       "money_min": 1500,
-      "money_max": 3500
+      "money_max": 3750
     }
   },
   {
@@ -1003,8 +1003,8 @@
       "chance": 1,
       "message": "You pulled the rarest character in the game on your first try! They aggressively bought your account for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 4000,
-      "money_max": 10000
+      "money_min": 1277,
+      "money_max": 3472
     }
   },
   {
@@ -1022,8 +1022,8 @@
       "chance": 2,
       "message": "You ruthlessly scammed them out of their rarest limiteds! You fenced the items for **\u058d {amount}** and kept a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1000,
-      "money_max": 2500
+      "money_min": 1611,
+      "money_max": 3889
     }
   },
   {
@@ -1041,8 +1041,8 @@
       "chance": 1,
       "message": "You achieved the ultimate sigma grindset! They handed you **\u058d {amount}** and an incredibly masculine **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -1060,8 +1060,8 @@
       "chance": 1.5,
       "message": "You completely out-trolled the master troll! They surrendered **\u058d {amount}** and their precious **{item_emoji} {item_name}** in defeat.",
       "item_id": "laptop",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 1944,
+      "money_max": 4305
     }
   },
   {
@@ -1079,8 +1079,8 @@
       "chance": 1,
       "message": "You recorded her massive freakout and posted it online! The ad revenue netted you **\u058d {amount}** and a new **{item_emoji} {item_name}**.",
       "item_id": "camera",
-      "money_min": 2000,
-      "money_max": 4500
+      "money_min": 2277,
+      "money_max": 4722
     }
   },
   {
@@ -1098,8 +1098,8 @@
       "chance": 1,
       "message": "You found a critical bug in the algorithm! Mark wired you a bounty of **\u058d {amount}** and shipped you a **{item_emoji} {item_name}**.",
       "item_id": "lizard_scales",
-      "money_min": 2000,
-      "money_max": 6000
+      "money_min": 2055,
+      "money_max": 4444
     }
   },
   {
@@ -1117,8 +1117,8 @@
       "chance": 0.5,
       "message": "You successfully unionized an entire warehouse! Jeff hastily paid you **\u058d {amount}** and a **{item_emoji} {item_name}** to go away.",
       "item_id": "union_card",
-      "money_min": 5000,
-      "money_max": 10000
+      "money_min": 2166,
+      "money_max": 4583
     }
   },
   {
@@ -1136,8 +1136,8 @@
       "chance": 1.5,
       "message": "You usurped the owner and became admin! You instantly abused your power for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "ban_hammer",
-      "money_min": 1000,
-      "money_max": 3000
+      "money_min": 1722,
+      "money_max": 4028
     }
   },
   {
@@ -1156,7 +1156,7 @@
       "message": "You unlocked the VIP badge in her chat! She sent you **\u058d {amount}** and a signed **{item_emoji} {item_name}**.",
       "item_id": "used_bathwater",
       "money_min": 1500,
-      "money_max": 4000
+      "money_max": 3750
     }
   },
   {
@@ -1174,8 +1174,8 @@
       "chance": 1,
       "message": "You somehow convinced him to buy your terribly drawn monkey picture! You scammed him for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "rug_pull_coin",
-      "money_min": 3000,
-      "money_max": 8000
+      "money_min": 1944,
+      "money_max": 4305
     }
   },
   {
@@ -1193,8 +1193,8 @@
       "chance": 2.5,
       "message": "Dad finally came back from the grocery store! He brought you **\u058d {amount}** and a cold **{item_emoji} {item_name}**.",
       "item_id": "gallon_of_milk",
-      "money_min": 500,
-      "money_max": 2500
+      "money_min": 833,
+      "money_max": 2917
     }
   },
   {
@@ -1212,8 +1212,8 @@
       "chance": 1.5,
       "message": "You clipped the absolute perfect fail moment! They paid you **\u058d {amount}** and a **{item_emoji} {item_name}** just to delete it.",
       "item_id": "clip_button",
-      "money_min": 1500,
-      "money_max": 4500
+      "money_min": 1611,
+      "money_max": 3889
     }
   },
   {
@@ -1231,8 +1231,8 @@
       "chance": 1.5,
       "message": "He traded you a weird shiny rock for a sandwich! It turned out to be worth **\u058d {amount}** and contained a hidden **{item_emoji} {item_name}**.",
       "item_id": "suspicious_rock",
-      "money_min": 800,
-      "money_max": 2000
+      "money_min": 1388,
+      "money_max": 3611
     }
   },
   {
@@ -1250,8 +1250,8 @@
       "chance": 1,
       "message": "You discovered a completely game-breaking glitch! You clipped out of bounds, snagging **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "glitched_code",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -1270,7 +1270,7 @@
       "message": "You accidentally walked into their shot and blew up overnight! You got sponsored for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "ring_light",
       "money_min": 1500,
-      "money_max": 3500
+      "money_max": 3750
     }
   },
   {
@@ -1288,8 +1288,8 @@
       "chance": 1,
       "message": "You pulled the rarest character in the game on your first try! They aggressively bought your account for **\u058d {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "max_level_waifu",
-      "money_min": 4000,
-      "money_max": 10000
+      "money_min": 1277,
+      "money_max": 3472
     }
   },
   {
@@ -1307,8 +1307,8 @@
       "chance": 2,
       "message": "You ruthlessly scammed them out of their rarest limiteds! You fenced the items for **\u058d {amount}** and kept a **{item_emoji} {item_name}**.",
       "item_id": "neon_pet",
-      "money_min": 1000,
-      "money_max": 2500
+      "money_min": 1611,
+      "money_max": 3889
     }
   },
   {
@@ -1326,8 +1326,8 @@
       "chance": 1,
       "message": "You achieved the ultimate sigma grindset! They handed you **\u058d {amount}** and an incredibly masculine **{item_emoji} {item_name}**.",
       "item_id": "sigma_grindset_audio",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 1833,
+      "money_max": 4167
     }
   },
   {
@@ -1345,8 +1345,8 @@
       "chance": 1.5,
       "message": "You completely out-trolled the master troll! They surrendered **\u058d {amount}** and their precious **{item_emoji} {item_name}** in defeat.",
       "item_id": "troll_mask",
-      "money_min": 1500,
-      "money_max": 3500
+      "money_min": 1944,
+      "money_max": 4305
     }
   },
   {
@@ -1364,8 +1364,8 @@
       "chance": 1,
       "message": "You convinced him there's hope in the world! He gave you **\u058d {amount}** and his old **{item_emoji} {item_name}** to start fresh.",
       "item_id": "viral_freakout_video",
-      "money_min": 2000,
-      "money_max": 4500
+      "money_min": 2277,
+      "money_max": 4722
     }
   }
 ]
