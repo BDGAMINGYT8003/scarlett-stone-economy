@@ -2,7 +2,7 @@
   {
     "id": "bank_note",
     "name": "Bank Note",
-    "description": "Imagine if banks actually had a max amount. Wait, some do? Thanks Obama.",
+    "description": "Imagine if real banks actually had a max capacity. Wait, some do? Thanks Obama. You can use this to expand your vault so you can hoard more fake internet money.",
     "emoji": "💵",
     "type": "Power-up",
     "rarity": "Common",
@@ -15,7 +15,7 @@
   {
     "id": "adventure_ticket",
     "name": "Adventure Ticket",
-    "description": "A ticket to go on an adventure!",
+    "description": "A golden ticket to go on a grand adventure! Or, more likely, a ticket to get mugged by a dragon. Either way, it's a one-way trip out of your mom's basement.",
     "emoji": "🎟️",
     "type": "Collectable",
     "rarity": "Uncommon",
@@ -28,7 +28,7 @@
   {
     "id": "alcohol",
     "name": "Alcohol",
-    "description": "Don't drink and drive.",
+    "description": "Liquid courage in a bottle. Do not drink and drive, or operate heavy machinery. Actually, just don't do anything important while under the influence of this pixelated booze.",
     "emoji": "🍺",
     "type": "Power-up",
     "rarity": "Common",
@@ -41,7 +41,7 @@
   {
     "id": "apple",
     "name": "Apple",
-    "description": "An apple a day keeps the doctor away.",
+    "description": "An apple a day keeps the doctor away. Mainly because doctors hate people who throw apples at them. Eat this to gain a tiny shred of health.",
     "emoji": "🍎",
     "type": "Collectable",
     "rarity": "Common",
@@ -54,7 +54,7 @@
   {
     "id": "padlock",
     "name": "Padlock",
-    "description": "Locks your wallet so people can't rob you.",
+    "description": "A rusty padlock to lock your wallet so greedy strangers can't rob you blind. It’s basically a digital chastity belt for your bank account. Use it wisely.",
     "emoji": "🔒",
     "type": "Tool",
     "rarity": "Common",
@@ -67,7 +67,7 @@
   {
     "id": "laptop",
     "name": "Laptop",
-    "description": "Used to post memes and commit internet crimes.",
+    "description": "A crusty, overheating gaming laptop used to post terrible memes and commit internet crimes. The fan sounds like a jet engine preparing for takeoff. Essential for any aspiring edge-lord.",
     "emoji": "💻",
     "type": "Tool",
     "rarity": "Rare",
@@ -80,7 +80,7 @@
   {
     "id": "fishing_pole",
     "name": "Fishing Pole",
-    "description": "Catch some fish!",
+    "description": "A sturdy rod for yanking innocent creatures out of their watery homes. It smells faintly of desperation and old bait. Cast away and pray you don't catch a boot.",
     "emoji": "🎣",
     "type": "Tool",
     "rarity": "Common",
@@ -93,7 +93,7 @@
   {
     "id": "hunting_rifle",
     "name": "Hunting Rifle",
-    "description": "Go hunting for animals.",
+    "description": "Go hunting for animals to prove your dominance over nature. It's loud, dangerous, and probably illegal in most jurisdictions. Try not to shoot your own foot off.",
     "emoji": "🔫",
     "type": "Tool",
     "rarity": "Common",
@@ -106,7 +106,7 @@
   {
     "id": "beggars_bowl",
     "name": "Beggars Bowl",
-    "description": "A dirty bowl for begging. Increases begging luck.",
+    "description": "A filthy, cracked bowl for panhandling in the digital streets. Simply holding this increases your aura of patheticness, making people pity you more. It smells like loose change and despair.",
     "emoji": "🥣",
     "type": "Tool",
     "rarity": "Rare",
@@ -119,7 +119,7 @@
   {
     "id": "ancient_coin",
     "name": "Ancient Coin",
-    "description": "A coin from a lost civilization. It belongs in a museum!",
+    "description": "A shiny coin from a lost civilization that collapsed due to hyperinflation. It totally belongs in a museum, but you're going to hoard it instead. Indiana Jones would be furious.",
     "emoji": "🪙",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -132,7 +132,7 @@
   {
     "id": "trash",
     "name": "Trash",
-    "description": "One man's trash is another man's... trash.",
+    "description": "Literally just a bag of smelly garbage. One man's trash is another man's... no, wait, this is definitely just trash. Useless, stinky, and completely worthless.",
     "emoji": "🗑️",
     "type": "Junk",
     "rarity": "Common",
@@ -145,7 +145,7 @@
   {
     "id": "lucky_horseshoe",
     "name": "Lucky Horseshoe",
-    "description": "Increases luck in gambling.",
+    "description": "A heavy chunk of iron that supposedly increases your luck in gambling. It’s completely placebo, but hey, whatever helps you sleep at night after losing your life savings. Equip it and pray to the RNG gods.",
     "emoji": "🧲",
     "type": "Power-up",
     "rarity": "Epic",
@@ -158,7 +158,7 @@
   {
     "id": "shovel",
     "name": "Shovel",
-    "description": "Used to dig for treasure.",
+    "description": "A dirty shovel used to violently excavate the earth in search of buried treasure. It doubles as a blunt force weapon in emergencies. Start digging before someone else claims your loot.",
     "emoji": "⛏️",
     "type": "Tool",
     "rarity": "Common",
@@ -171,7 +171,7 @@
   {
     "id": "mouse",
     "name": "Mouse",
-    "description": "A computer mouse. Click click.",
+    "description": "A sticky, RGB computer mouse that has seen far too many intense gaming sessions. Click it rapidly to pretend you're doing something productive. It's mostly just spare parts now.",
     "emoji": "🖱️",
     "type": "Tool",
     "rarity": "Uncommon",
@@ -184,7 +184,7 @@
   {
     "id": "keyboard",
     "name": "Keyboard",
-    "description": "Clicky clacky.",
+    "description": "A mechanical keyboard so loud it wakes up your neighbors. The keycaps are coated in a fine layer of Cheeto dust. Type your angry internet rants with unprecedented speed.",
     "emoji": "⌨️",
     "type": "Tool",
     "rarity": "Uncommon",
@@ -197,7 +197,7 @@
   {
     "id": "camera",
     "name": "Camera",
-    "description": "Say cheese!",
+    "description": "A high-end DSLR camera you bought to start a vlog but never used. Now you just use it to take pictures of your lunch. Say cheese for the surveillance state!",
     "emoji": "📷",
     "type": "Tool",
     "rarity": "Rare",
@@ -210,7 +210,7 @@
   {
     "id": "pizza",
     "name": "Pizza",
-    "description": "Yummy pepperoni pizza.",
+    "description": "A greasy, lukewarm slice of pepperoni pizza. It's the cornerstone of any balanced gamer diet. Shove it in your face for a quick burst of unearned energy.",
     "emoji": "🍕",
     "type": "Collectable",
     "rarity": "Common",
@@ -223,7 +223,7 @@
   {
     "id": "diamond",
     "name": "Diamond",
-    "description": "Shiny!",
+    "description": "A shiny, highly pressurized piece of carbon that society deemed incredibly valuable. It sparkles almost as much as your unfulfilled dreams. Keep it safe from the local jewel thieves.",
     "emoji": "💎",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -236,7 +236,7 @@
   {
     "id": "rare_pepe",
     "name": "Rare Pepe",
-    "description": "The rarest of pepes.",
+    "description": "The rarest, most exquisite of all Pepes. Minted in the fires of 4chan and verified by the meme council. Do not right-click and save this absolute masterpiece.",
     "emoji": "<:RarePepe:936007340736536626>",
     "type": "Collectable",
     "rarity": "Rare",
@@ -249,7 +249,7 @@
   {
     "id": "dank_box",
     "name": "Dank Box",
-    "description": "A box full of dank memes.",
+    "description": "A cardboard box radiating pure, unadulterated dankness. Opening it might give you unimaginable wealth or a literal pile of garbage. Are you feeling lucky, punk?",
     "emoji": "<a:DankBoxClosed:861390901049425950>",
     "type": "Lootbox",
     "rarity": "Epic",
@@ -262,7 +262,7 @@
   {
     "id": "work_box",
     "name": "Work Box",
-    "description": "A box for hard workers.",
+    "description": "A sad, gray box rewarded only to the hardest corporate drones. It smells like stale coffee and broken dreams. Open it to numb the pain of the 9-to-5 grind.",
     "emoji": "<a:WorkBoxClosed:1004537002869411970>",
     "type": "Lootbox",
     "rarity": "Rare",
@@ -275,7 +275,7 @@
   {
     "id": "meme_box",
     "name": "Meme Box",
-    "description": "A box of fresh memes.",
+    "description": "A vibrating crate full of fresh, stolen memes. Opening this without eye protection may cause severe cringe. Crack it open and see what the internet dragged in.",
     "emoji": "<a:MemeBoxClosed:861390901300953118>",
     "type": "Lootbox",
     "rarity": "Uncommon",
@@ -288,7 +288,7 @@
   {
     "id": "exclusive_gems_box",
     "name": "Exclusive Gems Box",
-    "description": "Contains shiny gems.",
+    "description": "A glowing, gem-encrusted box that screams 'I have too much money.' It contains shiny rocks that the peasants can only dream of. Open it to flex on everyone in general chat.",
     "emoji": "<a:ExclusiveWebsiteBoxClosed:1107672694545195060>",
     "type": "Lootbox",
     "rarity": "Legendary",
@@ -301,7 +301,7 @@
   {
     "id": "corn_seeds",
     "name": "Corn Seeds",
-    "description": "Plant these to grow corn.",
+    "description": "A handful of dry kernels. Plant these in the dirt and wait months for a mediocre vegetable. Farming is a completely honest, yet brutally boring living.",
     "emoji": "<:CornBag:996880154318090290>",
     "type": "Tool",
     "rarity": "Common",
@@ -314,7 +314,7 @@
   {
     "id": "carrot_seeds",
     "name": "Carrot Seeds",
-    "description": "Plant these to grow carrots.",
+    "description": "Tiny seeds that will eventually grow into orange root vegetables. Bugs Bunny would be proud. Plant them and watch the literal grass grow.",
     "emoji": "<:CarrotSeeds:998015510992130068>",
     "type": "Tool",
     "rarity": "Common",
@@ -327,7 +327,7 @@
   {
     "id": "broccoli_seeds",
     "name": "Broccoli Seeds",
-    "description": "Plant these to grow broccoli.",
+    "description": "Seeds for the vegetable that ruined your childhood dinners. Why are you even planting these? Grow them just to torture your digital taste buds.",
     "emoji": "<:BroccoliSeeds:998341356034478241>",
     "type": "Tool",
     "rarity": "Common",
@@ -340,7 +340,7 @@
   {
     "id": "worm",
     "name": "Worm",
-    "description": "It's wriggly. Eww.",
+    "description": "A slimy, wriggly little guy you dug out of the mud. It's incredibly gross, but the fish seem to love it. Impale it on a hook for maximum efficiency.",
     "emoji": "<:Worm:864261394920898600>",
     "type": "Animal",
     "rarity": "Common",
@@ -353,7 +353,7 @@
   {
     "id": "ant",
     "name": "Ant",
-    "description": "Small but strong.",
+    "description": "A single, incredibly strong insect that could ruin your picnic. It serves no real purpose other than existing. Just a tiny, six-legged monument to insignificance.",
     "emoji": "🐜",
     "type": "Animal",
     "rarity": "Common",
@@ -366,7 +366,7 @@
   {
     "id": "ladybug",
     "name": "Ladybug",
-    "description": "Good luck charm.",
+    "description": "A pretty little bug that supposedly brings good luck. It's a nice change of pace from all the horrific things you usually encounter. Don't squish it.",
     "emoji": "🐞",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -379,7 +379,7 @@
   {
     "id": "stickbug",
     "name": "Stickbug",
-    "description": "Get stickbugged lol.",
+    "description": "Get stickbugged lol. It literally looks exactly like a twig. A master of disguise and a master of dead memes.",
     "emoji": "🦗",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -392,7 +392,7 @@
   {
     "id": "spider",
     "name": "Spider",
-    "description": "Spooky.",
+    "description": "A terrifying, eight-legged freak of nature. It spins webs and haunts the darkest corners of your room. Keep it far away from me.",
     "emoji": "🕷️",
     "type": "Animal",
     "rarity": "Rare",
@@ -405,7 +405,7 @@
   {
     "id": "fossil",
     "name": "Fossil",
-    "description": "A piece of history.",
+    "description": "A piece of a dead dinosaur turned into solid rock. It belongs in a museum, but you're going to keep it in your messy inventory. A true piece of ancient history.",
     "emoji": "🦕",
     "type": "Collectable",
     "rarity": "Rare",
@@ -418,7 +418,7 @@
   {
     "id": "gold_nugget",
     "name": "Gold Nugget",
-    "description": "A chunk of pure gold.",
+    "description": "A solid chunk of pure, shiny gold. It's heavy, valuable, and makes you feel like a pirate. Guard it with your life.",
     "emoji": "<:GoldNugget:866108990396006430>",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -431,7 +431,7 @@
   {
     "id": "rabbit",
     "name": "Rabbit",
-    "description": "Hop hop hop.",
+    "description": "A fluffy, twitchy little creature that hops around aimlessly. You caught it while hunting, you monster. What are you going to do with it?",
     "emoji": "🐇",
     "type": "Animal",
     "rarity": "Common",
@@ -444,7 +444,7 @@
   {
     "id": "duck",
     "name": "Duck",
-    "description": "Quack quack.",
+    "description": "A noisy waterfowl that constantly quacks for bread. It's somewhat cute, but mostly just annoying. Caught while hunting in the local pond.",
     "emoji": "🦆",
     "type": "Animal",
     "rarity": "Common",
@@ -457,7 +457,7 @@
   {
     "id": "deer",
     "name": "Deer",
-    "description": "Oh deer.",
+    "description": "A majestic woodland creature that frequently jumps in front of moving cars. Oh deer, you managed to hunt one down. Enjoy the venison.",
     "emoji": "<:Deer:1167617729222684692>",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -470,7 +470,7 @@
   {
     "id": "boar",
     "name": "Boar",
-    "description": "Wild pig.",
+    "description": "A highly aggressive, hairy wild pig. It charged at you, and you survived. A true testament to your survival skills.",
     "emoji": "🐗",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -483,7 +483,7 @@
   {
     "id": "skunk",
     "name": "Skunk",
-    "description": "Stinky.",
+    "description": "A horrible, stinky animal that ruined your clothes. The smell will literally never wash out. Why did you even try to catch this?",
     "emoji": "🦨",
     "type": "Animal",
     "rarity": "Rare",
@@ -496,7 +496,7 @@
   {
     "id": "fox",
     "name": "Fox",
-    "description": "What does the fox say?",
+    "description": "What does the fox actually say? Probably something about how much it hates being in your inventory. A rare and cunning catch.",
     "emoji": "🦊",
     "type": "Animal",
     "rarity": "Rare",
@@ -509,7 +509,7 @@
   {
     "id": "bear",
     "name": "Bear",
-    "description": "Big and scary.",
+    "description": "A massive, terrifying apex predator. You somehow managed to hunt this without getting mauled to death. You are officially the alpha now.",
     "emoji": "🐻",
     "type": "Animal",
     "rarity": "Epic",
@@ -522,7 +522,7 @@
   {
     "id": "wolf",
     "name": "Wolf",
-    "description": "Winter is coming.",
+    "description": "A fierce, howling beast of the winter woods. Winter is coming, and so is this wolf. A truly epic catch.",
     "emoji": "🐺",
     "type": "Animal",
     "rarity": "Epic",
@@ -535,7 +535,7 @@
   {
     "id": "tiger",
     "name": "Tiger",
-    "description": "King of the jungle? Wait no.",
+    "description": "The striped king of the jungle, or wait, that's lions. Either way, it's a massive, deadly cat. A legendary trophy for any hunter.",
     "emoji": "🐯",
     "type": "Animal",
     "rarity": "Legendary",
@@ -548,7 +548,7 @@
   {
     "id": "dragon",
     "name": "Dragon",
-    "description": "A mythical beast.",
+    "description": "A literal fire-breathing mythical beast. How did you even catch this? You have defied the laws of reality itself.",
     "emoji": "🐉",
     "type": "Animal",
     "rarity": "Mythical",
@@ -561,7 +561,7 @@
   {
     "id": "common_fish",
     "name": "Common Fish",
-    "description": "Just a regular fish.",
+    "description": "Just a completely average, unremarkable fish. It flops around pathetically. At least you didn't catch a boot.",
     "emoji": "🐟",
     "type": "Animal",
     "rarity": "Common",
@@ -574,7 +574,7 @@
   {
     "id": "tropical_fish",
     "name": "Tropical Fish",
-    "description": "Colorful and pretty.",
+    "description": "A vibrant, colorful fish that belongs in a dentist's office aquarium. Finding Nemo was a documentary. It's too pretty to eat.",
     "emoji": "🐠",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -587,7 +587,7 @@
   {
     "id": "blowfish",
     "name": "Blowfish",
-    "description": "Don't touch the spikes!",
+    "description": "A spiky, highly venomous balloon of a fish. Do not touch the spikes, or you will have a very bad time. Handle with extreme caution.",
     "emoji": "🐡",
     "type": "Animal",
     "rarity": "Uncommon",
@@ -600,7 +600,7 @@
   {
     "id": "squid",
     "name": "Squid",
-    "description": "Inky.",
+    "description": "A squishy, inky cephalopod. It looks like it wants to escape back into the ocean. Try not to get sprayed.",
     "emoji": "🦑",
     "type": "Animal",
     "rarity": "Rare",
@@ -613,7 +613,7 @@
   {
     "id": "octopus",
     "name": "Octopus",
-    "description": "Eight arms to hold you.",
+    "description": "A highly intelligent creature with eight arms to hold you. It's probably smarter than half the people in this server. A rare and fascinating catch.",
     "emoji": "🐙",
     "type": "Animal",
     "rarity": "Rare",
@@ -626,7 +626,7 @@
   {
     "id": "crab",
     "name": "Crab",
-    "description": "Snip snip.",
+    "description": "A grumpy little crustacean with pinchers of doom. Snip snip, it wants to fight you. Watch your fingers.",
     "emoji": "🦀",
     "type": "Animal",
     "rarity": "Rare",
@@ -639,7 +639,7 @@
   {
     "id": "lobster",
     "name": "Lobster",
-    "description": "Fancy dinner.",
+    "description": "A fancy, expensive sea bug. Boil it alive for a gourmet dinner. Only the finest catches for your inventory.",
     "emoji": "🦞",
     "type": "Animal",
     "rarity": "Epic",
@@ -652,7 +652,7 @@
   {
     "id": "shrimp",
     "name": "Shrimp",
-    "description": "Small but tasty.",
+    "description": "A tiny, pathetic little sea creature. It's small but surprisingly tasty. You are one in a krillion.",
     "emoji": "🦐",
     "type": "Animal",
     "rarity": "Common",
@@ -665,7 +665,7 @@
   {
     "id": "shark",
     "name": "Shark",
-    "description": "Baby shark doo doo doo.",
+    "description": "A terrifying apex predator of the ocean. Baby shark doo doo doo. You are incredibly lucky to have caught this legendary beast without losing a limb.",
     "emoji": "🦈",
     "type": "Animal",
     "rarity": "Legendary",
@@ -678,7 +678,7 @@
   {
     "id": "whale",
     "name": "Whale",
-    "description": "A giant of the sea.",
+    "description": "A literal giant of the sea. How does this even fit in your inventory? The logistics are mind-boggling.",
     "emoji": "🐳",
     "type": "Animal",
     "rarity": "Legendary",
@@ -691,7 +691,7 @@
   {
     "id": "kraken",
     "name": "Kraken",
-    "description": "Release the Kraken!",
+    "description": "Release the Kraken! A mythical sea monster of unfathomable power. You have conquered the deepest oceans to claim this.",
     "emoji": "🦑",
     "type": "Animal",
     "rarity": "Legendary",
@@ -704,7 +704,7 @@
   {
     "id": "trivia_trophy",
     "name": "Trivia Trophy",
-    "description": "Proof that you know random stuff.",
+    "description": "A shiny plastic trophy proving you know a bunch of useless facts. Congratulations on your trivial knowledge. Flex it on the uneducated masses.",
     "emoji": "<:TriviaTrophy:1033824245077262386>",
     "type": "Collectable",
     "rarity": "Rare",
@@ -717,7 +717,7 @@
   {
     "id": "candy",
     "name": "Candy",
-    "description": "Sweet treat.",
+    "description": "A sweet, sugary treat filled with artificial colors. It will absolutely rot your teeth out. Eat it for a quick, jittery sugar rush.",
     "emoji": "<:Candy:943637574906417214>",
     "type": "Power-up",
     "rarity": "Common",
@@ -730,7 +730,7 @@
   {
     "id": "candy_corn",
     "name": "Candy Corn",
-    "description": "Love it or hate it.",
+    "description": "The most controversial candy in existence. You either love it or you want to throw it into the sun. A truly polarizing treat.",
     "emoji": "<:CandyCorn:1024830960216313969>",
     "type": "Power-up",
     "rarity": "Common",
@@ -743,7 +743,7 @@
   {
     "id": "scary_mask",
     "name": "Scary Mask",
-    "description": "Boo!",
+    "description": "A cheap plastic mask designed to elicit a mild 'boo'. It smells heavily of rubber and sweat. Perfect for cheap jump scares.",
     "emoji": "<:ScaryMask:1024829726159798272>",
     "type": "Tool",
     "rarity": "Uncommon",
@@ -756,7 +756,7 @@
   {
     "id": "spooky_mask",
     "name": "Spooky Mask",
-    "description": "Spoopy.",
+    "description": "A genuinely spoopy mask that might actually give someone nightmares. The eye holes stare directly into your soul. Wear it to assert dominance in the dark.",
     "emoji": "<:ScaryMask:1024829726159798272>",
     "type": "Tool",
     "rarity": "Uncommon",
@@ -769,7 +769,7 @@
   {
     "id": "voodoo_doll",
     "name": "Voodoo Doll",
-    "description": "Creepy.",
+    "description": "A creepy little doll filled with pins and dark magic. Who are you hexing today? Keep it away from your enemies.",
     "emoji": "<:VoodooDoll:1024827756300750848>",
     "type": "Tool",
     "rarity": "Rare",
@@ -782,7 +782,7 @@
   {
     "id": "jacky_o_lanty",
     "name": "Jacky o' Lanty",
-    "description": "It's alive!",
+    "description": "A carved pumpkin that is definitely haunted. It flickers ominously in the night. It's alive, I tell you, it's alive!",
     "emoji": "<a:JackyOLanty:968850393431961630>",
     "type": "Tool",
     "rarity": "Epic",
@@ -795,7 +795,7 @@
   {
     "id": "life_saver",
     "name": "Life Saver",
-    "description": "Saves your life.",
+    "description": "A glowing, magical donut that literally prevents you from dying. It's the ultimate 'get out of jail free' card for the afterlife. Never leave home without it.",
     "emoji": "<a:LifeSaver:935147848977219635>",
     "type": "Tool",
     "rarity": "Epic",
@@ -808,7 +808,7 @@
   {
     "id": "jar_of_singularity",
     "name": "Jar of Singularity",
-    "description": "A universe in a jar.",
+    "description": "A tiny glass jar containing a literal swirling galaxy. Do not open it, or you might collapse the universe. An impossibly rare and dangerous artifact.",
     "emoji": "<:JarOfSingularity:932759942081941515>",
     "type": "Collectable",
     "rarity": "Mythical",
@@ -821,7 +821,7 @@
   {
     "id": "skin_fragments",
     "name": "Skin Fragments",
-    "description": "Gross.",
+    "description": "A pile of crusty, peeling skin. This is absolutely disgusting and deeply concerning. Why are you collecting this?",
     "emoji": "<:SkinFragments:1060272407471984710>",
     "type": "Collectable",
     "rarity": "Rare",
@@ -834,7 +834,7 @@
   {
     "id": "cookie",
     "name": "Cookie",
-    "description": "C is for Cookie.",
+    "description": "C is for Cookie, and Cookie is for me. A delicious baked good filled with chocolate chips. Eat it to feel a fleeting moment of joy.",
     "emoji": "🍪",
     "type": "Power-up",
     "rarity": "Common",
@@ -847,7 +847,7 @@
   {
     "id": "chill_pill",
     "name": "Chill Pill",
-    "description": "Take a chill pill.",
+    "description": "A literal, physical pill that forces you to calm down. Take a chill pill before you start a flame war. Highly recommended for angry gamers.",
     "emoji": "💊",
     "type": "Power-up",
     "rarity": "Uncommon",
@@ -860,7 +860,7 @@
   {
     "id": "energy_drink",
     "name": "Energy Drink",
-    "description": "Go fast.",
+    "description": "A toxic, neon-colored liquid that makes your heart beat in dubstep. Go incredibly fast for exactly five minutes, then crash horribly. Fuel for the sleep-deprived.",
     "emoji": "⚡",
     "type": "Power-up",
     "rarity": "Common",
@@ -873,7 +873,7 @@
   {
     "id": "garbage",
     "name": "Garbage",
-    "description": "Stinky.",
+    "description": "A smelly, leaking bag of absolute refuse. It attracts flies and repulsive comments. Completely useless junk.",
     "emoji": "🗑️",
     "type": "Junk",
     "rarity": "Common",
@@ -886,7 +886,7 @@
   {
     "id": "duct_tape",
     "name": "Duct Tape",
-    "description": "Fixes everything.",
+    "description": "A roll of gray tape that can fix literally anything, from broken pipes to broken relationships. The cornerstone of engineering. Never underestimate its power.",
     "emoji": "🩹",
     "type": "Tool",
     "rarity": "Uncommon",
@@ -899,7 +899,7 @@
   {
     "id": "pepe_ring",
     "name": "Pepe Ring",
-    "description": "One ring to rule them all.",
+    "description": "One shiny ring to rule them all. Forged in the fires of Mount Doom by Pepe himself. A truly precious and legendary collectible.",
     "emoji": "💍",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -912,7 +912,7 @@
   {
     "id": "corncob",
     "name": "Corncob",
-    "description": "It's corn!",
+    "description": "It's corn! A big lump with knobs. It has the juice. Just a simple, completely average corncob.",
     "emoji": "🌽",
     "type": "Collectable",
     "rarity": "Common",
@@ -925,7 +925,7 @@
   {
     "id": "zombee",
     "name": "ZomB's Zombee",
-    "description": "It buzzes... menacingly.",
+    "description": "A horrific undead bee that buzzes menacingly. It craves brains and nectar. A truly rare and terrifying find.",
     "emoji": "🧟🐝",
     "type": "Collectable",
     "rarity": "Epic",
@@ -938,7 +938,7 @@
   {
     "id": "engagement_ring",
     "name": "Engagement Ring",
-    "description": "Will you marry me?",
+    "description": "A diamond ring meant to symbolize eternal love. Or, more likely, used to simp for someone in a Discord server. Will you marry me?",
     "emoji": "💍",
     "type": "Collectable",
     "rarity": "Epic",
@@ -951,7 +951,7 @@
   {
     "id": "holy_water",
     "name": "Holy Water",
-    "description": "Burns demons.",
+    "description": "A vial of blessed water that burns demons and toxic chatters. Sprinkle it to cleanse the server of sin. Stay pure.",
     "emoji": "💧",
     "type": "Tool",
     "rarity": "Rare",
@@ -964,7 +964,7 @@
   {
     "id": "aetheryx_flower",
     "name": "Aetheryx' Flower",
-    "description": "A rare flower.",
+    "description": "A beautiful, impossibly rare flower from another dimension. It glows with an ethereal light. A legendary botanical specimen.",
     "emoji": "🌺",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -977,7 +977,7 @@
   {
     "id": "blob_pet",
     "name": "Blob Pet",
-    "description": "A blob.",
+    "description": "A squishy, purple blob that bounces around happily. It demands head pats and snacks. The ultimate digital companion.",
     "emoji": "🟣",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -990,7 +990,7 @@
   {
     "id": "pepe_trophy",
     "name": "Pepe Trophy",
-    "description": "A trophy for Pepe.",
+    "description": "A massive, golden trophy dedicated to the greatest meme of all time. Only true winners possess this. Flex your superiority.",
     "emoji": "🏆",
     "type": "Collectable",
     "rarity": "Epic",
@@ -1003,7 +1003,7 @@
   {
     "id": "pepe_medal",
     "name": "Pepe Medal",
-    "description": "A medal for Pepe.",
+    "description": "A shiny medal proving your dedication to the Pepe lifestyle. Pin it to your chest with pride. You are officially a winner.",
     "emoji": "🥇",
     "type": "Collectable",
     "rarity": "Rare",
@@ -1016,7 +1016,7 @@
   {
     "id": "jack_o_lantern_pet",
     "name": "Jack O' Lantern Pet",
-    "description": "A spooky pet.",
+    "description": "A floating, carved pumpkin pet that follows you around. It constantly spits out tiny flames. Spooky, yet adorable.",
     "emoji": "🎃",
     "type": "Collectable",
     "rarity": "Legendary",
@@ -1029,7 +1029,7 @@
   {
     "id": "jacky_o_lantern",
     "name": "Jacky O'Lantern",
-    "description": "A spooky lantern.",
+    "description": "A slightly smaller, yet equally spooky glowing pumpkin. It sits there, judging you. The perfect Halloween decoration.",
     "emoji": "🎃",
     "type": "Collectable",
     "rarity": "Rare",
@@ -1042,7 +1042,7 @@
   {
     "id": "god_box",
     "name": "God Box",
-    "description": "A box fit for a god.",
+    "description": "A glowing, levitating crate forged by the developers themselves. It contains literal godlike rewards. Opening this makes you feel like a deity.",
     "emoji": "📦",
     "type": "Lootbox",
     "rarity": "Mythical",
@@ -1051,5 +1051,395 @@
     "net_value": 5000000,
     "usable": true,
     "usage_info": "Open for godlike rewards."
+  },
+  {
+    "id": "ban_hammer",
+    "name": "Ban Hammer",
+    "description": "A massive, heavy mallet used by power-tripping server mods. Perfect for when someone posts absolute cringe in general chat. Swing it to instantly vanish the unworthy.",
+    "emoji": "🔨",
+    "type": "Tool",
+    "rarity": "Epic",
+    "buy_price": 50000,
+    "sell_price": 20000,
+    "net_value": 30000,
+    "usable": false,
+    "usage_info": "Swings with the power of a discord mod."
+  },
+  {
+    "id": "bathwater",
+    "name": "E-Girl Bathwater",
+    "description": "A sealed jar of murky water sold by a prominent E-Girl. Do not drink it under any circumstances. You will contract a medieval disease and intense shame.",
+    "emoji": "🧪",
+    "type": "Collectable",
+    "rarity": "Legendary",
+    "buy_price": 100000,
+    "sell_price": 40000,
+    "net_value": 60000,
+    "usable": true,
+    "usage_info": "Gives you a weird status effect if consumed."
+  },
+  {
+    "id": "tinfoil_hat",
+    "name": "Tinfoil Hat",
+    "description": "A crinkled sheet of aluminum designed to keep the 5G brainwaves out. Wear this to instantly increase your conspiracy theory knowledge. The government is definitely watching you.",
+    "emoji": "🛸",
+    "type": "Power-up",
+    "rarity": "Uncommon",
+    "buy_price": 2000,
+    "sell_price": 500,
+    "net_value": 1000,
+    "usable": true,
+    "usage_info": "Equip to increase your conspiracy theory knowledge."
+  },
+  {
+    "id": "hardware_wallet",
+    "name": "Hardware Wallet",
+    "description": "A sleek USB drive containing exactly 0.00001 Bitcoin. It's basically your entire life savings in a tiny, easily losable stick. Worth defending with your life, HODL.",
+    "emoji": "💽",
+    "type": "Collectable",
+    "rarity": "Rare",
+    "buy_price": 15000,
+    "sell_price": 7500,
+    "net_value": 10000,
+    "usable": false,
+    "usage_info": "HODL."
+  },
+  {
+    "id": "love_letter",
+    "name": "Tear-Stained Love Letter",
+    "description": "A tear-stained, deeply emotional letter from your ex. The ink is smeared from all the crying, making it barely legible. Read it to immediately gain +10 Sadness and regret.",
+    "emoji": "💌",
+    "type": "Junk",
+    "rarity": "Common",
+    "buy_price": 0,
+    "sell_price": 10,
+    "net_value": 10,
+    "usable": true,
+    "usage_info": "Read it to gain +10 Sadness."
+  },
+  {
+    "id": "metaverse_headset",
+    "name": "Metaverse Headset",
+    "description": "A bulky, uncomfortable headset that transports you to a low-res corporate nightmare. Strap it on to experience the future of terrible graphics. Required to interact with our reptilian overlords.",
+    "emoji": "🥽",
+    "type": "Tool",
+    "rarity": "Epic",
+    "buy_price": 75000,
+    "sell_price": 25000,
+    "net_value": 40000,
+    "usable": false,
+    "usage_info": "Required to interact with Zuckerberg."
+  },
+  {
+    "id": "burnt_toast",
+    "name": "Burnt Toast",
+    "description": "A slice of bread that has been completely carbonized into a black square. It's technically edible, but why would you do that to yourself? The crunch is deeply unsettling.",
+    "emoji": "🍞",
+    "type": "Collectable",
+    "rarity": "Common",
+    "buy_price": 50,
+    "sell_price": 5,
+    "net_value": 20,
+    "usable": true,
+    "usage_info": "Crunchy."
+  },
+  {
+    "id": "stream_deck",
+    "name": "Stream Deck",
+    "description": "A grid of glowing buttons used to trigger obnoxious sound effects during a livestream. Smash them rapidly to pretend you have a real job. Increases your meme production speed by 400%.",
+    "emoji": "🎛️",
+    "type": "Tool",
+    "rarity": "Rare",
+    "buy_price": 20000,
+    "sell_price": 8000,
+    "net_value": 15000,
+    "usable": false,
+    "usage_info": "Increases meme production speed."
+  },
+  {
+    "id": "webcam_tape",
+    "name": "Webcam Tape",
+    "description": "A tiny, sticky piece of tape that is the only thing protecting you from the FBI agent. Apply it immediately to preserve your last shred of dignity. Provides +5 Privacy against the surveillance state.",
+    "emoji": "🩹",
+    "type": "Tool",
+    "rarity": "Uncommon",
+    "buy_price": 1000,
+    "sell_price": 200,
+    "net_value": 500,
+    "usable": false,
+    "usage_info": "Provides +5 Privacy."
+  },
+  {
+    "id": "cosmic_dust",
+    "name": "Cosmic Dust",
+    "description": "A handful of sparkly, ethereal dust left behind by an ancient deity. It smells faintly of ozone and shattered reality. Staring at it too long will induce a mild existential crisis.",
+    "emoji": "✨",
+    "type": "Collectable",
+    "rarity": "Mythical",
+    "buy_price": 0,
+    "sell_price": 150000,
+    "net_value": 300000,
+    "usable": false,
+    "usage_info": "Just look at it."
+  },
+  {
+    "id": "dead_mouse",
+    "name": "Dead Mouse",
+    "description": "A stiff, completely deceased rodent. A stray cat brought this to you as a 'gift'. Dispose of it quickly before it stinks up your entire digital inventory.",
+    "emoji": "🐁",
+    "type": "Junk",
+    "rarity": "Common",
+    "buy_price": 0,
+    "sell_price": 2,
+    "net_value": 5,
+    "usable": false,
+    "usage_info": "Dispose of it quickly."
+  },
+  {
+    "id": "equity_shares",
+    "name": "Worthless Equity Shares",
+    "description": "A crumpled piece of paper representing 0.01% ownership in a doomed AI-blockchain startup. It is literally less valuable than the paper it's printed on. Frame it as a monument to your bad investments.",
+    "emoji": "📉",
+    "type": "Collectable",
+    "rarity": "Rare",
+    "buy_price": 10000,
+    "sell_price": 100,
+    "net_value": 500,
+    "usable": false,
+    "usage_info": "Frame it."
+  },
+  {
+    "id": "cursed_doll",
+    "name": "Cursed Doll",
+    "description": "A horrifying little doll with soulless button eyes. It definitely moved a few inches while you were looking away. Do not keep this in your bedroom.",
+    "emoji": "🪆",
+    "type": "Collectable",
+    "rarity": "Epic",
+    "buy_price": 30000,
+    "sell_price": 15000,
+    "net_value": 20000,
+    "usable": false,
+    "usage_info": "Keep away from children."
+  },
+  {
+    "id": "mushroom",
+    "name": "1-Up Mushroom",
+    "description": "A bright, pixelated mushroom that promises to give you an extra life. It actually just tastes like dirt and gives you a mild stomach ache. Consume it if you're feeling incredibly desperate.",
+    "emoji": "🍄",
+    "type": "Power-up",
+    "rarity": "Rare",
+    "buy_price": 15000,
+    "sell_price": 5000,
+    "net_value": 10000,
+    "usable": true,
+    "usage_info": "Consume for a mild trip."
+  },
+  {
+    "id": "hr_manual",
+    "name": "HR Complaint Form",
+    "description": "A thick, incredibly boring manual on workplace conduct. It's completely blank, which is deeply concerning. You're definitely going to need to fill this out after your last incident.",
+    "emoji": "📋",
+    "type": "Junk",
+    "rarity": "Common",
+    "buy_price": 500,
+    "sell_price": 50,
+    "net_value": 200,
+    "usable": true,
+    "usage_info": "Fill it out."
+  },
+  {
+    "id": "cracked_software",
+    "name": "Cracked Software Zip",
+    "description": "A highly suspicious zip file containing a pirated version of Photoshop. It consists of 90% Russian malware and 10% actual software. Extracting this is basically digital Russian roulette.",
+    "emoji": "🗜️",
+    "type": "Tool",
+    "rarity": "Uncommon",
+    "buy_price": 0,
+    "sell_price": 2000,
+    "net_value": 4000,
+    "usable": false,
+    "usage_info": "Use at your own risk."
+  },
+  {
+    "id": "stolen_meme",
+    "name": "Stolen Meme NFT",
+    "description": "A heavily artifacted, low-resolution JPEG of a monkey smoking a cigar. Someone told you this is the future of finance. You just right-clicked and saved it like a true rebel.",
+    "emoji": "🖼️",
+    "type": "Collectable",
+    "rarity": "Rare",
+    "buy_price": 25000,
+    "sell_price": 10000,
+    "net_value": 15000,
+    "usable": false,
+    "usage_info": "Right-click save."
+  },
+  {
+    "id": "gas_can",
+    "name": "Gas Can",
+    "description": "A heavy red plastic can filled with highly flammable liquid. Perfect for those intrusive thoughts when dealing with a rival business. Keep it far away from open flames and common sense.",
+    "emoji": "⛽",
+    "type": "Tool",
+    "rarity": "Epic",
+    "buy_price": 40000,
+    "sell_price": 15000,
+    "net_value": 25000,
+    "usable": false,
+    "usage_info": "Highly flammable."
+  },
+  {
+    "id": "ticket_stub",
+    "name": "Jaywalking Ticket",
+    "description": "A wrinkled, yellow ticket issued by a power-tripping cop for jaywalking. It's a harsh reminder that the long arm of the law applies even to pedestrians. Frame it to remember your criminal past.",
+    "emoji": "🎫",
+    "type": "Junk",
+    "rarity": "Common",
+    "buy_price": 0,
+    "sell_price": 5,
+    "net_value": 10,
+    "usable": false,
+    "usage_info": "Throw it away."
+  },
+  {
+    "id": "offshore_account",
+    "name": "Offshore Account Info",
+    "description": "A heavily encrypted flash drive containing details to a secret bank account in the Cayman Islands. Hide your illicitly gained assets from the IRS. It feels incredibly illegal just to hold it.",
+    "emoji": "🏝️",
+    "type": "Collectable",
+    "rarity": "Legendary",
+    "buy_price": 0,
+    "sell_price": 75000,
+    "net_value": 150000,
+    "usable": false,
+    "usage_info": "Hide your assets."
+  },
+  {
+    "id": "vbucks_card",
+    "name": "$19 Fortnite Card",
+    "description": "A legendary nineteen dollar Fortnite card. Who wants it? And yes, I'm giving it away. Remember, share, share, share, and don't get blocked.",
+    "emoji": "💳",
+    "type": "Collectable",
+    "rarity": "Rare",
+    "buy_price": 5000,
+    "sell_price": 2000,
+    "net_value": 3000,
+    "usable": true,
+    "usage_info": "Redeem for skins."
+  },
+  {
+    "id": "rigged_dice",
+    "name": "Rigged Dice",
+    "description": "A pair of weighted dice that mysteriously always roll a 7. They are absolutely perfect for scamming your friends at the casino. Just make sure the pit boss isn't watching.",
+    "emoji": "🎲",
+    "type": "Tool",
+    "rarity": "Epic",
+    "buy_price": 35000,
+    "sell_price": 10000,
+    "net_value": 20000,
+    "usable": false,
+    "usage_info": "Don't get caught."
+  },
+  {
+    "id": "botnet",
+    "name": "Botnet Access Key",
+    "description": "A shady USB drive containing access keys to a million infected smart fridges. Use it to launch a massive DDoS attack against a Minecraft server. Absolute power corrupts absolutely.",
+    "emoji": "🕸️",
+    "type": "Tool",
+    "rarity": "Legendary",
+    "buy_price": 0,
+    "sell_price": 50000,
+    "net_value": 100000,
+    "usable": false,
+    "usage_info": "Launch a DDoS attack."
+  },
+  {
+    "id": "mob_ledger",
+    "name": "Mob Boss Ledger",
+    "description": "A blood-stained black notebook detailing everyone who owes the mafia money. Reading this puts a massive target on your back. Prime blackmail material if you have a death wish.",
+    "emoji": "📓",
+    "type": "Collectable",
+    "rarity": "Epic",
+    "buy_price": 0,
+    "sell_price": 30000,
+    "net_value": 60000,
+    "usable": false,
+    "usage_info": "Blackmail material."
+  },
+  {
+    "id": "stolen_lambo",
+    "name": "Stolen Lamborghini Keys",
+    "description": "The sleek, remote-fob keys to a heavily customized, stolen supercar. You have the keys, now you just have to find where you parked the actual car. Vroom vroom, criminal.",
+    "emoji": "🏎️",
+    "type": "Collectable",
+    "rarity": "Legendary",
+    "buy_price": 0,
+    "sell_price": 120000,
+    "net_value": 250000,
+    "usable": false,
+    "usage_info": "Vroom vroom."
+  },
+  {
+    "id": "party_hat",
+    "name": "Blue Partyhat",
+    "description": "A flimsy, blue paper crown that is somehow the ultimate status symbol from 2001. Flexing this shows everyone that you peaked decades ago. A truly mythical flex on the noobs.",
+    "emoji": "🥳",
+    "type": "Collectable",
+    "rarity": "Mythical",
+    "buy_price": 0,
+    "sell_price": 500000,
+    "net_value": 1000000,
+    "usable": false,
+    "usage_info": "Flex on noobs."
+  },
+  {
+    "id": "wiki_edit",
+    "name": "Wikipedia Admin Rights",
+    "description": "A magical badge granting you total Wikipedia admin rights. You now possess the terrifying power to lock pages and revert edits instantly. You control the narrative of truth itself.",
+    "emoji": "📖",
+    "type": "Tool",
+    "rarity": "Epic",
+    "buy_price": 50000,
+    "sell_price": 15000,
+    "net_value": 30000,
+    "usable": false,
+    "usage_info": "Control the truth."
+  },
+  {
+    "id": "alien_probe",
+    "name": "Alien Probe",
+    "description": "A highly advanced, deeply unsettling piece of extraterrestrial technology. You absolutely do not want to know where this has been. Best kept in a lead-lined lockbox.",
+    "emoji": "👽",
+    "type": "Tool",
+    "rarity": "Legendary",
+    "buy_price": 0,
+    "sell_price": 80000,
+    "net_value": 150000,
+    "usable": false,
+    "usage_info": "For scientific purposes."
+  },
+  {
+    "id": "used_napkin",
+    "name": "Used Napkin",
+    "description": "A crumpled paper napkin stained with ketchup and regret. You probably robbed a child's lemonade stand to get this. Just throw it away, it's disgusting.",
+    "emoji": "🤧",
+    "type": "Junk",
+    "rarity": "Common",
+    "buy_price": 0,
+    "sell_price": 1,
+    "net_value": 1,
+    "usable": false,
+    "usage_info": "Throw it away."
+  },
+  {
+    "id": "token_bucket",
+    "name": "Bucket of Arcade Tokens",
+    "description": "A sticky plastic bucket filled to the brim with worthless arcade tokens. If you save up ten thousand more, you might be able to afford a Chinese finger trap. Keep grinding.",
+    "emoji": "🪙",
+    "type": "Collectable",
+    "rarity": "Uncommon",
+    "buy_price": 1000,
+    "sell_price": 300,
+    "net_value": 500,
+    "usable": false,
+    "usage_info": "Play games."
   }
 ]

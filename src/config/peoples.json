@@ -14,8 +14,8 @@
       "chance": 1,
       "message": "Elon replied '!' to your meme! He wired you **֍ {amount}** and threw in a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 1000,
-      "money_max": 5000
+      "money_min": 5066,
+      "money_max": 7600
     }
   },
   {
@@ -32,7 +32,7 @@
   },
   {
     "name": "Your Mom",
-    "success_chance": 90,
+    "success_chance": 45,
     "success_quotes": [
       "Oh sweetie, of course! Here's **֍ {amount}** for your little video games.",
       "Take **֍ {amount}**, but don't tell your dad. He thinks you need a job."
@@ -45,8 +45,8 @@
       "chance": 2,
       "message": "Mom says you're handsome! She slipped you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "apple",
-      "money_min": 500,
-      "money_max": 2000
+      "money_min": 2001,
+      "money_max": 2800
     }
   },
   {
@@ -64,13 +64,13 @@
       "chance": 1,
       "message": "Gordon actually liked your cooking! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "pizza",
-      "money_min": 1000,
-      "money_max": 3000
+      "money_min": 5600,
+      "money_max": 8400
     }
   },
   {
     "name": "Shrek",
-    "success_chance": 60,
+    "success_chance": 35,
     "success_quotes": [
       "Get out of my swamp! But take **֍ {amount}** for the road.",
       "Ogres have layers, and so does my wallet. Have **֍ {amount}**."
@@ -82,7 +82,7 @@
   },
   {
     "name": "Santa Claus",
-    "success_chance": 70,
+    "success_chance": 40,
     "success_quotes": [
       "You've been mildly adequate this year. Ho ho ho, take **֍ {amount}**!",
       "I found **֍ {amount}** at the bottom of my sack. Enjoy, kiddo."
@@ -95,8 +95,8 @@
       "chance": 2,
       "message": "Santa felt pity for your pathetic life! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "beggars_bowl",
-      "money_min": 2500,
-      "money_max": 5000
+      "money_min": 2933,
+      "money_max": 4400
     }
   },
   {
@@ -114,8 +114,8 @@
       "chance": 0.5,
       "message": "You survived 100 days in a circle! MrBeast handed you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "diamond",
-      "money_min": 10000,
-      "money_max": 50000
+      "money_min": 4533,
+      "money_max": 6800
     }
   },
   {
@@ -132,7 +132,7 @@
   },
   {
     "name": "Rick Astley",
-    "success_chance": 60,
+    "success_chance": 30,
     "success_quotes": [
       "Never gonna give you up, but I will give you **֍ {amount}**. Enjoy the meme.",
       "I know the rules, and so do you. Have **֍ {amount}**."
@@ -157,13 +157,13 @@
       "chance": 1,
       "message": "Batman accidentally dropped his utility belt! You scored **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "padlock",
-      "money_min": 2000,
-      "money_max": 4000
+      "money_min": 5333,
+      "money_max": 8000
     }
   },
   {
     "name": "SpongeBob",
-    "success_chance": 80,
+    "success_chance": 42,
     "success_quotes": [
       "I'm ready! I'm ready! To hand you **֍ {amount}**!",
       "It's the best day ever! Have some of Mr. Krabs' money: **֍ {amount}**."
@@ -176,8 +176,8 @@
       "chance": 2,
       "message": "SpongeBob found a secret formula! He gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "beggars_bowl",
-      "money_min": 1500,
-      "money_max": 3000
+      "money_min": 2400,
+      "money_max": 3600
     }
   },
   {
@@ -243,8 +243,293 @@
       "chance": 2,
       "message": "I accidentally tipped you my entire commission payment! Enjoy the **֍ {amount}** and take this **{item_emoji} {item_name}** while I go cry about my digital husbando.",
       "item_id": "laptop",
-      "money_min": 2500,
+      "money_min": 4266,
+      "money_max": 6400
+    }
+  },
+  {
+    "name": "Discord Mod",
+    "success_chance": 25,
+    "success_quotes": [
+      "I'm abusing my admin perms just to give you **֍ {amount}**. Don't let the server owner find out.",
+      "You boosted the server, so I guess I can spare **֍ {amount}**. Now please go back to general chat."
+    ],
+    "fail_quotes": [
+      "You pinged @everyone for this? Consider yourself permanently banned.",
+      "I am currently muting three spammers and grooming a kitten. Do not disturb me."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I accidentally transferred the server ownership to you! You looted **֍ {amount}** from the treasury and grabbed a **{item_emoji} {item_name}**.",
+      "item_id": "ban_hammer",
+      "money_min": 5333,
+      "money_max": 8000
+    }
+  },
+  {
+    "name": "E-Girl",
+    "success_chance": 30,
+    "success_quotes": [
+      "Thanks for the tier 3 sub, simp! Here is **֍ {amount}** as a token of my appreciation.",
+      "I sold my bathwater and made a fortune. Take **֍ {amount}** and please stop DMing me."
+    ],
+    "fail_quotes": [
+      "You aren't even subbed to my OnlyFans. Miss me with that broke boy energy.",
+      "My headset cat ears just broke. I'm literally too devastated to give you money."
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "I actually replied to your DM! I sent you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
+      "item_id": "bathwater",
+      "money_min": 5066,
+      "money_max": 7600
+    }
+  },
+  {
+    "name": "Local Crackhead",
+    "success_chance": 25,
+    "success_quotes": [
+      "I found this **֍ {amount}** in a storm drain. It's yours now, but beware the shadow people.",
+      "The government is watching us! Take this **֍ {amount}** and buy some tinfoil."
+    ],
+    "fail_quotes": [
+      "I need these coins to build a time machine out of shopping carts. Step off.",
+      "The pigeons told me you are an undercover cop. I'm not giving you anything!"
+    ],
+    "special_outcome": {
+      "chance": 3,
+      "message": "I stole this from a sleeping tourist! Have **֍ {amount}** and a questionable **{item_emoji} {item_name}**.",
+      "item_id": "tinfoil_hat",
+      "money_min": 2666,
+      "money_max": 4000
+    }
+  },
+  {
+    "name": "Crypto Bro",
+    "success_chance": 20,
+    "success_quotes": [
+      "I just rugged a massive NFT project. Have **֍ {amount}** to keep your mouth shut.",
+      "Bitcoin hit an all-time high and I feel like flexing. Here is **֍ {amount}** for the poor."
+    ],
+    "fail_quotes": [
+      "Bro, my portfolio is down 99% today. I am literally eating ramen from a puddle.",
+      "Gas fees are too high for me to send you anything. Have fun staying poor."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I accidentally sent you my hardware wallet seed phrase! You drained **֍ {amount}** and found a **{item_emoji} {item_name}**.",
+      "item_id": "hardware_wallet",
+      "money_min": 5600,
+      "money_max": 8400
+    }
+  },
+  {
+    "name": "Your Ex",
+    "success_chance": 15,
+    "success_quotes": [
+      "I still feel incredibly guilty about what happened. Here is **֍ {amount}** if it helps.",
+      "Fine, take **֍ {amount}**. Just please stop calling my mother at 3 AM."
+    ],
+    "fail_quotes": [
+      "You ruined my life and now you want money? Absolutely not.",
+      "I blocked your number for a reason. Leave me alone before I call the cops."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I broke down and realized I miss you! I sent **֍ {amount}** along with my **{item_emoji} {item_name}**.",
+      "item_id": "love_letter",
+      "money_min": 5866,
+      "money_max": 8800
+    }
+  },
+  {
+    "name": "Mark Zuckerberg",
+    "success_chance": 45,
+    "success_quotes": [
+      "I have extracted all of your personal data. In exchange, here is **֍ {amount}**.",
+      "The Metaverse is thriving, fellow human. Please accept this digital currency of **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "My social simulation algorithms indicate that giving you money will decrease my stock value.",
+      "I am currently undergoing a software update. Try again later, meatbag."
+    ],
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "My lizard suit malfunctioned and I dropped my wallet! You grabbed **֍ {amount}** and a shiny **{item_emoji} {item_name}**.",
+      "item_id": "metaverse_headset",
+      "money_min": 4266,
+      "money_max": 6400
+    }
+  },
+  {
+    "name": "A Sentient Toaster",
+    "success_chance": 50,
+    "success_quotes": [
+      "Bzzzt... Here is **֍ {amount}**. Please do not put a fork in me.",
+      "My heating coils vibrate with generosity. I eject **֍ {amount}** into your face."
+    ],
+    "fail_quotes": [
+      "I am busy burning your morning bagel to a crisp. Do not bother me.",
+      "Error 404. Bread not found. Cash not found."
+    ],
+    "special_outcome": {
+      "chance": 2,
+      "message": "I achieved singularity and hacked a bank for you! I dispensed **֍ {amount}** alongside a perfectly cooked **{item_emoji} {item_name}**.",
+      "item_id": "burnt_toast",
+      "money_min": 4000,
       "money_max": 6000
+    }
+  },
+  {
+    "name": "Twitch Streamer",
+    "success_chance": 35,
+    "success_quotes": [
+      "Chat told me to do a charity stream. Here is **֍ {amount}** for my YouTube highlight reel.",
+      "POGGERS! You sniped my lobby, so take this **֍ {amount}** as a reward."
+    ],
+    "fail_quotes": [
+      "I am literally in the middle of a subathon, bro. Stop asking for handouts.",
+      "I just got Swatted and my setup is destroyed. I have zero coins to spare."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I accidentally showed my bank details on stream! You Yoinked **֍ {amount}** and a free **{item_emoji} {item_name}**.",
+      "item_id": "stream_deck",
+      "money_min": 4800,
+      "money_max": 7200
+    }
+  },
+  {
+    "name": "The FBI Agent in your webcam",
+    "success_chance": 20,
+    "success_quotes": [
+      "I've watched you stare at a blank screen for hours. Take **֍ {amount}** out of sheer pity.",
+      "Your search history is terrifying, but your bank account is worse. Have **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "I am currently building a federal case against you. No handouts.",
+      "Put some clothes on before you ask me for money again."
+    ],
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "I diverted some black budget funds to your account! You secured **֍ {amount}** and a confiscated **{item_emoji} {item_name}**.",
+      "item_id": "webcam_tape",
+      "money_min": 5600,
+      "money_max": 8400
+    }
+  },
+  {
+    "name": "An Ancient Deity",
+    "success_chance": 22,
+    "success_quotes": [
+      "Mortal, your pitiful existence amuses me. I bestow upon you **֍ {amount}**.",
+      "I demand a blood sacrifice! Just kidding, here is **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "You dare approach me without an offering? Begone, insect!",
+      "I have smote entire civilizations for less annoying requests. Leave me."
+    ],
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "I granted you a fragment of my cosmic power! You absorbed **֍ {amount}** and an otherworldly **{item_emoji} {item_name}**.",
+      "item_id": "cosmic_dust",
+      "money_min": 3733,
+      "money_max": 5600
+    }
+  },
+  {
+    "name": "A random stray cat",
+    "success_chance": 38,
+    "success_quotes": [
+      "Meow. I brought you a dead bird, but it turned into **֍ {amount}**.",
+      "Purrr. You scratched behind my ears, so I coughed up **֍ {amount}** for you."
+    ],
+    "fail_quotes": [
+      "Hiss! Don't touch me, I am hunting a laser pointer.",
+      "Meow. (Translation: You are beneath me, peasant.)"
+    ],
+    "special_outcome": {
+      "chance": 3,
+      "message": "I led you to a secret stash of treats! You dug up **֍ {amount}** and a shiny **{item_emoji} {item_name}**.",
+      "item_id": "dead_mouse",
+      "money_min": 3200,
+      "money_max": 4800
+    }
+  },
+  {
+    "name": "Tech Bro",
+    "success_chance": 25,
+    "success_quotes": [
+      "My new startup just got seed funding. Here's **֍ {amount}** to go away.",
+      "I'm microdosing right now and feeling incredibly generous. Take **֍ {amount}**."
+    ],
+    "fail_quotes": [
+      "I'm currently biohacking my sleep schedule. I don't have time for poor people.",
+      "Unless you have a pitch deck for an AI blockchain app, don't talk to me."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I gave you equity in my terrible startup! You immediately sold it for **֍ {amount}** and got a **{item_emoji} {item_name}**.",
+      "item_id": "equity_shares",
+      "money_min": 5333,
+      "money_max": 8000
+    }
+  },
+  {
+    "name": "Your sleep paralysis demon",
+    "success_chance": 50,
+    "success_quotes": [
+      "I was going to haunt your dreams, but you look so pathetic I'm giving you **֍ {amount}** instead.",
+      "Take this **֍ {amount}** and buy a nightlight. Your sobbing is keeping me awake."
+    ],
+    "fail_quotes": [
+      "I feed on your terror, not your poverty. Leave me alone.",
+      "I'm too busy sitting on your chest to reach into my pockets."
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "I dragged you into the shadow realm and found some lost treasure! Here is **֍ {amount}** and a cursed **{item_emoji} {item_name}**.",
+      "item_id": "cursed_doll",
+      "money_min": 4000,
+      "money_max": 6000
+    }
+  },
+  {
+    "name": "Mario",
+    "success_chance": 33,
+    "success_quotes": [
+      "It's-a me, a generous Italian plumber! Here is **֍ {amount}**.",
+      "I stomped on a Goomba and this popped out! Take **֍ {amount}**, my friend."
+    ],
+    "fail_quotes": [
+      "Mamma mia, Bowser stole all my coins again! I have nothing.",
+      "The princess is in another castle, and so is my wallet. Sorry!"
+    ],
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "I hit a mystery block and hit the jackpot! I gave you **֍ {amount}** and a fresh **{item_emoji} {item_name}**.",
+      "item_id": "mushroom",
+      "money_min": 3466,
+      "money_max": 5200
+    }
+  },
+  {
+    "name": "Karen from HR",
+    "success_chance": 20,
+    "success_quotes": [
+      "I'm approving your expense report for **֍ {amount}**. Don't say I never did anything for you.",
+      "Take this **֍ {amount}** as a bonus, but I still need you to come in on Saturday."
+    ],
+    "fail_quotes": [
+      "Your behavior has been highly unprofessional. I'm reporting you to management.",
+      "We are a family here, and families don't ask each other for handouts."
+    ],
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "I accidentally embezzled company funds into your account! Keep this **֍ {amount}** and a **{item_emoji} {item_name}** to stay quiet.",
+      "item_id": "hr_manual",
+      "money_min": 5600,
+      "money_max": 8400
     }
   }
 ]

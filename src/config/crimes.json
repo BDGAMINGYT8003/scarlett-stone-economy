@@ -3,10 +3,10 @@
     "name": "Tax Evasion",
     "id": "tax_evasion",
     "success_chance": 45,
-    "min_coins": 500,
-    "max_coins": 2000,
-    "fine_min": 200,
-    "fine_max": 1000,
+    "min_coins": 1875,
+    "max_coins": 3750,
+    "fine_min": 937,
+    "fine_max": 1875,
     "outcomes": {
       "success": [
         "You claimed your 14 fictional children as dependents and kept **֍ {amount}**. Take that, government.",
@@ -25,18 +25,18 @@
       "chance": 2,
       "message": "You completely bamboozled the IRS and stole **֍ {amount}** straight from their budget! They even sent you a **{item_emoji} {item_name}** by mistake.",
       "item_id": "beggars_bowl",
-      "money_min": 1000,
-      "money_max": 2000
+      "money_min": 11600,
+      "money_max": 17400
     }
   },
   {
     "name": "Shoplifting",
     "id": "shoplifting",
-    "success_chance": 55,
-    "min_coins": 100,
-    "max_coins": 800,
-    "fine_min": 50,
-    "fine_max": 400,
+    "success_chance": 42,
+    "min_coins": 1625,
+    "max_coins": 3250,
+    "fine_min": 812,
+    "fine_max": 1625,
     "outcomes": {
       "success": [
         "You slipped a PS5 into your overly baggy pants and sold it for **֍ {amount}**. Stealth 100.",
@@ -55,18 +55,18 @@
       "chance": 2,
       "message": "You accidentally walked into the backroom and found the manager's secret stash! You snagged **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "alcohol",
-      "money_min": 500,
-      "money_max": 1500
+      "money_min": 11600,
+      "money_max": 17400
     }
   },
   {
     "name": "Identity Theft",
     "id": "identity_theft",
     "success_chance": 30,
-    "min_coins": 1000,
-    "max_coins": 4000,
-    "fine_min": 500,
-    "fine_max": 2500,
+    "min_coins": 2250,
+    "max_coins": 4500,
+    "fine_min": 1125,
+    "fine_max": 2250,
     "outcomes": {
       "success": [
         "You catfished a lonely billionaire and scammed them out of **֍ {amount}**. Absolutely ruthless.",
@@ -85,18 +85,18 @@
       "chance": 1,
       "message": "You successfully stole a celebrity's verified Twitter account! You extorted them for **֍ {amount}** and forced them to mail you a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 2000,
-      "money_max": 5000
+      "money_min": 14133,
+      "money_max": 21200
     }
   },
   {
     "name": "Bank Heist",
     "id": "bank_heist",
     "success_chance": 20,
-    "min_coins": 5000,
-    "max_coins": 15000,
-    "fine_min": 2000,
-    "fine_max": 8000,
+    "min_coins": 2500,
+    "max_coins": 5000,
+    "fine_min": 1250,
+    "fine_max": 2500,
     "outcomes": {
       "success": [
         "You pulled off an Ocean's 11 level heist and escaped with **֍ {amount}**. Smooth criminal.",
@@ -115,18 +115,18 @@
       "chance": 0.5,
       "message": "You bypassed the lasers, cracked the ultimate safe, and became a legend! You stole **֍ {amount}** and the mythical **{item_emoji} {item_name}**.",
       "item_id": "bank_note",
-      "money_min": 10000,
-      "money_max": 30000
+      "money_min": 15400,
+      "money_max": 23100
     }
   },
   {
     "name": "AI Catfishing",
     "id": "ai_catfishing",
     "success_chance": 35,
-    "min_coins": 800,
-    "max_coins": 3000,
-    "fine_min": 300,
-    "fine_max": 1500,
+    "min_coins": 2125,
+    "max_coins": 4250,
+    "fine_min": 1062,
+    "fine_max": 2125,
     "outcomes": {
       "success": [
         "You convinced a lonely Discord mod that you were a sentient AI anime waifu and scammed them out of **֍ {amount}**. Degeneracy pays.",
@@ -145,8 +145,458 @@
       "chance": 1.5,
       "message": "Your AI bot somehow achieved sentience and hacked into the blockchain! It wired you **֍ {amount}** and gifted you a **{item_emoji} {item_name}**.",
       "item_id": "laptop",
-      "money_min": 3000,
-      "money_max": 8000
+      "money_min": 12866,
+      "money_max": 19300
+    }
+  },
+  {
+    "name": "Pirating Adobe Software",
+    "id": "pirating_adobe",
+    "success_chance": 45,
+    "min_coins": 1500,
+    "max_coins": 3000,
+    "fine_min": 750,
+    "fine_max": 1500,
+    "outcomes": {
+      "success": [
+        "You cracked Photoshop and sold designs for **֍ {amount}**. A true master of digital arts.",
+        "You bypassed the license key and saved a subscription fee worth **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "Your torrent stopped at 99%. A tragedy of modern times.",
+        "You accidentally downloaded a Shrek movie instead. Try again later."
+      ],
+      "fail_fined": [
+        "Your ISP sent a strongly worded letter. You paid **֍ {fine}** to keep them quiet.",
+        "You installed malware that encrypted your homework. Unlocking it cost **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You accidentally downloaded the entire source code of the internet! You made **֍ {amount}** selling it and found a **{item_emoji} {item_name}**.",
+      "item_id": "cracked_software",
+      "money_min": 11600,
+      "money_max": 17400
+    }
+  },
+  {
+    "name": "Stealing Memes",
+    "id": "stealing_memes",
+    "success_chance": 45,
+    "min_coins": 1000,
+    "max_coins": 2000,
+    "fine_min": 500,
+    "fine_max": 1000,
+    "outcomes": {
+      "success": [
+        "You cropped out the watermark and farmed **֍ {amount}** in ad revenue. Absolutely shameless.",
+        "You posted an ancient Reddit meme to Instagram and made **֍ {amount}**. Easy money."
+      ],
+      "fail_safe": [
+        "The original creator called you out in the comments. You deleted the post out of shame.",
+        "Nobody liked your repost. You went back to the drawing board."
+      ],
+      "fail_fined": [
+        "You got hit with a copyright strike and lost **֍ {fine}** in legal fees.",
+        "A meme historian proved it was fake. Your followers unsubscribed and cost you **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 3,
+      "message": "Your stolen meme went so viral you got a brand deal! You secured **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "stolen_meme",
+      "money_min": 9066,
+      "money_max": 13600
+    }
+  },
+  {
+    "name": "Arson",
+    "id": "arson",
+    "success_chance": 20,
+    "min_coins": 2500,
+    "max_coins": 5000,
+    "fine_min": 1250,
+    "fine_max": 2500,
+    "outcomes": {
+      "success": [
+        "You burned down a rival business and collected **֍ {amount}** in insurance fraud. Savage.",
+        "You accidentally incinerated an evidence locker and the mob paid you **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "You forgot your lighter. Back to the convenience store you go.",
+        "It started raining. Your chaotic energy was washed away."
+      ],
+      "fail_fined": [
+        "You set your own pants on fire and had to pay **֍ {fine}** in medical bills.",
+        "The smoke alarm woke the neighbors. You paid **֍ {fine}** for property damage."
+      ]
+    },
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "You burned down the central bank and triggered a financial collapse! You looted **֍ {amount}** and a **{item_emoji} {item_name}** from the ashes.",
+      "item_id": "gas_can",
+      "money_min": 15400,
+      "money_max": 23100
+    }
+  },
+  {
+    "name": "Jaywalking",
+    "id": "jaywalking",
+    "success_chance": 45,
+    "min_coins": 1000,
+    "max_coins": 1250,
+    "fine_min": 500,
+    "fine_max": 625,
+    "outcomes": {
+      "success": [
+        "You saved 30 seconds of your life and picked up **֍ {amount}** on the asphalt. Heroic.",
+        "You sprinted across the highway and won a bet for **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "A car honked at you. You scurried back to the sidewalk like a frightened rat.",
+        "The crosswalk sign turned green right as you stepped off. What a waste."
+      ],
+      "fail_fined": [
+        "A cop saw you and wrote a ticket. You lost **֍ {fine}**. For walking. Really.",
+        "You tripped and dropped **֍ {fine}** down a storm drain. Gravity always wins."
+      ]
+    },
+    "special_outcome": {
+      "chance": 5,
+      "message": "You dodged a speeding truck and landed in a pile of cash! You snagged **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "ticket_stub",
+      "money_min": 6001,
+      "money_max": 6001
+    }
+  },
+  {
+    "name": "Embezzlement",
+    "id": "embezzlement",
+    "success_chance": 25,
+    "min_coins": 2375,
+    "max_coins": 4750,
+    "fine_min": 1187,
+    "fine_max": 2375,
+    "outcomes": {
+      "success": [
+        "You siphoned pennies from millions of transactions and amassed **֍ {amount}**. Very Office Space of you.",
+        "You forged your boss's signature and wired **֍ {amount}** to the Bahamas."
+      ],
+      "fail_safe": [
+        "You got confused by Excel formulas and gave up.",
+        "You felt a rare pang of morality and canceled the transfer."
+      ],
+      "fail_fined": [
+        "The auditors found your sloppy spreadsheet. You paid **֍ {fine}** to settle out of court.",
+        "You accidentally sent the money to the company's charity fund. They docked your pay for **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You completely liquidated the company's assets and fled to a private island! You took **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "offshore_account",
+      "money_min": 14133,
+      "money_max": 21200
+    }
+  },
+  {
+    "name": "Cyberbullying a child",
+    "id": "cyberbullying_child",
+    "success_chance": 35,
+    "min_coins": 1250,
+    "max_coins": 2500,
+    "fine_min": 625,
+    "fine_max": 1250,
+    "outcomes": {
+      "success": [
+        "You ratioed a 9-year-old on Twitter and won **֍ {amount}** from an illegal betting ring.",
+        "You beat a kid in Fortnite and took his lunch money worth **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "The kid started crying on mic. You felt bad and logged off.",
+        "They hit you with the 'I know you are but what am I' and you had no counter."
+      ],
+      "fail_fined": [
+        "The kid's older brother is a hacker. They doxxed you and drained **֍ {fine}** from your account.",
+        "You got banned for toxicity. A new account cost you **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "The kid turned out to be a prince! You ransomed his Roblox account for **֍ {amount}** and extorted a **{item_emoji} {item_name}**.",
+      "item_id": "vbucks_card",
+      "money_min": 11600,
+      "money_max": 17400
+    }
+  },
+  {
+    "name": "Counterfeiting V-Bucks",
+    "id": "counterfeit_vbucks",
+    "success_chance": 40,
+    "min_coins": 2000,
+    "max_coins": 4000,
+    "fine_min": 1000,
+    "fine_max": 2000,
+    "outcomes": {
+      "success": [
+        "You sold fake codes to middle schoolers and made **֍ {amount}**. You monster.",
+        "You hacked a generator site and extracted **֍ {amount}** in pure profit."
+      ],
+      "fail_safe": [
+        "The codes were actually for club penguin memberships. Totally useless.",
+        "You forgot the verification step and got locked out of the generator."
+      ],
+      "fail_fined": [
+        "Epic Games sued you into oblivion. You owe **֍ {fine}** in legal damages.",
+        "You accidentally scammed an undercover agent. Bail cost you **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You broke into the Epic Games mainframe and minted unlimited currency! You sold it for **֍ {amount}** and claimed a **{item_emoji} {item_name}**.",
+      "item_id": "vbucks_card",
+      "money_min": 14133,
+      "money_max": 21200
+    }
+  },
+  {
+    "name": "Rigging a Giveaway",
+    "id": "rigging_giveaway",
+    "success_chance": 50,
+    "min_coins": 1750,
+    "max_coins": 3500,
+    "fine_min": 875,
+    "fine_max": 1750,
+    "outcomes": {
+      "success": [
+        "You used 50 alt accounts to win a Discord nitro drop and flipped it for **֍ {amount}**.",
+        "You bribed the event organizer and walked away with **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "The bot detected your alts and disqualified you. Try harder next time.",
+        "You forgot to react to the message. You absolute failure."
+      ],
+      "fail_fined": [
+        "The server exposed you and blacklisted you. You lost **֍ {fine}** in reputation damage.",
+        "You accidentally rigged it so your enemy won. You broke your monitor and spent **֍ {fine}** replacing it."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "You rigged a massive charity raffle and took the grand prize! You made off with **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "rigged_dice",
+      "money_min": 12866,
+      "money_max": 19300
+    }
+  },
+  {
+    "name": "DDoS-ing a Minecraft Server",
+    "id": "ddos_minecraft",
+    "success_chance": 45,
+    "min_coins": 1875,
+    "max_coins": 3750,
+    "fine_min": 937,
+    "fine_max": 1875,
+    "outcomes": {
+      "success": [
+        "You took down the hypixel network and held it for ransom. They paid **֍ {amount}**.",
+        "You crashed a streamer's SMP and farmed **֍ {amount}** from the dramatic youtube views."
+      ],
+      "fail_safe": [
+        "Your mom unplugged the router. Mission failed.",
+        "The server had DDoS protection. Your attack bounced right off."
+      ],
+      "fail_fined": [
+        "You accidentally DDoS-ed yourself and lost **֍ {fine}** in internet bills.",
+        "The server admin tracked your IP and swatted you. The door repair cost **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You managed to hijack the server's database and stole their rare items! You fenced them for **֍ {amount}** and secured a **{item_emoji} {item_name}**.",
+      "item_id": "botnet",
+      "money_min": 11600,
+      "money_max": 17400
+    }
+  },
+  {
+    "name": "Robbing a Lemonade Stand",
+    "id": "robbing_lemonade",
+    "success_chance": 38,
+    "min_coins": 1000,
+    "max_coins": 1750,
+    "fine_min": 500,
+    "fine_max": 875,
+    "outcomes": {
+      "success": [
+        "You shoved a 6-year-old and sprinted away with their jar of **֍ {amount}**. Unhinged.",
+        "You drank the lemonade, refused to pay, and stole **֍ {amount}** from the tip jar."
+      ],
+      "fail_safe": [
+        "The kid stared at you with big, sad eyes. You walked away.",
+        "The lemonade was too sour, and you threw up instead of robbing them."
+      ],
+      "fail_fined": [
+        "Their dad chased you down with a bat. You dropped **֍ {fine}** while fleeing.",
+        "A neighborhood watch group caught you. You paid **֍ {fine}** to avoid getting posted on Facebook."
+      ]
+    },
+    "special_outcome": {
+      "chance": 4,
+      "message": "You found out it was a front for a mob operation! You stole their secret stash of **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "used_napkin",
+      "money_min": 6533,
+      "money_max": 9800
+    }
+  },
+  {
+    "name": "Grand Theft Auto",
+    "id": "grand_theft_auto",
+    "success_chance": 30,
+    "min_coins": 2250,
+    "max_coins": 4500,
+    "fine_min": 1125,
+    "fine_max": 2250,
+    "outcomes": {
+      "success": [
+        "You hotwired a lambo and chopped it up for **֍ {amount}**. The mechanics respect you.",
+        "You literally just downloaded a car. You sold the blueprint for **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "You couldn't drive manual. You stalled three times and gave up.",
+        "The car belonged to John Wick. You ran for your life instead."
+      ],
+      "fail_fined": [
+        "You got caught in a high-speed chase and crashed. The tow fee was **֍ {fine}**.",
+        "You stole a decoy cop car and got instantly arrested. Bail was **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "You hijacked a billionaire's custom supercar and found a briefcase inside! You earned **֍ {amount}** and grabbed a **{item_emoji} {item_name}**.",
+      "item_id": "stolen_lambo",
+      "money_min": 14133,
+      "money_max": 21200
+    }
+  },
+  {
+    "name": "Scamming in Runescape",
+    "id": "scamming_runescape",
+    "success_chance": 33,
+    "min_coins": 1625,
+    "max_coins": 3250,
+    "fine_min": 812,
+    "fine_max": 1625,
+    "outcomes": {
+      "success": [
+        "You told a noob you could trim their armor and stole **֍ {amount}**. A classic trick.",
+        "You lured someone into the wilderness and looted **֍ {amount}** from their corpse."
+      ],
+      "fail_safe": [
+        "They saw right through your trick. You logged off in shame.",
+        "Your mom told you to get off the computer before you could finalize the scam."
+      ],
+      "fail_fined": [
+        "A game mod caught you and wiped your bank. You lost **֍ {fine}**.",
+        "You got counter-scammed and lost **֍ {fine}** trying to double your money."
+      ]
+    },
+    "special_outcome": {
+      "chance": 2,
+      "message": "You successfully social engineered a clan leader and wiped their entire guild bank! You converted it to **֍ {amount}** and bought a **{item_emoji} {item_name}**.",
+      "item_id": "party_hat",
+      "money_min": 11600,
+      "money_max": 17400
+    }
+  },
+  {
+    "name": "Vandalizing Wikipedia",
+    "id": "vandalizing_wikipedia",
+    "success_chance": 40,
+    "min_coins": 1125,
+    "max_coins": 2250,
+    "fine_min": 562,
+    "fine_max": 1125,
+    "outcomes": {
+      "success": [
+        "You changed a celebrity's cause of death to 'Ligma' and a tabloid paid you **֍ {amount}** for the scoop.",
+        "You wrote a fake historical battle and won a bet for **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "A power-tripping editor reverted your edit in 0.5 seconds. Pain.",
+        "You misspelled your vandalism and felt too stupid to fix it."
+      ],
+      "fail_fined": [
+        "Your IP was banned and you paid **֍ {fine}** for a VPN to get back on.",
+        "A teacher caught you plagiarizing your own fake article. You lost **֍ {fine}** in tuition."
+      ]
+    },
+    "special_outcome": {
+      "chance": 3,
+      "message": "You created a fake crypto token on Wikipedia and people actually bought it! You rug-pulled for **֍ {amount}** and grabbed a **{item_emoji} {item_name}**.",
+      "item_id": "wiki_edit",
+      "money_min": 9066,
+      "money_max": 13600
+    }
+  },
+  {
+    "name": "Selling Fake NFTs",
+    "id": "selling_fake_nfts",
+    "success_chance": 40,
+    "min_coins": 2000,
+    "max_coins": 4000,
+    "fine_min": 1000,
+    "fine_max": 2000,
+    "outcomes": {
+      "success": [
+        "You sold a poorly drawn monkey picture for **֍ {amount}**. The buyer is a complete idiot.",
+        "You hyped up a vaporware project on Discord and walked away with **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "The crypto market crashed. Your JPEG is worthless.",
+        "Nobody joined your Discord server. It's just you and a bot."
+      ],
+      "fail_fined": [
+        "You got sued by the original artist. Legal fees drained **֍ {fine}** from your wallet.",
+        "Your wallet was hacked by a North Korean group. You lost **֍ {fine}**."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1,
+      "message": "Your fake NFT accidentally became the next big trend! You cashed out **֍ {amount}** and bought a **{item_emoji} {item_name}** to celebrate.",
+      "item_id": "stolen_meme",
+      "money_min": 14133,
+      "money_max": 21200
+    }
+  },
+  {
+    "name": "Trespassing in Area 51",
+    "id": "trespassing_area_51",
+    "success_chance": 15,
+    "min_coins": 2625,
+    "max_coins": 5250,
+    "fine_min": 1312,
+    "fine_max": 2625,
+    "outcomes": {
+      "success": [
+        "You Naruto ran past the guards and stole alien technology worth **֍ {amount}**.",
+        "You found the secret recipe for Dr. Pepper and sold it for **֍ {amount}**."
+      ],
+      "fail_safe": [
+        "You heard a weird noise and sprinted back to your car.",
+        "You got lost in the desert and went home to play video games instead."
+      ],
+      "fail_fined": [
+        "You got detained by military police and fined **֍ {fine}**. You are on a list now.",
+        "An alien probed you. You paid **֍ {fine}** in therapy bills."
+      ]
+    },
+    "special_outcome": {
+      "chance": 0.5,
+      "message": "You discovered a crashed UFO and hotwired it! You escaped with **֍ {amount}** and a literal **{item_emoji} {item_name}**.",
+      "item_id": "alien_probe",
+      "money_min": 15400,
+      "money_max": 23100
     }
   }
 ]
