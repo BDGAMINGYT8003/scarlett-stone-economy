@@ -206,15 +206,22 @@
   },
   {
     "name": "Karen",
-    "success_chance": 10,
+    "success_chance": 20,
     "success_quotes": [
-      "I spoke to the manager and got a refund. Here is **֍ {amount}**.",
-      "Fine! Take **֍ {amount}** and leave me alone!"
+      "I screamed at the teenage cashier until they gave me a full refund. Here is **֍ {amount}**.",
+      "Fine! Take **֍ {amount}** and stop recording me for your stupid TikTok video!"
     ],
     "fail_quotes": [
-      "I want to speak to your manager.",
-      "I'm calling the police."
-    ]
+      "I am calling the HOA, the local police, and your mother.",
+      "Where is the absolute manager of this Discord server?!"
+    ],
+    "special_outcome": {
+      "chance": 1,
+      "message": "You recorded her massive freakout and posted it online! The ad revenue netted you **֍ {amount}** and a new **{item_emoji} {item_name}**.",
+      "item_id": "camera",
+      "money_min": 5555,
+      "money_max": 9555
+    }
   },
   {
     "name": "Dank Memer",
@@ -230,173 +237,173 @@
   },
   {
     "name": "Mark Zuckerberg",
-    "success_chance": 21,
+    "success_chance": 30,
     "success_quotes": [
-      "I have analyzed your metadata and decided to grant you **֍ {amount}**.",
-      "Take this **֍ {amount}** and please continue to ignore my lizard eyes."
+      "I have analyzed your metadata and decided to grant you exactly **֍ {amount}**. Please continue scrolling.",
+      "Take this **֍ {amount}** and please pretend you didn't notice my reptilian blinking pattern."
     ],
     "fail_quotes": [
-      "You declined the Terms of Service. No money for you.",
-      "My servers are down. Check back later."
+      "You declined the Terms of Service. I will not distribute any funds to you.",
+      "My emotional processing servers are currently down. Leave my presence."
     ],
     "special_outcome": {
-      "chance": 0.5204475885495425,
-      "message": "You found a bug in Facebook! Mark wired you **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5511,
-      "money_max": 9511
+      "chance": 1,
+      "message": "You found a critical bug in the algorithm! Mark wired you a bounty of **֍ {amount}** and shipped you a **{item_emoji} {item_name}**.",
+      "item_id": "lizard_scales",
+      "money_min": 5111,
+      "money_max": 9111
     }
   },
   {
     "name": "Jeff Bezos",
-    "success_chance": 20,
+    "success_chance": 25,
     "success_quotes": [
-      "Here is **֍ {amount}**. My delivery drones will drop it on your head.",
-      "I make this much in a millisecond. Take **֍ {amount}**."
+      "I make this much in literally a millisecond. Take **֍ {amount}** and buy a Kindle.",
+      "Here is **֍ {amount}**. I'll have a drone drop it directly onto your roof."
     ],
     "fail_quotes": [
-      "You don't have Amazon Prime. Go away.",
-      "I am too busy building rockets to deal with you."
+      "You don't even have Amazon Prime. Stop asking me for handouts.",
+      "I am far too busy building a giant rocket to deal with your poverty."
     ],
     "special_outcome": {
-      "chance": 1.2707682646682796,
-      "message": "You successfully unionized! Jeff paid you **֍ {amount}** and a **{item_emoji} {item_name}** to stop.",
-      "item_id": "apple",
-      "money_min": 3467,
-      "money_max": 7467
+      "chance": 0.5,
+      "message": "You successfully unionized an entire warehouse! Jeff hastily paid you **֍ {amount}** and a **{item_emoji} {item_name}** to go away.",
+      "item_id": "union_card",
+      "money_min": 5333,
+      "money_max": 9333
     }
   },
   {
     "name": "Discord Mod",
-    "success_chance": 25,
+    "success_chance": 45,
     "success_quotes": [
-      "You followed all the rules perfectly. Here is your **֍ {amount}** allowance.",
-      "I like your vibe, kitten. Take **֍ {amount}**."
+      "You followed all the rules perfectly in #general. Here is your **֍ {amount}** allowance.",
+      "I actually like your vibe, kitten. Take **֍ {amount}** and don't spend it all at once."
     ],
     "fail_quotes": [
-      "You posted in the wrong channel. Banned.",
-      "I am currently policing 40 servers. Leave me alone."
+      "You posted a meme in #announcements. You are permanently banned.",
+      "I am currently policing 40 different servers for free. I have no time for you."
     ],
     "special_outcome": {
-      "chance": 1.7924191504073514,
-      "message": "You became admin! You abused your power for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 3067,
-      "money_max": 7067
+      "chance": 1.5,
+      "message": "You usurped the owner and became admin! You instantly abused your power for **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "ban_hammer",
+      "money_min": 4444,
+      "money_max": 8444
     }
   },
   {
     "name": "Gamer Girl",
-    "success_chance": 46,
+    "success_chance": 35,
     "success_quotes": [
-      "Thanks for the tier 3 sub! Here is **֍ {amount}** as a refund.",
-      "You carried me in Valorant, so take **֍ {amount}**."
+      "Thanks for gifting 100 subs! Here is a partial refund of **֍ {amount}**.",
+      "You absolutely carried me in that Valorant match, so take **֍ {amount}** as thanks."
     ],
     "fail_quotes": [
-      "You're just another random in my chat. Blocked.",
-      "I am too busy selling bathwater."
+      "You're just another random complaining in my chat. Enjoy your block.",
+      "I am way too busy bottling my bathwater to hand out cash."
     ],
     "special_outcome": {
-      "chance": 0.6781124670670067,
-      "message": "You got VIP in her chat! She sent you **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "mouse",
-      "money_min": 4400,
-      "money_max": 8400
+      "chance": 2,
+      "message": "You unlocked the VIP badge in her chat! She sent you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
+      "item_id": "used_bathwater",
+      "money_min": 4000,
+      "money_max": 8000
     }
   },
   {
     "name": "Crypto Bro",
-    "success_chance": 31,
+    "success_chance": 35,
     "success_quotes": [
-      "Bitcoin is going to the moon! Take **֍ {amount}**.",
-      "I just rugged a project, so I have spare change. Here is **֍ {amount}**."
+      "Bitcoin is going to the moon, baby! Take **֍ {amount}** and invest it immediately.",
+      "I just rugged a massive NFT project, so I have plenty to spare. Here is **֍ {amount}**."
     ],
     "fail_quotes": [
-      "The market crashed. I'm ruined.",
-      "Have fun staying poor."
+      "The market completely crashed overnight. I'm ruined. Don't look at me.",
+      "Have fun staying poor, fiat user."
     ],
     "special_outcome": {
-      "chance": 1.8161395777509675,
-      "message": "You convinced him to buy your NFT! You got **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "diamond",
-      "money_min": 5066,
-      "money_max": 9066
+      "chance": 1,
+      "message": "You somehow convinced him to buy your terribly drawn monkey picture! You scammed him for **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "rug_pull_coin",
+      "money_min": 4889,
+      "money_max": 8889
     }
   },
   {
     "name": "Your Dad",
     "success_chance": 45,
     "success_quotes": [
-      "Don't tell your mom I gave you this **֍ {amount}**.",
-      "Are ya winning, son? Here is **֍ {amount}**."
+      "Don't tell your mother I gave you this **֍ {amount}**. Go buy some candy.",
+      "Are ya winning, son? Here is **֍ {amount}** for your little computer games."
     ],
     "fail_quotes": [
-      "Go mow the lawn first.",
-      "I'm still looking for the milk."
+      "Go mow the lawn and clean the gutters first, then we can talk about money.",
+      "I'm still out looking for that specific brand of milk. Be back later."
     ],
     "special_outcome": {
-      "chance": 0.7177544405482521,
-      "message": "Dad came back with the milk! He brought **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "alcohol",
-      "money_min": 3422,
-      "money_max": 7422
+      "chance": 2.5,
+      "message": "Dad finally came back from the grocery store! He brought you **֍ {amount}** and a cold **{item_emoji} {item_name}**.",
+      "item_id": "gallon_of_milk",
+      "money_min": 2667,
+      "money_max": 6667
     }
   },
   {
     "name": "Twitch Streamer",
-    "success_chance": 49,
+    "success_chance": 50,
     "success_quotes": [
-      "POGGERS! Take this **֍ {amount}** for the content.",
-      "Chat told me to give you **֍ {amount}**, so here."
+      "POGGERS! Take this **֍ {amount}** just for the epic content it provides.",
+      "Chat told me I'd get cancelled if I didn't give you **֍ {amount}**, so here."
     ],
     "fail_quotes": [
-      "You stream sniped me. I'm reporting you.",
-      "I'm currently doing a 24-hour subathon. I can't read your message."
+      "You obviously stream sniped me in that last match. I'm reporting your account.",
+      "I'm currently 18 hours into a subathon. I literally cannot comprehend your message."
     ],
     "special_outcome": {
-      "chance": 2.227562239504441,
-      "message": "You clipped the perfect moment! They paid you **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4267,
-      "money_max": 8267
+      "chance": 1.5,
+      "message": "You clipped the absolute perfect fail moment! They paid you **֍ {amount}** and a **{item_emoji} {item_name}** just to delete it.",
+      "item_id": "clip_button",
+      "money_min": 4222,
+      "money_max": 8222
     }
   },
   {
     "name": "Local Crackhead",
-    "success_chance": 44,
+    "success_chance": 25,
     "success_quotes": [
-      "I found this **֍ {amount}** in a drain. You want it?",
-      "The shadow people told me to give you **֍ {amount}**."
+      "I found this **֍ {amount}** stuck in a storm drain. You want it? Take it.",
+      "The shadow people in my walls told me to give you **֍ {amount}** immediately."
     ],
     "fail_quotes": [
-      "Stop looking at me like that.",
-      "He just hissed at you and ran away."
+      "Stop looking at me like you know my secrets.",
+      "He just violently hissed at you like a cat and sprinted across the street."
     ],
     "special_outcome": {
-      "chance": 2.3332843828892256,
-      "message": "He traded you a weird shiny rock for a sandwich! It was actually **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "trash",
-      "money_min": 4489,
-      "money_max": 8489
+      "chance": 1.5,
+      "message": "He traded you a weird shiny rock for a sandwich! It turned out to be worth **֍ {amount}** and contained a hidden **{item_emoji} {item_name}**.",
+      "item_id": "suspicious_rock",
+      "money_min": 3778,
+      "money_max": 7778
     }
   },
   {
     "name": "Speedrunner",
-    "success_chance": 30,
+    "success_chance": 40,
     "success_quotes": [
-      "I saved 0.5 seconds on this transaction to give you **֍ {amount}**.",
-      "World record pace! Have **֍ {amount}**."
+      "I saved exactly 0.5 frames on this transaction just to hand you **֍ {amount}**.",
+      "We are on world record pace right now! Have **֍ {amount}** to keep the RNG good."
     ],
     "fail_quotes": [
-      "Your RNG is terrible. No money for you.",
-      "I am currently doing a blindfolded run. I can't see you."
+      "Your RNG is absolutely terrible today. I'm resetting the run. No money for you.",
+      "I am currently doing a blindfolded run, I can't even see where you are."
     ],
     "special_outcome": {
-      "chance": 0.6381281353266468,
-      "message": "You discovered a new glitch! You glitched **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5111,
-      "money_max": 9111
+      "chance": 1,
+      "message": "You discovered a completely game-breaking glitch! You clipped out of bounds, snagging **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "glitched_code",
+      "money_min": 4667,
+      "money_max": 8667
     }
   },
   {
@@ -420,97 +427,97 @@
   },
   {
     "name": "TikToker",
-    "success_chance": 13,
+    "success_chance": 35,
     "success_quotes": [
-      "Do this dance with me and I'll give you **֍ {amount}**.",
-      "This is going viral! Take **֍ {amount}**."
+      "Do this cringe dance in the background of my video and I'll pay you **֍ {amount}**.",
+      "This prank is totally going viral! Take **֍ {amount}** for playing along."
     ],
     "fail_quotes": [
-      "You literally have zero followers.",
-      "I'm too busy doing the renegade."
+      "You literally have zero followers. Do not approach me.",
+      "I'm way too busy doing the renegade in public to hand out cash."
     ],
     "special_outcome": {
-      "chance": 1.212875003234845,
-      "message": "You blew up overnight! You got sponsored for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5866,
-      "money_max": 9866
+      "chance": 1.5,
+      "message": "You accidentally walked into their shot and blew up overnight! You got sponsored for **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "ring_light",
+      "money_min": 4000,
+      "money_max": 8000
     }
   },
   {
     "name": "Gacha Whale",
     "success_chance": 30,
     "success_quotes": [
-      "I just dropped 10k on this banner. Have my leftover **֍ {amount}**.",
-      "My luck is insane today! Share this **֍ {amount}**."
+      "I just dropped 10k on this banner and got lucky. Have my leftover **֍ {amount}**.",
+      "My pulls are insane today! I'll share my good fortune with this **֍ {amount}**."
     ],
     "fail_quotes": [
-      "I need every penny to pull my waifu.",
-      "My bank account is overdrawn."
+      "I need every single penny to pull my 2D waifu. Get away from me.",
+      "My bank account is currently overdrawn by five thousand dollars. I can't help."
     ],
     "special_outcome": {
-      "chance": 2.46388736541297,
-      "message": "You pulled the rarest character in the game! They bought your account for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 3467,
-      "money_max": 7467
+      "chance": 1,
+      "message": "You pulled the rarest character in the game on your first try! They aggressively bought your account for **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "max_level_waifu",
+      "money_min": 3556,
+      "money_max": 7556
     }
   },
   {
     "name": "Roblox Kid",
-    "success_chance": 40,
+    "success_chance": 50,
     "success_quotes": [
-      "I will give you **֍ {amount}** if you adopt me.",
-      "You traded me a good pet! Here is **֍ {amount}** robux."
+      "I will literally give you **֍ {amount}** if you just adopt me in-game.",
+      "You traded me a super rare neon pet! Here is **֍ {amount}** robux as promised."
     ],
     "fail_quotes": [
-      "My mom said I can't talk to strangers.",
+      "My mom said I'm not allowed to talk to strangers on the internet.",
       "OOF."
     ],
     "special_outcome": {
-      "chance": 2.205951428810234,
-      "message": "You scammed them out of their limiteds! You made **֍ {amount}** and got a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 3778,
-      "money_max": 7778
+      "chance": 2,
+      "message": "You ruthlessly scammed them out of their rarest limiteds! You fenced the items for **֍ {amount}** and kept a **{item_emoji} {item_name}**.",
+      "item_id": "neon_pet",
+      "money_min": 4222,
+      "money_max": 8222
     }
   },
   {
     "name": "Sigma Male",
-    "success_chance": 35,
+    "success_chance": 40,
     "success_quotes": [
-      "Always respect the grind. Take **֍ {amount}**.",
-      "You have that alpha energy. Here is **֍ {amount}**."
+      "Always respect the hustle. Take **֍ {amount}** and invest it in yourself.",
+      "You have that raw alpha energy. Here is **֍ {amount}** to expand your empire."
     ],
     "fail_quotes": [
-      "You are a beta. Leave my presence.",
-      "I am busy listening to phonk and working out."
+      "You are acting like a total beta right now. Leave my presence immediately.",
+      "I am too busy listening to phonk music and staring at a wall to give you money."
     ],
     "special_outcome": {
-      "chance": 1.3951654268047993,
-      "message": "You achieved ultimate sigma status! You earned **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4089,
-      "money_max": 8089
+      "chance": 1,
+      "message": "You achieved the ultimate sigma grindset! They handed you **֍ {amount}** and an incredibly masculine **{item_emoji} {item_name}**.",
+      "item_id": "sigma_grindset_audio",
+      "money_min": 4667,
+      "money_max": 8667
     }
   },
   {
     "name": "Internet Troll",
-    "success_chance": 48,
+    "success_chance": 35,
     "success_quotes": [
-      "I'm feeling generous after doxxing someone. Have **֍ {amount}**.",
-      "You actually fell for the bait? Here is **֍ {amount}** out of pity."
+      "I'm feeling strangely generous after doxxing someone. Have **֍ {amount}**.",
+      "You actually fell for the bait? Here is **֍ {amount}** entirely out of pity."
     ],
     "fail_quotes": [
-      "L + ratio + you're broke.",
-      "I just sent a pizza to your house. Pay for it yourself."
+      "Massive L + ratio + you're broke + touch grass.",
+      "I just sent an unpaid pizza to your house. Pay for it yourself."
     ],
     "special_outcome": {
-      "chance": 1.4430662724126677,
-      "message": "You out-trolled the troll! They surrendered **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4311,
-      "money_max": 8311
+      "chance": 1.5,
+      "message": "You completely out-trolled the master troll! They surrendered **֍ {amount}** and their precious **{item_emoji} {item_name}** in defeat.",
+      "item_id": "troll_mask",
+      "money_min": 4889,
+      "money_max": 8889
     }
   },
   {
@@ -796,557 +803,6 @@
       "item_id": "laptop",
       "money_min": 5244,
       "money_max": 9244
-    }
-  },
-  {
-    "name": "Mark Zuckerberg",
-    "success_chance": 30,
-    "success_quotes": [
-      "I have analyzed your metadata and decided to grant you exactly **֍ {amount}**. Please continue scrolling.",
-      "Take this **֍ {amount}** and please pretend you didn't notice my reptilian blinking pattern."
-    ],
-    "fail_quotes": [
-      "You declined the Terms of Service. I will not distribute any funds to you.",
-      "My emotional processing servers are currently down. Leave my presence."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You found a critical bug in the algorithm! Mark wired you a bounty of **֍ {amount}** and shipped you a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5111,
-      "money_max": 9111
-    }
-  },
-  {
-    "name": "Jeff Bezos",
-    "success_chance": 25,
-    "success_quotes": [
-      "I make this much in literally a millisecond. Take **֍ {amount}** and buy a Kindle.",
-      "Here is **֍ {amount}**. I'll have a drone drop it directly onto your roof."
-    ],
-    "fail_quotes": [
-      "You don't even have Amazon Prime. Stop asking me for handouts.",
-      "I am far too busy building a giant rocket to deal with your poverty."
-    ],
-    "special_outcome": {
-      "chance": 0.5,
-      "message": "You successfully unionized an entire warehouse! Jeff hastily paid you **֍ {amount}** and a **{item_emoji} {item_name}** to go away.",
-      "item_id": "apple",
-      "money_min": 5333,
-      "money_max": 9333
-    }
-  },
-  {
-    "name": "Discord Mod",
-    "success_chance": 45,
-    "success_quotes": [
-      "You followed all the rules perfectly in #general. Here is your **֍ {amount}** allowance.",
-      "I actually like your vibe, kitten. Take **֍ {amount}** and don't spend it all at once."
-    ],
-    "fail_quotes": [
-      "You posted a meme in #announcements. You are permanently banned.",
-      "I am currently policing 40 different servers for free. I have no time for you."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You usurped the owner and became admin! You instantly abused your power for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4444,
-      "money_max": 8444
-    }
-  },
-  {
-    "name": "Gamer Girl",
-    "success_chance": 35,
-    "success_quotes": [
-      "Thanks for gifting 100 subs! Here is a partial refund of **֍ {amount}**.",
-      "You absolutely carried me in that Valorant match, so take **֍ {amount}** as thanks."
-    ],
-    "fail_quotes": [
-      "You're just another random complaining in my chat. Enjoy your block.",
-      "I am way too busy bottling my bathwater to hand out cash."
-    ],
-    "special_outcome": {
-      "chance": 2,
-      "message": "You unlocked the VIP badge in her chat! She sent you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
-      "item_id": "mouse",
-      "money_min": 4000,
-      "money_max": 8000
-    }
-  },
-  {
-    "name": "Crypto Bro",
-    "success_chance": 35,
-    "success_quotes": [
-      "Bitcoin is going to the moon, baby! Take **֍ {amount}** and invest it immediately.",
-      "I just rugged a massive NFT project, so I have plenty to spare. Here is **֍ {amount}**."
-    ],
-    "fail_quotes": [
-      "The market completely crashed overnight. I'm ruined. Don't look at me.",
-      "Have fun staying poor, fiat user."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You somehow convinced him to buy your terribly drawn monkey picture! You scammed him for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "diamond",
-      "money_min": 4889,
-      "money_max": 8889
-    }
-  },
-  {
-    "name": "Your Dad",
-    "success_chance": 45,
-    "success_quotes": [
-      "Don't tell your mother I gave you this **֍ {amount}**. Go buy some candy.",
-      "Are ya winning, son? Here is **֍ {amount}** for your little computer games."
-    ],
-    "fail_quotes": [
-      "Go mow the lawn and clean the gutters first, then we can talk about money.",
-      "I'm still out looking for that specific brand of milk. Be back later."
-    ],
-    "special_outcome": {
-      "chance": 2.5,
-      "message": "Dad finally came back from the grocery store! He brought you **֍ {amount}** and a cold **{item_emoji} {item_name}**.",
-      "item_id": "alcohol",
-      "money_min": 2667,
-      "money_max": 6667
-    }
-  },
-  {
-    "name": "Twitch Streamer",
-    "success_chance": 50,
-    "success_quotes": [
-      "POGGERS! Take this **֍ {amount}** just for the epic content it provides.",
-      "Chat told me I'd get cancelled if I didn't give you **֍ {amount}**, so here."
-    ],
-    "fail_quotes": [
-      "You obviously stream sniped me in that last match. I'm reporting your account.",
-      "I'm currently 18 hours into a subathon. I literally cannot comprehend your message."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You clipped the absolute perfect fail moment! They paid you **֍ {amount}** and a **{item_emoji} {item_name}** just to delete it.",
-      "item_id": "laptop",
-      "money_min": 4222,
-      "money_max": 8222
-    }
-  },
-  {
-    "name": "Local Crackhead",
-    "success_chance": 25,
-    "success_quotes": [
-      "I found this **֍ {amount}** stuck in a storm drain. You want it? Take it.",
-      "The shadow people in my walls told me to give you **֍ {amount}** immediately."
-    ],
-    "fail_quotes": [
-      "Stop looking at me like you know my secrets.",
-      "He just violently hissed at you like a cat and sprinted across the street."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "He traded you a weird shiny rock for a sandwich! It turned out to be worth **֍ {amount}** and contained a hidden **{item_emoji} {item_name}**.",
-      "item_id": "trash",
-      "money_min": 3778,
-      "money_max": 7778
-    }
-  },
-  {
-    "name": "Speedrunner",
-    "success_chance": 40,
-    "success_quotes": [
-      "I saved exactly 0.5 frames on this transaction just to hand you **֍ {amount}**.",
-      "We are on world record pace right now! Have **֍ {amount}** to keep the RNG good."
-    ],
-    "fail_quotes": [
-      "Your RNG is absolutely terrible today. I'm resetting the run. No money for you.",
-      "I am currently doing a blindfolded run, I can't even see where you are."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You discovered a completely game-breaking glitch! You clipped out of bounds, snagging **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4667,
-      "money_max": 8667
-    }
-  },
-  {
-    "name": "TikToker",
-    "success_chance": 35,
-    "success_quotes": [
-      "Do this cringe dance in the background of my video and I'll pay you **֍ {amount}**.",
-      "This prank is totally going viral! Take **֍ {amount}** for playing along."
-    ],
-    "fail_quotes": [
-      "You literally have zero followers. Do not approach me.",
-      "I'm way too busy doing the renegade in public to hand out cash."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You accidentally walked into their shot and blew up overnight! You got sponsored for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4000,
-      "money_max": 8000
-    }
-  },
-  {
-    "name": "Gacha Whale",
-    "success_chance": 30,
-    "success_quotes": [
-      "I just dropped 10k on this banner and got lucky. Have my leftover **֍ {amount}**.",
-      "My pulls are insane today! I'll share my good fortune with this **֍ {amount}**."
-    ],
-    "fail_quotes": [
-      "I need every single penny to pull my 2D waifu. Get away from me.",
-      "My bank account is currently overdrawn by five thousand dollars. I can't help."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You pulled the rarest character in the game on your first try! They aggressively bought your account for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 3556,
-      "money_max": 7556
-    }
-  },
-  {
-    "name": "Roblox Kid",
-    "success_chance": 50,
-    "success_quotes": [
-      "I will literally give you **֍ {amount}** if you just adopt me in-game.",
-      "You traded me a super rare neon pet! Here is **֍ {amount}** robux as promised."
-    ],
-    "fail_quotes": [
-      "My mom said I'm not allowed to talk to strangers on the internet.",
-      "OOF."
-    ],
-    "special_outcome": {
-      "chance": 2,
-      "message": "You ruthlessly scammed them out of their rarest limiteds! You fenced the items for **֍ {amount}** and kept a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 4222,
-      "money_max": 8222
-    }
-  },
-  {
-    "name": "Sigma Male",
-    "success_chance": 40,
-    "success_quotes": [
-      "Always respect the hustle. Take **֍ {amount}** and invest it in yourself.",
-      "You have that raw alpha energy. Here is **֍ {amount}** to expand your empire."
-    ],
-    "fail_quotes": [
-      "You are acting like a total beta right now. Leave my presence immediately.",
-      "I am too busy listening to phonk music and staring at a wall to give you money."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You achieved the ultimate sigma grindset! They handed you **֍ {amount}** and an incredibly masculine **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 4667,
-      "money_max": 8667
-    }
-  },
-  {
-    "name": "Internet Troll",
-    "success_chance": 35,
-    "success_quotes": [
-      "I'm feeling strangely generous after doxxing someone. Have **֍ {amount}**.",
-      "You actually fell for the bait? Here is **֍ {amount}** entirely out of pity."
-    ],
-    "fail_quotes": [
-      "Massive L + ratio + you're broke + touch grass.",
-      "I just sent an unpaid pizza to your house. Pay for it yourself."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You completely out-trolled the master troll! They surrendered **֍ {amount}** and their precious **{item_emoji} {item_name}** in defeat.",
-      "item_id": "laptop",
-      "money_min": 4889,
-      "money_max": 8889
-    }
-  },
-  {
-    "name": "Karen",
-    "success_chance": 20,
-    "success_quotes": [
-      "I screamed at the teenage cashier until they gave me a full refund. Here is **֍ {amount}**.",
-      "Fine! Take **֍ {amount}** and stop recording me for your stupid TikTok video!"
-    ],
-    "fail_quotes": [
-      "I am calling the HOA, the local police, and your mother.",
-      "Where is the absolute manager of this Discord server?!"
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You recorded her massive freakout and posted it online! The ad revenue netted you **֍ {amount}** and a new **{item_emoji} {item_name}**.",
-      "item_id": "camera",
-      "money_min": 5555,
-      "money_max": 9555
-    }
-  },
-  {
-    "name": "Mark Zuckerberg",
-    "success_chance": 30,
-    "success_quotes": [
-      "I have analyzed your metadata and decided to grant you exactly **֍ {amount}**. Please continue scrolling.",
-      "Take this **֍ {amount}** and please pretend you didn't notice my reptilian blinking pattern."
-    ],
-    "fail_quotes": [
-      "You declined the Terms of Service. I will not distribute any funds to you.",
-      "My emotional processing servers are currently down. Leave my presence."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You found a critical bug in the algorithm! Mark wired you a bounty of **֍ {amount}** and shipped you a **{item_emoji} {item_name}**.",
-      "item_id": "lizard_scales",
-      "money_min": 5111,
-      "money_max": 9111
-    }
-  },
-  {
-    "name": "Jeff Bezos",
-    "success_chance": 25,
-    "success_quotes": [
-      "I make this much in literally a millisecond. Take **֍ {amount}** and buy a Kindle.",
-      "Here is **֍ {amount}**. I'll have a drone drop it directly onto your roof."
-    ],
-    "fail_quotes": [
-      "You don't even have Amazon Prime. Stop asking me for handouts.",
-      "I am far too busy building a giant rocket to deal with your poverty."
-    ],
-    "special_outcome": {
-      "chance": 0.5,
-      "message": "You successfully unionized an entire warehouse! Jeff hastily paid you **֍ {amount}** and a **{item_emoji} {item_name}** to go away.",
-      "item_id": "union_card",
-      "money_min": 5333,
-      "money_max": 9333
-    }
-  },
-  {
-    "name": "Discord Mod",
-    "success_chance": 45,
-    "success_quotes": [
-      "You followed all the rules perfectly in #general. Here is your **֍ {amount}** allowance.",
-      "I actually like your vibe, kitten. Take **֍ {amount}** and don't spend it all at once."
-    ],
-    "fail_quotes": [
-      "You posted a meme in #announcements. You are permanently banned.",
-      "I am currently policing 40 different servers for free. I have no time for you."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You usurped the owner and became admin! You instantly abused your power for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "ban_hammer",
-      "money_min": 4444,
-      "money_max": 8444
-    }
-  },
-  {
-    "name": "Gamer Girl",
-    "success_chance": 35,
-    "success_quotes": [
-      "Thanks for gifting 100 subs! Here is a partial refund of **֍ {amount}**.",
-      "You absolutely carried me in that Valorant match, so take **֍ {amount}** as thanks."
-    ],
-    "fail_quotes": [
-      "You're just another random complaining in my chat. Enjoy your block.",
-      "I am way too busy bottling my bathwater to hand out cash."
-    ],
-    "special_outcome": {
-      "chance": 2,
-      "message": "You unlocked the VIP badge in her chat! She sent you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
-      "item_id": "used_bathwater",
-      "money_min": 4000,
-      "money_max": 8000
-    }
-  },
-  {
-    "name": "Crypto Bro",
-    "success_chance": 35,
-    "success_quotes": [
-      "Bitcoin is going to the moon, baby! Take **֍ {amount}** and invest it immediately.",
-      "I just rugged a massive NFT project, so I have plenty to spare. Here is **֍ {amount}**."
-    ],
-    "fail_quotes": [
-      "The market completely crashed overnight. I'm ruined. Don't look at me.",
-      "Have fun staying poor, fiat user."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You somehow convinced him to buy your terribly drawn monkey picture! You scammed him for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "rug_pull_coin",
-      "money_min": 4889,
-      "money_max": 8889
-    }
-  },
-  {
-    "name": "Your Dad",
-    "success_chance": 45,
-    "success_quotes": [
-      "Don't tell your mother I gave you this **֍ {amount}**. Go buy some candy.",
-      "Are ya winning, son? Here is **֍ {amount}** for your little computer games."
-    ],
-    "fail_quotes": [
-      "Go mow the lawn and clean the gutters first, then we can talk about money.",
-      "I'm still out looking for that specific brand of milk. Be back later."
-    ],
-    "special_outcome": {
-      "chance": 2.5,
-      "message": "Dad finally came back from the grocery store! He brought you **֍ {amount}** and a cold **{item_emoji} {item_name}**.",
-      "item_id": "gallon_of_milk",
-      "money_min": 2667,
-      "money_max": 6667
-    }
-  },
-  {
-    "name": "Twitch Streamer",
-    "success_chance": 50,
-    "success_quotes": [
-      "POGGERS! Take this **֍ {amount}** just for the epic content it provides.",
-      "Chat told me I'd get cancelled if I didn't give you **֍ {amount}**, so here."
-    ],
-    "fail_quotes": [
-      "You obviously stream sniped me in that last match. I'm reporting your account.",
-      "I'm currently 18 hours into a subathon. I literally cannot comprehend your message."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You clipped the absolute perfect fail moment! They paid you **֍ {amount}** and a **{item_emoji} {item_name}** just to delete it.",
-      "item_id": "clip_button",
-      "money_min": 4222,
-      "money_max": 8222
-    }
-  },
-  {
-    "name": "Local Crackhead",
-    "success_chance": 25,
-    "success_quotes": [
-      "I found this **֍ {amount}** stuck in a storm drain. You want it? Take it.",
-      "The shadow people in my walls told me to give you **֍ {amount}** immediately."
-    ],
-    "fail_quotes": [
-      "Stop looking at me like you know my secrets.",
-      "He just violently hissed at you like a cat and sprinted across the street."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "He traded you a weird shiny rock for a sandwich! It turned out to be worth **֍ {amount}** and contained a hidden **{item_emoji} {item_name}**.",
-      "item_id": "suspicious_rock",
-      "money_min": 3778,
-      "money_max": 7778
-    }
-  },
-  {
-    "name": "Speedrunner",
-    "success_chance": 40,
-    "success_quotes": [
-      "I saved exactly 0.5 frames on this transaction just to hand you **֍ {amount}**.",
-      "We are on world record pace right now! Have **֍ {amount}** to keep the RNG good."
-    ],
-    "fail_quotes": [
-      "Your RNG is absolutely terrible today. I'm resetting the run. No money for you.",
-      "I am currently doing a blindfolded run, I can't even see where you are."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You discovered a completely game-breaking glitch! You clipped out of bounds, snagging **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "glitched_code",
-      "money_min": 4667,
-      "money_max": 8667
-    }
-  },
-  {
-    "name": "TikToker",
-    "success_chance": 35,
-    "success_quotes": [
-      "Do this cringe dance in the background of my video and I'll pay you **֍ {amount}**.",
-      "This prank is totally going viral! Take **֍ {amount}** for playing along."
-    ],
-    "fail_quotes": [
-      "You literally have zero followers. Do not approach me.",
-      "I'm way too busy doing the renegade in public to hand out cash."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You accidentally walked into their shot and blew up overnight! You got sponsored for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "ring_light",
-      "money_min": 4000,
-      "money_max": 8000
-    }
-  },
-  {
-    "name": "Gacha Whale",
-    "success_chance": 30,
-    "success_quotes": [
-      "I just dropped 10k on this banner and got lucky. Have my leftover **֍ {amount}**.",
-      "My pulls are insane today! I'll share my good fortune with this **֍ {amount}**."
-    ],
-    "fail_quotes": [
-      "I need every single penny to pull my 2D waifu. Get away from me.",
-      "My bank account is currently overdrawn by five thousand dollars. I can't help."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You pulled the rarest character in the game on your first try! They aggressively bought your account for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "max_level_waifu",
-      "money_min": 3556,
-      "money_max": 7556
-    }
-  },
-  {
-    "name": "Roblox Kid",
-    "success_chance": 50,
-    "success_quotes": [
-      "I will literally give you **֍ {amount}** if you just adopt me in-game.",
-      "You traded me a super rare neon pet! Here is **֍ {amount}** robux as promised."
-    ],
-    "fail_quotes": [
-      "My mom said I'm not allowed to talk to strangers on the internet.",
-      "OOF."
-    ],
-    "special_outcome": {
-      "chance": 2,
-      "message": "You ruthlessly scammed them out of their rarest limiteds! You fenced the items for **֍ {amount}** and kept a **{item_emoji} {item_name}**.",
-      "item_id": "neon_pet",
-      "money_min": 4222,
-      "money_max": 8222
-    }
-  },
-  {
-    "name": "Sigma Male",
-    "success_chance": 40,
-    "success_quotes": [
-      "Always respect the hustle. Take **֍ {amount}** and invest it in yourself.",
-      "You have that raw alpha energy. Here is **֍ {amount}** to expand your empire."
-    ],
-    "fail_quotes": [
-      "You are acting like a total beta right now. Leave my presence immediately.",
-      "I am too busy listening to phonk music and staring at a wall to give you money."
-    ],
-    "special_outcome": {
-      "chance": 1,
-      "message": "You achieved the ultimate sigma grindset! They handed you **֍ {amount}** and an incredibly masculine **{item_emoji} {item_name}**.",
-      "item_id": "sigma_grindset_audio",
-      "money_min": 4667,
-      "money_max": 8667
-    }
-  },
-  {
-    "name": "Internet Troll",
-    "success_chance": 35,
-    "success_quotes": [
-      "I'm feeling strangely generous after doxxing someone. Have **֍ {amount}**.",
-      "You actually fell for the bait? Here is **֍ {amount}** entirely out of pity."
-    ],
-    "fail_quotes": [
-      "Massive L + ratio + you're broke + touch grass.",
-      "I just sent an unpaid pizza to your house. Pay for it yourself."
-    ],
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You completely out-trolled the master troll! They surrendered **֍ {amount}** and their precious **{item_emoji} {item_name}** in defeat.",
-      "item_id": "troll_mask",
-      "money_min": 4889,
-      "money_max": 8889
     }
   },
   {

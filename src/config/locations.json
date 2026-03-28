@@ -139,169 +139,169 @@
   {
     "name": "Area 51",
     "id": "area_51",
-    "success_chance": 20,
-    "min_coins": 1133,
-    "max_coins": 3292,
+    "success_chance": 35,
+    "min_coins": 2000,
+    "max_coins": 4375,
     "outcomes": {
       "success": [
-        "You sneaked past the guards and stole alien technology worth **֍ {amount}**. Clapped those alien cheeks.",
-        "You actually found some loose change worth **֍ {amount}** in a UFO."
+        "You actually managed to sneak past the heavily armed guards and stole **֍ {amount}**. Clapped those alien cheeks.",
+        "A stray gray alien handed you **֍ {amount}** before beaming back to its mothership. Easiest money of your life."
       ],
       "fail": [
-        "The guards saw your Naruto run and tased you.",
-        "An alien probed you. You lost your dignity, not your life, but no coins either."
+        "The military caught you trying to Naruto run past the gates. You barely escaped with your life.",
+        "You found an experimental portal, but it just spat you out in New Jersey. Absolutely terrifying."
       ]
     },
     "special_outcome": {
-      "chance": 1.754118724871973,
-      "message": "You found the literal meaning of life! Also **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5925,
-      "money_max": 8425
+      "chance": 1,
+      "message": "You broke into the deepest vault and found the literal meaning of life! Oh, and also **֍ {amount}** plus a weird **{item_emoji} {item_name}**.",
+      "item_id": "alien_blaster",
+      "money_min": 6872,
+      "money_max": 9372
     }
   },
   {
     "name": "Dumpster",
     "id": "dumpster",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
+    "success_chance": 50,
+    "min_coins": 1500,
+    "max_coins": 3750,
     "outcomes": {
       "success": [
-        "You wrestled a raccoon for a half-eaten burger and found **֍ {amount}**. Total sigma move.",
-        "You found a perfectly good chair and sold it for **֍ {amount}**. Trash to treasure."
+        "You wrestled a feral raccoon for a half-eaten burger and found **֍ {amount}** at the bottom. Total sigma move.",
+        "Someone threw away a perfectly good gamer chair with **֍ {amount}** stuffed in the cushions. Trash to treasure, baby."
       ],
       "fail": [
-        "The dumpster juice got on your shoes. You went home to shower.",
-        "A homeless guy yelled at you to leave his house."
+        "The dumpster juice completely ruined your shoes. You went home to shower in shame.",
+        "A local homeless man chased you out of his 'living room'. You ran away crying."
       ]
     },
     "special_outcome": {
-      "chance": 0.7991400344646671,
-      "message": "You found a discarded winning lottery ticket worth **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "trash",
-      "money_min": 7124,
-      "money_max": 9624
+      "chance": 2,
+      "message": "You dug through the filth and found a discarded winning lottery ticket worth **֍ {amount}** alongside a **{item_emoji} {item_name}**!",
+      "item_id": "half_eaten_burger",
+      "money_min": 5616,
+      "money_max": 8116
     }
   },
   {
     "name": "Roblox Server",
     "id": "roblox_server",
-    "success_chance": 35,
-    "min_coins": 1333,
-    "max_coins": 3542,
+    "success_chance": 45,
+    "min_coins": 1666,
+    "max_coins": 3958,
     "outcomes": {
       "success": [
-        "You scammed some kid out of their limiteds and made **֍ {amount}**. Evil but profitable.",
-        "You built a tycoon and earned **֍ {amount}** in passive income."
+        "You scammed a naive 9-year-old out of their limiteds and liquidated them for **֍ {amount}**. Evil, but incredibly profitable.",
+        "Your low-effort tycoon game actually got players, earning you **֍ {amount}** in passive income."
       ],
       "fail": [
-        "You got banned for saying 'oof' too many times.",
-        "An online dater chased you across the map."
+        "You got IP banned for saying 'oof' too many times in the chat.",
+        "An online dater started relentlessly following you across the map until you logged off."
       ]
     },
     "special_outcome": {
-      "chance": 0.83824233933534,
-      "message": "You hacked the mainframe and gave yourself admin! You spawned **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 7075,
-      "money_max": 9575
+      "chance": 1.5,
+      "message": "You successfully hacked the mainframe and gave yourself admin privileges! You spawned **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "neon_pet",
+      "money_min": 6244,
+      "money_max": 8744
     }
   },
   {
     "name": "Metaverse",
     "id": "metaverse",
-    "success_chance": 35,
-    "min_coins": 1333,
-    "max_coins": 3542,
+    "success_chance": 30,
+    "min_coins": 2166,
+    "max_coins": 4583,
     "outcomes": {
       "success": [
-        "You sold a virtual rock for **֍ {amount}**. NFTs are definitely not a scam.",
-        "You glitched through a wall and picked up **֍ {amount}**."
+        "You sold a virtual block of low-res dirt to a crypto bro for **֍ {amount}**. Web3 is the future.",
+        "You clipped through a poorly rendered wall and picked up **֍ {amount}** hidden by the devs."
       ],
       "fail": [
-        "Your headset died and you fell over in real life.",
-        "Zuckerberg appeared and demanded your personal data. You fled."
+        "Your VR headset died mid-jump and you faceplanted into your real-life coffee table.",
+        "Mark Zuckerberg's avatar appeared and demanded your personal data. You immediately pulled the plug."
       ]
     },
     "special_outcome": {
-      "chance": 1.0486131065559905,
-      "message": "You found a forgotten crypto wallet containing **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "laptop",
-      "money_min": 6811,
-      "money_max": 9311
+      "chance": 1,
+      "message": "You stumbled upon a forgotten crypto wallet deep in the code containing **֍ {amount}** and a **{item_emoji} {item_name}**!",
+      "item_id": "nft_receipt",
+      "money_min": 6872,
+      "money_max": 9372
     }
   },
   {
     "name": "Taco Bell Bathroom",
     "id": "taco_bell_bathroom",
     "success_chance": 35,
-    "min_coins": 1100,
-    "max_coins": 3250,
+    "min_coins": 1166,
+    "max_coins": 3334,
     "outcomes": {
       "success": [
-        "You survived the gas chamber and found **֍ {amount}** on the floor.",
-        "Someone dropped **֍ {amount}** while running to the stall."
+        "You survived the toxic gas chamber long enough to scrape **֍ {amount}** off the sticky floor.",
+        "Someone was in such a rush to the stall they dropped **֍ {amount}**. Their loss is your gain."
       ],
       "fail": [
-        "The smell alone dealt 50 psychic damage. You passed out.",
-        "It was occupied. You couldn't handle the pressure."
+        "The smell alone dealt 50 psychic damage. You passed out on the sink.",
+        "Every stall was occupied and sounding like a warzone. You couldn't handle the pressure."
       ]
     },
     "special_outcome": {
-      "chance": 1.1144981145705497,
-      "message": "You found the legendary golden chalupa! It's worth **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 6728,
-      "money_max": 9228
+      "chance": 2,
+      "message": "You discovered the legendary golden chalupa hidden behind the mirror! It's worth **֍ {amount}** and came with a **{item_emoji} {item_name}**.",
+      "item_id": "golden_chalupa",
+      "money_min": 5616,
+      "money_max": 8116
     }
   },
   {
     "name": "Twitch Chat",
     "id": "twitch_chat",
     "success_chance": 40,
-    "min_coins": 1000,
-    "max_coins": 3125,
+    "min_coins": 1833,
+    "max_coins": 4167,
     "outcomes": {
       "success": [
-        "You spammed PogChamp so hard they gifted you **֍ {amount}**.",
-        "You correctly predicted the streamer's death and won **֍ {amount}**."
+        "You spammed PogChamp so fast that an oil prince felt bad and gifted you **֍ {amount}**.",
+        "You correctly predicted the streamer dying to a boss and won **֍ {amount}** in channel points."
       ],
       "fail": [
-        "You got timed out for 10 minutes by a power-tripping mod.",
-        "The streamer read your message and made fun of you on stream."
+        "You got timed out for 10 minutes by a power-tripping Discord mod who takes his unpaid job way too seriously.",
+        "The streamer read your message out loud and relentlessly roasted you in front of 50k people."
       ]
     },
     "special_outcome": {
-      "chance": 1.1521504112630832,
-      "message": "You became a tier 3 sub and the streamer personally mailed you **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "laptop",
-      "money_min": 6681,
-      "money_max": 9181
+      "chance": 1.2,
+      "message": "You became a Tier 3 sub and the streamer personally mailed you **֍ {amount}** along with their used **{item_emoji} {item_name}**!",
+      "item_id": "soundboard",
+      "money_min": 6621,
+      "money_max": 9121
     }
   },
   {
     "name": "Backrooms",
     "id": "backrooms",
-    "success_chance": 43,
-    "min_coins": 1733,
-    "max_coins": 4042,
+    "success_chance": 20,
+    "min_coins": 2500,
+    "max_coins": 5000,
     "outcomes": {
       "success": [
-        "You noclipped through reality but found **֍ {amount}** on the carpet.",
-        "You avoided the entities long enough to grab **֍ {amount}**."
+        "You noclipped through reality and miraculously found **֍ {amount}** half-buried in the moist carpet.",
+        "You managed to avoid the entities long enough to grab **֍ {amount}** sitting on a flickering fluorescent light."
       ],
       "fail": [
-        "You heard a buzzing noise and ran the opposite way.",
-        "An entity spotted you. You sprinted for your life."
+        "You heard a loud buzzing noise growing closer and sprinted the opposite way in sheer panic.",
+        "An entity with entirely too many limbs spotted you. You ran until your legs gave out."
       ]
     },
     "special_outcome": {
-      "chance": 0.7711018475705653,
-      "message": "You found an exit door! You escaped with **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "camera",
-      "money_min": 7159,
-      "money_max": 9659
+      "chance": 0.8,
+      "message": "You finally found a rusted exit door! You escaped back to reality clutching **֍ {amount}** and a weird **{item_emoji} {item_name}**.",
+      "item_id": "backrooms_carpet",
+      "money_min": 7123,
+      "money_max": 9623
     }
   },
   {
@@ -331,169 +331,169 @@
   {
     "name": "Abandoned Mall",
     "id": "abandoned_mall",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
+    "success_chance": 35,
+    "min_coins": 2000,
+    "max_coins": 4375,
     "outcomes": {
       "success": [
-        "You found an untouched cash register with **֍ {amount}** inside.",
-        "You scavenged some vintage clothes and sold them for **֍ {amount}**."
+        "You smashed open an untouched cash register at the old Hot Topic and walked away with **֍ {amount}**.",
+        "You scavenged some moldy vintage clothes and sold them to a hipster for **֍ {amount}**."
       ],
       "fail": [
-        "A mall cop ghost chased you out.",
-        "You stepped on rusty glass and had to go get a tetanus shot."
+        "A terrifyingly aggressive mall cop ghost chased you all the way back to your car.",
+        "You stepped on some rusty glass near the food court and had to leave to get a tetanus shot."
       ]
     },
     "special_outcome": {
-      "chance": 0.7246439938144813,
-      "message": "You found a secret underground vault with **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "ancient_coin",
-      "money_min": 7217,
-      "money_max": 9717
+      "chance": 1,
+      "message": "You discovered a secret underground vault beneath the food court! You hauled out **֍ {amount}** and a dusty **{item_emoji} {item_name}**.",
+      "item_id": "haunted_mannequin",
+      "money_min": 6872,
+      "money_max": 9372
     }
   },
   {
     "name": "Waffle House",
     "id": "waffle_house",
     "success_chance": 25,
-    "min_coins": 1266,
-    "max_coins": 3458,
+    "min_coins": 1333,
+    "max_coins": 3542,
     "outcomes": {
       "success": [
-        "You watched a 3 AM brawl and bet on the winner, making **֍ {amount}**.",
-        "The cook dropped **֍ {amount}** while flipping a waffle."
+        "You placed a bet on a 3 AM brawl between the cooks and won **֍ {amount}**. Pure entertainment.",
+        "The waitress threw a plate at a customer and accidentally dropped **֍ {amount}** on your table."
       ],
       "fail": [
-        "A flying chair hit you in the face.",
-        "The waitress told you to leave because you ordered pancakes."
+        "A flying folding chair hit you directly in the face before you could even order.",
+        "The staff told you to leave immediately because you asked if they served pancakes."
       ]
     },
     "special_outcome": {
-      "chance": 2.323236779285612,
-      "message": "You became the Waffle House champion! They gave you **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 5211,
-      "money_max": 7711
+      "chance": 1.5,
+      "message": "You became the undisputed Waffle House fighting champion! The manager gave you **֍ {amount}** and a **{item_emoji} {item_name}** out of respect.",
+      "item_id": "waffle_iron",
+      "money_min": 6244,
+      "money_max": 8744
     }
   },
   {
     "name": "Dark Web",
     "id": "dark_web",
-    "success_chance": 49,
-    "min_coins": 1533,
-    "max_coins": 3792,
-    "outcomes": {
-      "success": [
-        "You sold some generic data for **֍ {amount}**. Very illegal.",
-        "You found a Bitcoin on a sketchy forum worth **֍ {amount}**."
-      ],
-      "fail": [
-        "You accidentally downloaded 30 viruses to your PC.",
-        "An FBI agent messaged you. You unplugged your router."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.6970707805391623,
-      "message": "You ordered a mystery box! It contained **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 5997,
-      "money_max": 8497
-    }
-  },
-  {
-    "name": "Reddit Frontpage",
-    "id": "reddit_frontpage",
     "success_chance": 25,
     "min_coins": 2333,
     "max_coins": 4791,
     "outcomes": {
       "success": [
-        "You reposted a 5-year-old meme and got **֍ {amount}** in Reddit Gold.",
-        "You won an argument with a stranger and felt so good you found **֍ {amount}**."
+        "You sold some extremely questionable data to a shady buyer for **֍ {amount}**. Very illegal, very cool.",
+        "You found an old Bitcoin sitting in a forgotten hacker forum worth **֍ {amount}**."
       ],
       "fail": [
-        "You got downvoted to oblivion for having an opinion.",
-        "A mod banned you for not reading the 400-page rulebook."
+        "You accidentally clicked the wrong link and downloaded 30 different viruses to your main PC.",
+        "An FBI agent messaged your personal IP. You panicked and unplugged your router."
       ]
     },
     "special_outcome": {
-      "chance": 1.7498064758627523,
-      "message": "Your post blew up! You got internet famous, earning **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "apple",
-      "money_min": 5930,
-      "money_max": 8430
+      "chance": 0.5,
+      "message": "You successfully ordered a mystery box! It somehow legally contained **֍ {amount}** and a brand new **{item_emoji} {item_name}**.",
+      "item_id": "mystery_box",
+      "money_min": 7500,
+      "money_max": 10000
+    }
+  },
+  {
+    "name": "Reddit Frontpage",
+    "id": "reddit_frontpage",
+    "success_chance": 45,
+    "min_coins": 1666,
+    "max_coins": 3958,
+    "outcomes": {
+      "success": [
+        "You reposted a 5-year-old meme and farmed **֍ {amount}** in Reddit Gold from clueless users.",
+        "You successfully won an argument with a stranger, feeling so euphoric that you stumbled upon **֍ {amount}**."
+      ],
+      "fail": [
+        "You stated a mildly controversial opinion and got downvoted into oblivion.",
+        "An overweight moderator permanently banned you for violating sub-section 4B of the rules."
+      ]
+    },
+    "special_outcome": {
+      "chance": 1.5,
+      "message": "Your post blew up entirely! You achieved brief internet fame, earning **֍ {amount}** and a commemorative **{item_emoji} {item_name}**.",
+      "item_id": "reddit_gold",
+      "money_min": 6244,
+      "money_max": 8744
     }
   },
   {
     "name": "Local Arcade",
     "id": "local_arcade",
-    "success_chance": 37,
-    "min_coins": 1933,
-    "max_coins": 4291,
+    "success_chance": 45,
+    "min_coins": 1000,
+    "max_coins": 3125,
     "outcomes": {
       "success": [
-        "You beat the high score on Pac-Man and won **֍ {amount}**.",
-        "You shook the coin pusher machine and **֍ {amount}** fell out."
+        "You aggressively shook the coin pusher machine when nobody was looking and **֍ {amount}** tumbled out.",
+        "You destroyed a high score on Pac-Man, and a bystander tipped you **֍ {amount}** out of respect."
       ],
       "fail": [
-        "A 10-year-old destroyed you in a fighting game. You cried.",
-        "The machine ate your quarter."
+        "A hyperactive 10-year-old completely humiliated you in a fighting game. You left in shame.",
+        "The claw machine ate your money, and the attendant refused to give you a refund."
       ]
     },
     "special_outcome": {
-      "chance": 1.026085375131114,
-      "message": "You won the jackpot! The tickets bought you **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "mouse",
-      "money_min": 6839,
-      "money_max": 9339
+      "chance": 2,
+      "message": "You hit the ultimate jackpot on the massive wheel! You traded the tickets for **֍ {amount}** and a shiny **{item_emoji} {item_name}**.",
+      "item_id": "arcade_tickets",
+      "money_min": 5616,
+      "money_max": 8116
     }
   },
   {
     "name": "IKEA Maze",
     "id": "ikea_maze",
-    "success_chance": 24,
-    "min_coins": 2366,
-    "max_coins": 4833,
+    "success_chance": 35,
+    "min_coins": 2000,
+    "max_coins": 4375,
     "outcomes": {
       "success": [
-        "You found the exit and the staff gave you **֍ {amount}** as a reward.",
-        "You built a fort out of display beds and charged **֍ {amount}** for entry."
+        "You miraculously found the exit without crying, and the staff handed you **֍ {amount}** as a reward.",
+        "You built a massive fort out of display beds and charged lost customers **֍ {amount}** for entry."
       ],
       "fail": [
-        "You got lost and had to eat Swedish meatballs for a week.",
-        "The lights turned off and you couldn't find your way out."
+        "You got hopelessly lost in the lighting section and had to survive on Swedish meatballs for three days.",
+        "The store closed, the lights turned off, and you realized you were never getting out."
       ]
     },
     "special_outcome": {
-      "chance": 0.5134602260673478,
-      "message": "You found the mythical perfectly-assembled furniture piece! It sold for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 7483,
-      "money_max": 9983
+      "chance": 1,
+      "message": "You uncovered the mythical perfectly-assembled furniture piece! You sold it to a desperate couple for **֍ {amount}** and a **{item_emoji} {item_name}**.",
+      "item_id": "flat_pack_furniture",
+      "money_min": 6872,
+      "money_max": 9372
     }
   },
   {
     "name": "Anime Convention",
     "id": "anime_con",
-    "success_chance": 40,
-    "min_coins": 1033,
-    "max_coins": 3167,
+    "success_chance": 50,
+    "min_coins": 1500,
+    "max_coins": 3750,
     "outcomes": {
       "success": [
-        "You sold fake body pillows for **֍ {amount}**. Pure profit.",
-        "You won the cosplay contest and got **֍ {amount}**."
+        "You sold completely fake, poorly drawn body pillows in the alley outside for **֍ {amount}**. Pure profit.",
+        "You entered the cosplay contest with a cardboard box and somehow won the **֍ {amount}** grand prize."
       ],
       "fail": [
-        "The smell of unwashed attendees forced you to leave.",
-        "You got trampled by people running to a panel."
+        "The overwhelming stench of unwashed attendees dealt lethal damage to your sinuses. You retreated.",
+        "You got brutally trampled by a mob of people running to catch a VTuber panel."
       ]
     },
     "special_outcome": {
-      "chance": 1.1903924677391495,
-      "message": "You met your favorite voice actor! They gave you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 6633,
-      "money_max": 9133
+      "chance": 1.5,
+      "message": "You met your absolute favorite voice actor! They felt so bad for your outfit they gave you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
+      "item_id": "signed_poster",
+      "money_min": 6244,
+      "money_max": 8744
     }
   },
   {
@@ -857,534 +857,6 @@
     }
   },
   {
-    "name": "Area 51",
-    "id": "area_51",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You actually managed to sneak past the heavily armed guards and stole **֍ {amount}**. Clapped those alien cheeks.",
-        "A stray gray alien handed you **֍ {amount}** before beaming back to its mothership. Easiest money of your life."
-      ],
-      "fail": [
-        "The military caught you trying to Naruto run past the gates. You barely escaped with your life.",
-        "You found an experimental portal, but it just spat you out in New Jersey. Absolutely terrifying."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You broke into the deepest vault and found the literal meaning of life! Oh, and also **֍ {amount}** plus a weird **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Dumpster",
-    "id": "dumpster",
-    "success_chance": 50,
-    "min_coins": 1500,
-    "max_coins": 3750,
-    "outcomes": {
-      "success": [
-        "You wrestled a feral raccoon for a half-eaten burger and found **֍ {amount}** at the bottom. Total sigma move.",
-        "Someone threw away a perfectly good gamer chair with **֍ {amount}** stuffed in the cushions. Trash to treasure, baby."
-      ],
-      "fail": [
-        "The dumpster juice completely ruined your shoes. You went home to shower in shame.",
-        "A local homeless man chased you out of his 'living room'. You ran away crying."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You dug through the filth and found a discarded winning lottery ticket worth **֍ {amount}** alongside a **{item_emoji} {item_name}**!",
-      "item_id": "trash",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "Roblox Server",
-    "id": "roblox_server",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
-    "outcomes": {
-      "success": [
-        "You scammed a naive 9-year-old out of their limiteds and liquidated them for **֍ {amount}**. Evil, but incredibly profitable.",
-        "Your low-effort tycoon game actually got players, earning you **֍ {amount}** in passive income."
-      ],
-      "fail": [
-        "You got IP banned for saying 'oof' too many times in the chat.",
-        "An online dater started relentlessly following you across the map until you logged off."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You successfully hacked the mainframe and gave yourself admin privileges! You spawned **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Metaverse",
-    "id": "metaverse",
-    "success_chance": 30,
-    "min_coins": 2166,
-    "max_coins": 4583,
-    "outcomes": {
-      "success": [
-        "You sold a virtual block of low-res dirt to a crypto bro for **֍ {amount}**. Web3 is the future.",
-        "You clipped through a poorly rendered wall and picked up **֍ {amount}** hidden by the devs."
-      ],
-      "fail": [
-        "Your VR headset died mid-jump and you faceplanted into your real-life coffee table.",
-        "Mark Zuckerberg's avatar appeared and demanded your personal data. You immediately pulled the plug."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You stumbled upon a forgotten crypto wallet deep in the code containing **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "laptop",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Taco Bell Bathroom",
-    "id": "taco_bell_bathroom",
-    "success_chance": 35,
-    "min_coins": 1166,
-    "max_coins": 3334,
-    "outcomes": {
-      "success": [
-        "You survived the toxic gas chamber long enough to scrape **֍ {amount}** off the sticky floor.",
-        "Someone was in such a rush to the stall they dropped **֍ {amount}**. Their loss is your gain."
-      ],
-      "fail": [
-        "The smell alone dealt 50 psychic damage. You passed out on the sink.",
-        "Every stall was occupied and sounding like a warzone. You couldn't handle the pressure."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You discovered the legendary golden chalupa hidden behind the mirror! It's worth **֍ {amount}** and came with a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "Twitch Chat",
-    "id": "twitch_chat",
-    "success_chance": 40,
-    "min_coins": 1833,
-    "max_coins": 4167,
-    "outcomes": {
-      "success": [
-        "You spammed PogChamp so fast that an oil prince felt bad and gifted you **֍ {amount}**.",
-        "You correctly predicted the streamer dying to a boss and won **֍ {amount}** in channel points."
-      ],
-      "fail": [
-        "You got timed out for 10 minutes by a power-tripping Discord mod who takes his unpaid job way too seriously.",
-        "The streamer read your message out loud and relentlessly roasted you in front of 50k people."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.2,
-      "message": "You became a Tier 3 sub and the streamer personally mailed you **֍ {amount}** along with their used **{item_emoji} {item_name}**!",
-      "item_id": "mouse",
-      "money_min": 6621,
-      "money_max": 9121
-    }
-  },
-  {
-    "name": "Backrooms",
-    "id": "backrooms",
-    "success_chance": 20,
-    "min_coins": 2500,
-    "max_coins": 5000,
-    "outcomes": {
-      "success": [
-        "You noclipped through reality and miraculously found **֍ {amount}** half-buried in the moist carpet.",
-        "You managed to avoid the entities long enough to grab **֍ {amount}** sitting on a flickering fluorescent light."
-      ],
-      "fail": [
-        "You heard a loud buzzing noise growing closer and sprinted the opposite way in sheer panic.",
-        "An entity with entirely too many limbs spotted you. You ran until your legs gave out."
-      ]
-    },
-    "special_outcome": {
-      "chance": 0.8,
-      "message": "You finally found a rusted exit door! You escaped back to reality clutching **֍ {amount}** and a weird **{item_emoji} {item_name}**.",
-      "item_id": "camera",
-      "money_min": 7123,
-      "money_max": 9623
-    }
-  },
-  {
-    "name": "Discord Voice Channel",
-    "id": "discord_vc",
-    "success_chance": 50,
-    "min_coins": 1500,
-    "max_coins": 3750,
-    "outcomes": {
-      "success": [
-        "You earraped the entire lobby with terrible mic quality, so they paid you **֍ {amount}** just to leave.",
-        "You played copyright music through a soundboard and someone threw **֍ {amount}** at you for the vibes."
-      ],
-      "fail": [
-        "A girl joined the VC and you instantly got server-muted by a horde of angry simps.",
-        "You sneezed directly into your headset and everyone collectively voted to kick you."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You destroyed a rival in an impromptu rap battle! The lobby crowned you king, handing over **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Abandoned Mall",
-    "id": "abandoned_mall",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You smashed open an untouched cash register at the old Hot Topic and walked away with **֍ {amount}**.",
-        "You scavenged some moldy vintage clothes and sold them to a hipster for **֍ {amount}**."
-      ],
-      "fail": [
-        "A terrifyingly aggressive mall cop ghost chased you all the way back to your car.",
-        "You stepped on some rusty glass near the food court and had to leave to get a tetanus shot."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You discovered a secret underground vault beneath the food court! You hauled out **֍ {amount}** and a dusty **{item_emoji} {item_name}**.",
-      "item_id": "ancient_coin",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Waffle House",
-    "id": "waffle_house",
-    "success_chance": 25,
-    "min_coins": 1333,
-    "max_coins": 3542,
-    "outcomes": {
-      "success": [
-        "You placed a bet on a 3 AM brawl between the cooks and won **֍ {amount}**. Pure entertainment.",
-        "The waitress threw a plate at a customer and accidentally dropped **֍ {amount}** on your table."
-      ],
-      "fail": [
-        "A flying folding chair hit you directly in the face before you could even order.",
-        "The staff told you to leave immediately because you asked if they served pancakes."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You became the undisputed Waffle House fighting champion! The manager gave you **֍ {amount}** and a **{item_emoji} {item_name}** out of respect.",
-      "item_id": "pizza",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Dark Web",
-    "id": "dark_web",
-    "success_chance": 25,
-    "min_coins": 2333,
-    "max_coins": 4791,
-    "outcomes": {
-      "success": [
-        "You sold some extremely questionable data to a shady buyer for **֍ {amount}**. Very illegal, very cool.",
-        "You found an old Bitcoin sitting in a forgotten hacker forum worth **֍ {amount}**."
-      ],
-      "fail": [
-        "You accidentally clicked the wrong link and downloaded 30 different viruses to your main PC.",
-        "An FBI agent messaged your personal IP. You panicked and unplugged your router."
-      ]
-    },
-    "special_outcome": {
-      "chance": 0.5,
-      "message": "You successfully ordered a mystery box! It somehow legally contained **֍ {amount}** and a brand new **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 7500,
-      "money_max": 10000
-    }
-  },
-  {
-    "name": "Reddit Frontpage",
-    "id": "reddit_frontpage",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
-    "outcomes": {
-      "success": [
-        "You reposted a 5-year-old meme and farmed **֍ {amount}** in Reddit Gold from clueless users.",
-        "You successfully won an argument with a stranger, feeling so euphoric that you stumbled upon **֍ {amount}**."
-      ],
-      "fail": [
-        "You stated a mildly controversial opinion and got downvoted into oblivion.",
-        "An overweight moderator permanently banned you for violating sub-section 4B of the rules."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "Your post blew up entirely! You achieved brief internet fame, earning **֍ {amount}** and a commemorative **{item_emoji} {item_name}**.",
-      "item_id": "apple",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Local Arcade",
-    "id": "local_arcade",
-    "success_chance": 45,
-    "min_coins": 1000,
-    "max_coins": 3125,
-    "outcomes": {
-      "success": [
-        "You aggressively shook the coin pusher machine when nobody was looking and **֍ {amount}** tumbled out.",
-        "You destroyed a high score on Pac-Man, and a bystander tipped you **֍ {amount}** out of respect."
-      ],
-      "fail": [
-        "A hyperactive 10-year-old completely humiliated you in a fighting game. You left in shame.",
-        "The claw machine ate your money, and the attendant refused to give you a refund."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You hit the ultimate jackpot on the massive wheel! You traded the tickets for **֍ {amount}** and a shiny **{item_emoji} {item_name}**.",
-      "item_id": "mouse",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "IKEA Maze",
-    "id": "ikea_maze",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You miraculously found the exit without crying, and the staff handed you **֍ {amount}** as a reward.",
-        "You built a massive fort out of display beds and charged lost customers **֍ {amount}** for entry."
-      ],
-      "fail": [
-        "You got hopelessly lost in the lighting section and had to survive on Swedish meatballs for three days.",
-        "The store closed, the lights turned off, and you realized you were never getting out."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You uncovered the mythical perfectly-assembled furniture piece! You sold it to a desperate couple for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "pizza",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Anime Convention",
-    "id": "anime_con",
-    "success_chance": 50,
-    "min_coins": 1500,
-    "max_coins": 3750,
-    "outcomes": {
-      "success": [
-        "You sold completely fake, poorly drawn body pillows in the alley outside for **֍ {amount}**. Pure profit.",
-        "You entered the cosplay contest with a cardboard box and somehow won the **֍ {amount}** grand prize."
-      ],
-      "fail": [
-        "The overwhelming stench of unwashed attendees dealt lethal damage to your sinuses. You retreated.",
-        "You got brutally trampled by a mob of people running to catch a VTuber panel."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You met your absolute favorite voice actor! They felt so bad for your outfit they gave you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
-      "item_id": "laptop",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Area 51",
-    "id": "area_51",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You actually managed to sneak past the heavily armed guards and stole **֍ {amount}**. Clapped those alien cheeks.",
-        "A stray gray alien handed you **֍ {amount}** before beaming back to its mothership. Easiest money of your life."
-      ],
-      "fail": [
-        "The military caught you trying to Naruto run past the gates. You barely escaped with your life.",
-        "You found an experimental portal, but it just spat you out in New Jersey. Absolutely terrifying."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You broke into the deepest vault and found the literal meaning of life! Oh, and also **֍ {amount}** plus a weird **{item_emoji} {item_name}**.",
-      "item_id": "alien_blaster",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Dumpster",
-    "id": "dumpster",
-    "success_chance": 50,
-    "min_coins": 1500,
-    "max_coins": 3750,
-    "outcomes": {
-      "success": [
-        "You wrestled a feral raccoon for a half-eaten burger and found **֍ {amount}** at the bottom. Total sigma move.",
-        "Someone threw away a perfectly good gamer chair with **֍ {amount}** stuffed in the cushions. Trash to treasure, baby."
-      ],
-      "fail": [
-        "The dumpster juice completely ruined your shoes. You went home to shower in shame.",
-        "A local homeless man chased you out of his 'living room'. You ran away crying."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You dug through the filth and found a discarded winning lottery ticket worth **֍ {amount}** alongside a **{item_emoji} {item_name}**!",
-      "item_id": "half_eaten_burger",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "Roblox Server",
-    "id": "roblox_server",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
-    "outcomes": {
-      "success": [
-        "You scammed a naive 9-year-old out of their limiteds and liquidated them for **֍ {amount}**. Evil, but incredibly profitable.",
-        "Your low-effort tycoon game actually got players, earning you **֍ {amount}** in passive income."
-      ],
-      "fail": [
-        "You got IP banned for saying 'oof' too many times in the chat.",
-        "An online dater started relentlessly following you across the map until you logged off."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You successfully hacked the mainframe and gave yourself admin privileges! You spawned **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "neon_pet",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Metaverse",
-    "id": "metaverse",
-    "success_chance": 30,
-    "min_coins": 2166,
-    "max_coins": 4583,
-    "outcomes": {
-      "success": [
-        "You sold a virtual block of low-res dirt to a crypto bro for **֍ {amount}**. Web3 is the future.",
-        "You clipped through a poorly rendered wall and picked up **֍ {amount}** hidden by the devs."
-      ],
-      "fail": [
-        "Your VR headset died mid-jump and you faceplanted into your real-life coffee table.",
-        "Mark Zuckerberg's avatar appeared and demanded your personal data. You immediately pulled the plug."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You stumbled upon a forgotten crypto wallet deep in the code containing **֍ {amount}** and a **{item_emoji} {item_name}**!",
-      "item_id": "nft_receipt",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Taco Bell Bathroom",
-    "id": "taco_bell_bathroom",
-    "success_chance": 35,
-    "min_coins": 1166,
-    "max_coins": 3334,
-    "outcomes": {
-      "success": [
-        "You survived the toxic gas chamber long enough to scrape **֍ {amount}** off the sticky floor.",
-        "Someone was in such a rush to the stall they dropped **֍ {amount}**. Their loss is your gain."
-      ],
-      "fail": [
-        "The smell alone dealt 50 psychic damage. You passed out on the sink.",
-        "Every stall was occupied and sounding like a warzone. You couldn't handle the pressure."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You discovered the legendary golden chalupa hidden behind the mirror! It's worth **֍ {amount}** and came with a **{item_emoji} {item_name}**.",
-      "item_id": "golden_chalupa",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "Twitch Chat",
-    "id": "twitch_chat",
-    "success_chance": 40,
-    "min_coins": 1833,
-    "max_coins": 4167,
-    "outcomes": {
-      "success": [
-        "You spammed PogChamp so fast that an oil prince felt bad and gifted you **֍ {amount}**.",
-        "You correctly predicted the streamer dying to a boss and won **֍ {amount}** in channel points."
-      ],
-      "fail": [
-        "You got timed out for 10 minutes by a power-tripping Discord mod who takes his unpaid job way too seriously.",
-        "The streamer read your message out loud and relentlessly roasted you in front of 50k people."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.2,
-      "message": "You became a Tier 3 sub and the streamer personally mailed you **֍ {amount}** along with their used **{item_emoji} {item_name}**!",
-      "item_id": "soundboard",
-      "money_min": 6621,
-      "money_max": 9121
-    }
-  },
-  {
-    "name": "Backrooms",
-    "id": "backrooms",
-    "success_chance": 20,
-    "min_coins": 2500,
-    "max_coins": 5000,
-    "outcomes": {
-      "success": [
-        "You noclipped through reality and miraculously found **֍ {amount}** half-buried in the moist carpet.",
-        "You managed to avoid the entities long enough to grab **֍ {amount}** sitting on a flickering fluorescent light."
-      ],
-      "fail": [
-        "You heard a loud buzzing noise growing closer and sprinted the opposite way in sheer panic.",
-        "An entity with entirely too many limbs spotted you. You ran until your legs gave out."
-      ]
-    },
-    "special_outcome": {
-      "chance": 0.8,
-      "message": "You finally found a rusted exit door! You escaped back to reality clutching **֍ {amount}** and a weird **{item_emoji} {item_name}**.",
-      "item_id": "backrooms_carpet",
-      "money_min": 7123,
-      "money_max": 9623
-    }
-  },
-  {
     "name": "Discord Voice Channel",
     "id": "discord_vc",
     "success_chance": 50,
@@ -1404,174 +876,6 @@
       "chance": 1.5,
       "message": "You destroyed a rival in an impromptu rap battle! The lobby crowned you king, handing over **֍ {amount}** and a **{item_emoji} {item_name}**.",
       "item_id": "kitten_ears",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Abandoned Mall",
-    "id": "abandoned_mall",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You smashed open an untouched cash register at the old Hot Topic and walked away with **֍ {amount}**.",
-        "You scavenged some moldy vintage clothes and sold them to a hipster for **֍ {amount}**."
-      ],
-      "fail": [
-        "A terrifyingly aggressive mall cop ghost chased you all the way back to your car.",
-        "You stepped on some rusty glass near the food court and had to leave to get a tetanus shot."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You discovered a secret underground vault beneath the food court! You hauled out **֍ {amount}** and a dusty **{item_emoji} {item_name}**.",
-      "item_id": "haunted_mannequin",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Waffle House",
-    "id": "waffle_house",
-    "success_chance": 25,
-    "min_coins": 1333,
-    "max_coins": 3542,
-    "outcomes": {
-      "success": [
-        "You placed a bet on a 3 AM brawl between the cooks and won **֍ {amount}**. Pure entertainment.",
-        "The waitress threw a plate at a customer and accidentally dropped **֍ {amount}** on your table."
-      ],
-      "fail": [
-        "A flying folding chair hit you directly in the face before you could even order.",
-        "The staff told you to leave immediately because you asked if they served pancakes."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You became the undisputed Waffle House fighting champion! The manager gave you **֍ {amount}** and a **{item_emoji} {item_name}** out of respect.",
-      "item_id": "waffle_iron",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Dark Web",
-    "id": "dark_web",
-    "success_chance": 25,
-    "min_coins": 2333,
-    "max_coins": 4791,
-    "outcomes": {
-      "success": [
-        "You sold some extremely questionable data to a shady buyer for **֍ {amount}**. Very illegal, very cool.",
-        "You found an old Bitcoin sitting in a forgotten hacker forum worth **֍ {amount}**."
-      ],
-      "fail": [
-        "You accidentally clicked the wrong link and downloaded 30 different viruses to your main PC.",
-        "An FBI agent messaged your personal IP. You panicked and unplugged your router."
-      ]
-    },
-    "special_outcome": {
-      "chance": 0.5,
-      "message": "You successfully ordered a mystery box! It somehow legally contained **֍ {amount}** and a brand new **{item_emoji} {item_name}**.",
-      "item_id": "mystery_box",
-      "money_min": 7500,
-      "money_max": 10000
-    }
-  },
-  {
-    "name": "Reddit Frontpage",
-    "id": "reddit_frontpage",
-    "success_chance": 45,
-    "min_coins": 1666,
-    "max_coins": 3958,
-    "outcomes": {
-      "success": [
-        "You reposted a 5-year-old meme and farmed **֍ {amount}** in Reddit Gold from clueless users.",
-        "You successfully won an argument with a stranger, feeling so euphoric that you stumbled upon **֍ {amount}**."
-      ],
-      "fail": [
-        "You stated a mildly controversial opinion and got downvoted into oblivion.",
-        "An overweight moderator permanently banned you for violating sub-section 4B of the rules."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "Your post blew up entirely! You achieved brief internet fame, earning **֍ {amount}** and a commemorative **{item_emoji} {item_name}**.",
-      "item_id": "reddit_gold",
-      "money_min": 6244,
-      "money_max": 8744
-    }
-  },
-  {
-    "name": "Local Arcade",
-    "id": "local_arcade",
-    "success_chance": 45,
-    "min_coins": 1000,
-    "max_coins": 3125,
-    "outcomes": {
-      "success": [
-        "You aggressively shook the coin pusher machine when nobody was looking and **֍ {amount}** tumbled out.",
-        "You destroyed a high score on Pac-Man, and a bystander tipped you **֍ {amount}** out of respect."
-      ],
-      "fail": [
-        "A hyperactive 10-year-old completely humiliated you in a fighting game. You left in shame.",
-        "The claw machine ate your money, and the attendant refused to give you a refund."
-      ]
-    },
-    "special_outcome": {
-      "chance": 2,
-      "message": "You hit the ultimate jackpot on the massive wheel! You traded the tickets for **֍ {amount}** and a shiny **{item_emoji} {item_name}**.",
-      "item_id": "arcade_tickets",
-      "money_min": 5616,
-      "money_max": 8116
-    }
-  },
-  {
-    "name": "IKEA Maze",
-    "id": "ikea_maze",
-    "success_chance": 35,
-    "min_coins": 2000,
-    "max_coins": 4375,
-    "outcomes": {
-      "success": [
-        "You miraculously found the exit without crying, and the staff handed you **֍ {amount}** as a reward.",
-        "You built a massive fort out of display beds and charged lost customers **֍ {amount}** for entry."
-      ],
-      "fail": [
-        "You got hopelessly lost in the lighting section and had to survive on Swedish meatballs for three days.",
-        "The store closed, the lights turned off, and you realized you were never getting out."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1,
-      "message": "You uncovered the mythical perfectly-assembled furniture piece! You sold it to a desperate couple for **֍ {amount}** and a **{item_emoji} {item_name}**.",
-      "item_id": "flat_pack_furniture",
-      "money_min": 6872,
-      "money_max": 9372
-    }
-  },
-  {
-    "name": "Anime Convention",
-    "id": "anime_con",
-    "success_chance": 50,
-    "min_coins": 1500,
-    "max_coins": 3750,
-    "outcomes": {
-      "success": [
-        "You sold completely fake, poorly drawn body pillows in the alley outside for **֍ {amount}**. Pure profit.",
-        "You entered the cosplay contest with a cardboard box and somehow won the **֍ {amount}** grand prize."
-      ],
-      "fail": [
-        "The overwhelming stench of unwashed attendees dealt lethal damage to your sinuses. You retreated.",
-        "You got brutally trampled by a mob of people running to catch a VTuber panel."
-      ]
-    },
-    "special_outcome": {
-      "chance": 1.5,
-      "message": "You met your absolute favorite voice actor! They felt so bad for your outfit they gave you **֍ {amount}** and a signed **{item_emoji} {item_name}**.",
-      "item_id": "signed_poster",
       "money_min": 6244,
       "money_max": 8744
     }

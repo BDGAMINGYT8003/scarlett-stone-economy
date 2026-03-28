@@ -1,4 +1,4 @@
-const { Events } = require('discord.js');
+const { Events, MessageFlags } = require('discord.js');
 const { log } = require('../utils/logger');
 const db = require('../utils/db');
 const { checkAndUnlockBadges } = require('../utils/badgeManager');
@@ -55,7 +55,7 @@ module.exports = {
                     } catch (error) {
                         console.error(error);
                         if (!interaction.replied && !interaction.deferred) {
-                             await interaction.reply({ content: 'Something went wrong processing this interaction.', ephemeral: true });
+                             await interaction.reply({ content: 'Something went wrong processing this interaction.', flags: MessageFlags.Ephemeral });
                         }
                     }
                 }
@@ -84,9 +84,9 @@ module.exports = {
             console.error(error);
             log(`Error executing ${interaction.commandName}`, 'error');
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+                await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
             } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
             }
         }
     },
