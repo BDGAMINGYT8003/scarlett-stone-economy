@@ -35,6 +35,9 @@ const categories = {
         { name: '/grant', description: 'Grants money or items to a user (Developer Only).' },
         { name: '/revoke', description: 'Revokes money, items, or premium from a user (Developer Only).' },
         { name: '/godmode', description: 'Grants God Mode (No Cooldowns) to a user (Developer Only).' }
+    ],
+    Minigames: [
+        { name: '/rps', description: 'Challenges a specified user to a game of Rock, Paper, Scissors with an optional currency wager.' }
     ]
 };
 
@@ -85,7 +88,8 @@ module.exports = {
                 .addOptions(
                     { label: 'Currency', value: 'Currency', default: category === 'Currency' },
                     { label: 'Utility', value: 'Utility', default: category === 'Utility' },
-                    { label: 'Admin', value: 'Admin', default: category === 'Admin' }
+                    { label: 'Admin', value: 'Admin', default: category === 'Admin' },
+                    { label: 'Minigames', value: 'Minigames', default: category === 'Minigames' }
                 );
 
             const row1 = new ActionRowBuilder().addComponents(selectMenu);
