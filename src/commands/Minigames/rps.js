@@ -278,18 +278,25 @@ module.exports = {
                         collector3.on('end', async (c, reason) => {
                             if (reason === 'time') {
                                 let culprit = !challengerMove ? challenger : target;
-                                const timeoutEmbed = new EmbedBuilder()
-                                    .setTitle('Action Timed Out')
-                                    .setDescription(`${culprit} took too long to make a move.`)
-                                    .setFooter({ text: 'Request timed out' })
-                                    .setColor(0xFF0000);
+                                let winner = !challengerMove ? target : challenger;
 
-                                // Refund if wager was placed
+                                let resultMsg = `${culprit} took too long to make a move and forfeited the game!`;
+                                let quip = 'Too slow.';
+
                                 if (wager !== null) {
-                                    db.addBalance(challenger.id, wager);
-                                    db.addBalance(target.id, wager);
-                                    timeoutEmbed.setDescription(`${culprit} took too long. Wagers refunded.`);
+                                    const pot = wager * 2;
+                                    db.addBalance(winner.id, pot);
+                                    db.logTransaction(winner.id, 'rps win (forfeit)', { amount: pot });
+                                    resultMsg += `\n\n${winner} wins by default and takes the total pot of ֍ ${pot.toLocaleString()}!`;
+                                    quip = 'Free money is the best kind of money.';
+                                } else {
+                                    resultMsg += `\n\n${winner} wins by default!`;
                                 }
+
+                                const timeoutEmbed = new EmbedBuilder()
+                                    .setTitle('Rock, Paper, Scissors - Forfeit')
+                                    .setDescription(`${resultMsg}\n\n-# ${quip}`)
+                                    .setColor(0x00FF00);
 
                                 try { await interaction.editReply({ embeds: [timeoutEmbed], components: [] }); } catch (e) {}
                             }
