@@ -6,6 +6,6 @@ module.exports = {
     once: true,
     execute(client) {
         log(`Ready! Logged in as ${client.user.tag}`, 'success');
-        client.user.setActivity('Dank Memer Reborn', { type: 4 });
+        client.user.setActivity('Template Bot', { type: 4 });
     },
 };

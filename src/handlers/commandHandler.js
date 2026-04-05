@@ -8,15 +8,23 @@ module.exports = async (client) => {
     const commands = [];
     const commandsPath = path.join(__dirname, '../commands');
 
-    // Read command folders
-    const commandFolders = fs.readdirSync(commandsPath);
+    // Dynamically create commands directory if it doesn't exist
+    if (!fs.existsSync(commandsPath)) {
+        fs.mkdirSync(commandsPath, { recursive: true });
+        log(`Created commands directory at ${commandsPath}`, 'info');
+    }
 
-    for (const folder of commandFolders) {
-        const folderPath = path.join(commandsPath, folder);
-        if (fs.statSync(folderPath).isDirectory()) {
-            const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
+    // Read command folders or files directly
+    const commandItems = fs.readdirSync(commandsPath);
+
+    for (const item of commandItems) {
+        const itemPath = path.join(commandsPath, item);
+        const stat = fs.statSync(itemPath);
+
+        if (stat.isDirectory()) {
+            const commandFiles = fs.readdirSync(itemPath).filter(file => file.endsWith('.js'));
             for (const file of commandFiles) {
-                const filePath = path.join(folderPath, file);
+                const filePath = path.join(itemPath, file);
                 const command = require(filePath);
                 if ('data' in command && 'execute' in command) {
                     client.commands.set(command.data.name, command);
@@ -26,6 +34,15 @@ module.exports = async (client) => {
                     log(`The command at ${filePath} is missing a required "data" or "execute" property.`, 'warn');
                 }
             }
+        } else if (stat.isFile() && item.endsWith('.js')) {
+            const command = require(itemPath);
+            if ('data' in command && 'execute' in command) {
+                client.commands.set(command.data.name, command);
+                commands.push(command.data.toJSON());
+                log(`Loaded command: ${command.data.name}`, 'debug');
+            } else {
+                log(`The command at ${itemPath} is missing a required "data" or "execute" property.`, 'warn');
+            }
         }
     }
 
@@ -34,8 +51,7 @@ module.exports = async (client) => {
     try {
         log(`Started refreshing ${commands.length} application (/) commands.`, 'info');
 
-        // Put commands globally (or per guild for development speed if needed, but requirements say "synced automatically")
-        // Using global application commands
+        // Put commands globally
         const data = await rest.put(
             Routes.applicationCommands(process.env.CLIENT_ID),
             { body: commands },
