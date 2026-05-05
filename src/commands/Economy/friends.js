@@ -405,6 +405,19 @@ module.exports = {
             }
 
             if (i.customId === 'confirm_share') {
+                const latestUserData = db.getUser(userId);
+                const latestBalance = latestUserData.balance ?? 0;
+
+                if (amount > latestBalance) {
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Insufficient Funds')
+                        .setDescription(`You only have **֍ ${latestBalance.toLocaleString()}** available now, so this share was cancelled.`)
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Balance changed before confirmation' });
+                    collector.stop();
+                    return i.update({ embeds: [errorEmbed], components: [] });
+                }
+
                 db.removeBalance(userId, amount);
                 db.addBalance(targetUser.id, amount);
                 db.logTransaction(userId, 'share coins', { amount: -amount });
@@ -484,6 +497,18 @@ module.exports = {
             }
 
             if (i.customId === 'confirm_share') {
+                const latestCount = db.getItemCount(userId, item.id);
+
+                if (quantity > latestCount) {
+                    const errorEmbed = new EmbedBuilder()
+                        .setTitle('Insufficient Items')
+                        .setDescription(`You only have **${latestCount.toLocaleString()}x ${item.name}** available now, so this share was cancelled.`)
+                        .setColor(0xFF0000)
+                        .setFooter({ text: 'Inventory changed before confirmation' });
+                    collector.stop();
+                    return i.update({ embeds: [errorEmbed], components: [] });
+                }
+
                 db.removeItem(userId, item.id, quantity);
                 db.logTransaction(userId, 'share items', {
                     amount: 0,

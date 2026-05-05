@@ -243,8 +243,8 @@ module.exports = {
         const customId = interaction.customId;
 
         if (customId.startsWith('slots_spin_again_')) {
-            const betAmount = parseInt(customId.replace('slots_spin_again_', ''));
-             if (betAmount < MIN_BET || betAmount > MAX_BET) {
+            const betAmount = Number(customId.replace('slots_spin_again_', ''));
+             if (!Number.isSafeInteger(betAmount) || betAmount < MIN_BET || betAmount > MAX_BET) {
                 const embed = new EmbedBuilder()
                     .setTitle('Invalid Bet')
                     .setDescription('Invalid bet amount.')

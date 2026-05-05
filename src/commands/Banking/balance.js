@@ -103,7 +103,10 @@ module.exports = {
 
                 // Wait for modal submit
                 try {
-                    const submission = await i.awaitModalSubmit({ time: 60000 });
+                    const submission = await i.awaitModalSubmit({
+                        time: 60000,
+                        filter: modalInteraction => modalInteraction.user.id === interaction.user.id && modalInteraction.customId === modalId
+                    });
                     const amountStr = submission.fields.getTextInputValue('amountInput');
                     const userData = db.getUser(targetUser.id);
 

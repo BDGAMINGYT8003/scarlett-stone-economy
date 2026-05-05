@@ -173,9 +173,9 @@ module.exports = {
         const customId = interaction.customId;
 
         if (customId.startsWith('snakeeyes_roll_again_')) {
-            const betAmount = parseInt(customId.replace('snakeeyes_roll_again_', ''));
+            const betAmount = Number(customId.replace('snakeeyes_roll_again_', ''));
 
-             if (betAmount < MIN_BET || betAmount > MAX_BET) {
+             if (!Number.isSafeInteger(betAmount) || betAmount < MIN_BET || betAmount > MAX_BET) {
                 const embed = new EmbedBuilder()
                     .setTitle('Invalid Bet')
                     .setDescription('Invalid bet amount.')
