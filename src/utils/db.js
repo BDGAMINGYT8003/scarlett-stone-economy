@@ -2,6 +2,13 @@ const Database = require('better-sqlite3');
 const db = new Database('economy.db');
 const itemsConfig = require('../config/items.json');
 
+
+const normalizePositiveInteger = (amount) => {
+    if (!Number.isFinite(amount)) return 0;
+    const normalized = Math.floor(amount);
+    return normalized > 0 ? normalized : 0;
+};
+
 // Initialize tables
 db.prepare(`
     CREATE TABLE IF NOT EXISTS users (
@@ -266,28 +273,43 @@ const isGodMode = (userId) => {
 
 // Economy Methods
 const addBalance = (userId, amount) => {
+    const normalizedAmount = normalizePositiveInteger(amount);
+    if (!normalizedAmount) return false;
     getUser(userId);
-    db.prepare('UPDATE users SET balance = balance + ? WHERE id = ?').run(amount, userId);
+    db.prepare('UPDATE users SET balance = balance + ? WHERE id = ?').run(normalizedAmount, userId);
+    return true;
 };
 
 const removeBalance = (userId, amount) => {
+    const normalizedAmount = normalizePositiveInteger(amount);
+    if (!normalizedAmount) return false;
     getUser(userId);
-    db.prepare('UPDATE users SET balance = balance - ? WHERE id = ?').run(amount, userId);
+    db.prepare('UPDATE users SET balance = balance - ? WHERE id = ?').run(normalizedAmount, userId);
+    return true;
 };
 
 const addBank = (userId, amount) => {
+    const normalizedAmount = normalizePositiveInteger(amount);
+    if (!normalizedAmount) return false;
     getUser(userId);
-    db.prepare('UPDATE users SET bank = bank + ? WHERE id = ?').run(amount, userId);
+    db.prepare('UPDATE users SET bank = bank + ? WHERE id = ?').run(normalizedAmount, userId);
+    return true;
 };
 
 const removeBank = (userId, amount) => {
+    const normalizedAmount = normalizePositiveInteger(amount);
+    if (!normalizedAmount) return false;
     getUser(userId);
-    db.prepare('UPDATE users SET bank = bank - ? WHERE id = ?').run(amount, userId);
+    db.prepare('UPDATE users SET bank = bank - ? WHERE id = ?').run(normalizedAmount, userId);
+    return true;
 };
 
 const increaseBankCapacity = (userId, amount) => {
+    const normalizedAmount = normalizePositiveInteger(amount);
+    if (!normalizedAmount) return false;
     getUser(userId);
-    db.prepare('UPDATE users SET bank_capacity = bank_capacity + ? WHERE id = ?').run(amount, userId);
+    db.prepare('UPDATE users SET bank_capacity = bank_capacity + ? WHERE id = ?').run(normalizedAmount, userId);
+    return true;
 };
 
 const getEffectiveBankCapacity = (userId) => {
@@ -540,22 +562,29 @@ const isFriend = (u1, u2) => {
 
 // Inventory Methods
 const addItem = (userId, itemId, quantity) => {
+    const normalizedQuantity = normalizePositiveInteger(quantity);
+    if (!normalizedQuantity) return false;
+
     const current = db.prepare('SELECT quantity FROM inventory WHERE user_id = ? AND item_id = ?').get(userId, itemId);
     if (current) {
-        db.prepare('UPDATE inventory SET quantity = quantity + ? WHERE user_id = ? AND item_id = ?').run(quantity, userId, itemId);
+        db.prepare('UPDATE inventory SET quantity = quantity + ? WHERE user_id = ? AND item_id = ?').run(normalizedQuantity, userId, itemId);
     } else {
-        db.prepare('INSERT INTO inventory (user_id, item_id, quantity) VALUES (?, ?, ?)').run(userId, itemId, quantity);
+        db.prepare('INSERT INTO inventory (user_id, item_id, quantity) VALUES (?, ?, ?)').run(userId, itemId, normalizedQuantity);
     }
+    return true;
 };
 
 const removeItem = (userId, itemId, quantity) => {
+    const normalizedQuantity = normalizePositiveInteger(quantity);
+    if (!normalizedQuantity) return false;
+
     const current = db.prepare('SELECT quantity FROM inventory WHERE user_id = ? AND item_id = ?').get(userId, itemId);
     if (!current) return false;
 
-    if (current.quantity <= quantity) {
+    if (current.quantity <= normalizedQuantity) {
         db.prepare('DELETE FROM inventory WHERE user_id = ? AND item_id = ?').run(userId, itemId);
     } else {
-        db.prepare('UPDATE inventory SET quantity = quantity - ? WHERE user_id = ? AND item_id = ?').run(quantity, userId, itemId);
+        db.prepare('UPDATE inventory SET quantity = quantity - ? WHERE user_id = ? AND item_id = ?').run(normalizedQuantity, userId, itemId);
     }
     return true;
 };

@@ -8,65 +8,83 @@
 function parseDuration(timeStr) {
     if (!timeStr) return null;
 
-    const regex = /(\d+)\s*([a-zA-Z]+)/g;
+    const input = timeStr.toString().trim();
+    if (!input) return null;
+
+    const tokenRegex = /(\d+)\s*([a-zA-Z]+)/g;
     let totalMs = 0;
     let match;
+    let cursor = 0;
     let found = false;
 
-    while ((match = regex.exec(timeStr)) !== null) {
+    while ((match = tokenRegex.exec(input)) !== null) {
+        if (input.slice(cursor, match.index).trim() !== '') return null;
+
         found = true;
-        const amount = parseInt(match[1]);
+        cursor = tokenRegex.lastIndex;
+
+        const amount = Number(match[1]);
         const unit = match[2].toLowerCase();
+        let multiplier = 0;
 
         switch (unit) {
             case 's':
             case 'sec':
+            case 'secs':
+            case 'second':
             case 'seconds':
-                totalMs += amount * 1000;
+                multiplier = 1000;
                 break;
             case 'm':
             case 'min':
             case 'mins':
+            case 'minute':
             case 'minutes':
-                totalMs += amount * 60 * 1000;
+                multiplier = 60 * 1000;
                 break;
             case 'h':
             case 'hr':
             case 'hrs':
+            case 'hour':
             case 'hours':
-                totalMs += amount * 60 * 60 * 1000;
+                multiplier = 60 * 60 * 1000;
                 break;
             case 'd':
             case 'day':
             case 'days':
-                totalMs += amount * 24 * 60 * 60 * 1000;
+                multiplier = 24 * 60 * 60 * 1000;
                 break;
             case 'w':
             case 'wk':
             case 'wks':
+            case 'week':
             case 'weeks':
-                totalMs += amount * 7 * 24 * 60 * 60 * 1000;
+                multiplier = 7 * 24 * 60 * 60 * 1000;
                 break;
             case 'mo':
             case 'mos':
             case 'month':
             case 'months':
-                totalMs += amount * 30 * 24 * 60 * 60 * 1000; // Approx 30 days
+                multiplier = 30 * 24 * 60 * 60 * 1000;
                 break;
             case 'y':
             case 'yr':
             case 'yrs':
             case 'year':
             case 'years':
-                totalMs += amount * 365 * 24 * 60 * 60 * 1000; // Approx 365 days
+                multiplier = 365 * 24 * 60 * 60 * 1000;
                 break;
             default:
-                // Unknown unit, ignore or could invalidate
-                break;
+                return null;
         }
+
+        totalMs += amount * multiplier;
+        if (!Number.isFinite(totalMs) || totalMs <= 0) return null;
     }
 
-    return found ? totalMs : null;
+    if (!found || input.slice(cursor).trim() !== '') return null;
+
+    return totalMs;
 }
 
 module.exports = { parseDuration };
